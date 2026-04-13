@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZAR Capital Partners — Meridian Strategy Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Barlow+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#1e2c3a;border-radius:2px}
+body{background:#07090e;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#setup{display:flex;align-items:center;justify-content:center;height:100vh;background:#07090e}
+#main{display:none;flex-direction:column;height:100vh}
+.btn{padding:4px 12px;background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .2s}
+.btn:hover{border-color:#c89040;color:#c89040}
+.btn:disabled{opacity:.4;cursor:default;pointer-events:none}
+.btn-gold{background:#c89040;border:none;color:#000;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:6px 18px;cursor:pointer;transition:all .2s}
+.btn-gold:disabled{opacity:.35;cursor:default;pointer-events:none}
+.btn-gold:not(:disabled):hover{background:#d4a050}
+.ob{display:flex;gap:9px;padding:8px 10px;background:#121824;border:1px solid #1a2535;cursor:pointer;width:100%;color:#c0cbd8;font-family:'IBM Plex Mono',monospace;text-align:left;transition:all .15s;margin-bottom:4px}
+.ob:hover{border-color:#c89040!important;background:#111d2a!important}
+.ob:hover .efx{max-height:30px!important}
+input[type=text],input[type=password]{background:#121824;border:1px solid #1a2535;color:#c0cbd8;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 12px;outline:none;transition:border-color .2s;width:100%}
+input:focus{border-color:#c89040}
+@keyframes sli{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fdi{from{opacity:0}to{opacity:1}}
+@keyframes lvu{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+.evc{animation:sli .3s ease}
+.loge{animation:fdi .25s ease}
+#lvup{animation:lvu .4s ease}
+</style>
+</head>
+<body>
+
+<!-- ── SETUP SCREEN ─────────────────────────────────────────── -->
+<div id="setup">
+  <div style="max-width:440px;width:92%">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;letter-spacing:5px;color:#c89040;text-transform:uppercase">ZAR CAPITAL PARTNERS</div>
+    <div style="font-size:9px;letter-spacing:2px;color:#3a4f65;text-transform:uppercase;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid #1a2535">Meridian Strategy — Global Barbell Fund Simulator</div>
+
+    <div style="font-size:9px;color:#3a4f65;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">Anthropic API Key</div>
+    <input type="password" id="key-input" placeholder="sk-ant-api03-..." style="margin-bottom:6px">
+    <div style="font-size:9px;color:#1e2c3a;line-height:1.6;margin-bottom:20px">La clave se guarda en localStorage. Nunca sale de tu dispositivo.</div>
+    <button class="btn-gold" onclick="startGame()" style="width:100%;padding:9px">Iniciar Simulación</button>
+    <div id="key-err" style="font-size:9px;color:#e84040;margin-top:7px;display:none">Ingresá una API key válida (sk-ant-...)</div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a2535;display:flex;gap:8px">
+      <button class="btn" onclick="startDemo()" style="flex:1;padding:6px">Modo Demo (sin API key)</button>
+      <button class="btn" onclick="resetAndStart()" style="flex:1;padding:6px">Nueva Partida</button>
+    </div>
+    <div id="resume-notice" style="display:none;margin-top:12px;font-size:9px;color:#c89040;letter-spacing:1px">▸ Partida guardada detectada — ingresá tu key para continuar</div>
+  </div>
+</div>
+
+<!-- ── MAIN GAME SCREEN ─────────────────────────────────────── -->
+<div id="main">
+
+  <!-- HEADER -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:50px;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0">
+    <div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;letter-spacing:4px;color:#c89040;text-transform:uppercase">ZAR CAPITAL PARTNERS</div>
+      <div style="font-size:9px;letter-spacing:2px;color:#3a4f65;text-transform:uppercase;margin-top:1px">Meridian Strategy — Global Barbell Fund</div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:center">
+      <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Turno</div><div id="h-turn" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700">1 / 12</div></div>
+      <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Período</div><div id="h-period" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700">ENE-FEB 2025</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <div id="lv-badge" style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border:1px solid #3a4f65;color:#3a4f65;transition:all .4s">NV.1 ANALISTA SOLITARIO</div>
+        <div style="width:120px;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="lv-bar" style="height:100%;background:#3a4f65;width:5%;transition:width .8s ease,background .4s ease"></div></div>
+      </div>
+      <div id="h-phase" style="background:#121824;border:1px solid #c89040;color:#c89040;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px">INCUBACIÓN</div>
+    </div>
+  </div>
+
+  <!-- METRICS BAR -->
+  <div style="display:grid;grid-template-columns:1.75fr repeat(5,1fr);border-bottom:1px solid #1a2535;background:#0c101a;flex-shrink:0;height:54px">
+    <div style="padding:7px 14px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">AUM Total</span>
+      <div style="display:flex;align-items:baseline;gap:5px">
+        <span id="m-aum" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">$50K</span>
+        <span id="m-aum-sub" style="font-size:9px;color:#3a4f65"></span>
+      </div>
+    </div>
+    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Reputación</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-rep" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#4a9eff">30</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-rep" style="height:100%;border-radius:1px;background:#4a9eff;width:30%;transition:width .6s ease"></div></div></div>
+    </div>
+    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Riesgo</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-risk" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#e84040">45</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-risk" style="height:100%;border-radius:1px;background:#e84040;width:45%;transition:width .6s ease"></div></div></div>
+    </div>
+    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Moral</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-mor" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#00c896">70</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-mor" style="height:100%;border-radius:1px;background:#00c896;width:70%;transition:width .6s ease"></div></div></div>
+    </div>
+    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Exposición</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-med" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#3a4f65">15</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-med" style="height:100%;border-radius:1px;background:#3a4f65;width:15%;transition:width .6s ease"></div></div></div>
+    </div>
+    <div style="padding:7px 11px;display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Compliance</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-cmp" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#00c896">85</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-cmp" style="height:100%;border-radius:1px;background:#00c896;width:85%;transition:width .6s ease"></div></div></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div style="display:flex;flex:1;overflow:hidden">
+    <div id="ep" style="flex:1;overflow-y:auto;padding:12px;border-right:1px solid #1a2535"><div id="ec"></div></div>
+    <div style="width:272px;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0">
+      <div style="padding:11px;border-bottom:1px solid #1a2535;overflow-y:auto;flex-shrink:0">
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:2px;margin-bottom:5px">Capital</div>
+        <div style="background:#121824;border:1px solid #1a2535;padding:8px;margin-bottom:9px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:#3a4f65">Capital propio</span><span id="a-own" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#c89040">USD 50,000</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:#3a4f65">LP confirmado</span><span id="a-lp" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#00c896">USD 0</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:9px;color:#3a4f65">En negociación</span><span id="a-pend" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#3a4f65">USD 100,000</span></div>
+          <div style="border-top:1px solid #1a2535;padding-top:4px;display:flex;justify-content:space-between"><span style="font-size:9px;color:#c0cbd8;font-weight:600">AUM Total</span><span id="a-tot" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700">USD 50,000</span></div>
+        </div>
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:2px;margin-bottom:5px">Meridian Barbell</div>
+        <div style="font-size:8px;color:#e84040;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Agresivo 40%</div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">FX</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;width:37.5%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">Commodities</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;opacity:.65;width:25%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">10%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:6px"><span style="font-size:9px;width:64px">Índices</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;opacity:.45;width:37.5%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
+        <div style="font-size:8px;color:#4a9eff;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Balanceado 60%</div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">UST/Bonos</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;width:33%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">20%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">CER</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.72;width:25%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">CEDEARs</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.5;width:25%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span style="font-size:9px;width:64px">ETFs</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.32;width:17%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">10%</span></div>
+      </div>
+      <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:2px;padding:8px 11px 4px;flex-shrink:0">Bitácora</div>
+      <div id="zlog" style="flex:1;overflow-y:auto;padding:0 11px 10px"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:40px;background:#0c101a;border-top:1px solid #1a2535;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:7px">
+      <button id="edu-btn" class="btn" onclick="toggleEdu()" style="display:flex;align-items:center;gap:5px"><div id="edu-dot" style="width:5px;height:5px;border-radius:50%;background:#1a2535;transition:all .2s;flex-shrink:0"></div>Modo Educativo</button>
+      <button id="bs-btn" class="btn" onclick="genBlackSwan()" style="border-color:#e84040;color:#e84040">Cisne Negro</button>
+      <button id="ai-btn" class="btn" onclick="consultAI()">Asesor Ejecutivo</button>
+      <span id="fstat" style="font-size:9px;color:#3a4f65;letter-spacing:1px;text-transform:uppercase"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span id="evrem" style="font-size:9px;color:#3a4f65;letter-spacing:1px;text-transform:uppercase"></span>
+      <button id="nxt" class="btn-gold" onclick="advance()" disabled>Siguiente Bimestre</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL (fixed) ────────────────────────────────────────── -->
+<div id="zmod" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:100;align-items:center;justify-content:center">
+  <div style="background:#0c101a;border:1px solid #1a2535;max-width:460px;width:92%;max-height:85vh;overflow-y:auto;padding:22px">
+    <div id="macc" style="height:3px;margin:-22px -22px 16px;background:#00c896"></div>
+    <div id="mtit" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;color:#00c896"></div>
+    <div id="msub" style="font-size:9px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1a2535"></div>
+    <div id="mbod" style="font-size:11px;color:#c0cbd8;line-height:1.9"></div>
+    <button class="btn" onclick="closeM()" style="margin-top:14px">Continuar</button>
+  </div>
+</div>
+
+<!-- ── LEVEL UP NOTIFICATION (fixed) ───────────────────────── -->
+<div id="lvup" style="display:none;position:fixed;top:60px;right:18px;z-index:200">
+  <div style="background:#0c101a;border:1px solid #c89040;padding:12px 16px;max-width:260px">
+    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px">NIVEL DESBLOQUEADO</div>
+    <div id="lu-name" style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:2px;color:#c89040;text-transform:uppercase"></div>
+    <div id="lu-desc" style="font-size:9px;color:#3a4f65;margin-top:3px;line-height:1.5"></div>
+  </div>
+</div>
+
+<script>
+const LSSAVE='zcp_state_v3';
+const LSKEY='zcp_apikey';
+
+// ── LEVEL SYSTEM ────────────────────────────────────────────
+const LEVELS=[
+  {id:1,name:'Analista Solitario',stage:'Monoambiente',aum:0,rep:0,col:'#3a4f65',desc:'Capital propio. Solo vos y el mercado.'},
+  {id:2,name:'Firma Boutique',stage:'Oficina',aum:100000,rep:40,col:'#4a9eff',desc:'Primer LP. Primeros empleados. Oficina boutique en BA.'},
+  {id:3,name:'Hedge Fund Consolidado',stage:'Rascacielos',aum:500000,rep:60,col:'#c89040',desc:'M&A, reguladores, inversores institucionales.'},
+  {id:4,name:'Jugador Global',stage:'Multinacional',aum:2000000,rep:80,col:'#00c896',desc:'Geopolítica, monopolios. El 3D Globe se activa.'},
+  {id:5,name:'Dinastía Estelar',stage:'Puerto Espacial',aum:10000000,rep:95,col:'#e84040',desc:'Herederos. Asteroides. Leyes interplanetarias.'}
+];
+
+const PER=['ENE-FEB','MAR-ABR','MAY-JUN','JUL-AGO','SEP-OCT','NOV-DIC'];
+function per(t){return PER[(t-1)%6]+' '+(t<=6?2025:2026);}
+function phase(t){if(t>=10)return'INSTITUCIONAL';if(t>=7)return'EXPANSIÓN';if(t>=5)return'OPERACIONAL';if(t>=3)return'PRE-LAUNCH';return'INCUBACIÓN';}
+function getLevel(aum,rep){let lv=LEVELS[0];for(const l of LEVELS){if(aum>=l.aum&&rep>=l.rep)lv=l;}return lv;}
+function getNextLevel(aum,rep){const c=getLevel(aum,rep);return LEVELS.find(l=>l.id===c.id+1)||null;}
+function getLvProg(aum,rep){const c=getLevel(aum,rep);const n=getNextLevel(aum,rep);if(!n)return 100;return Math.min(100,Math.round((Math.min(aum/n.aum,.99)*0.6+Math.min(rep/n.rep,.99)*0.4)*100));}
+
+// ── STATE ───────────────────────────────────────────────────
+let S={turn:1,tot:12,aum:50000,lp:0,pend:100000,m:{rep:30,risk:45,mor:70,med:15,cmp:85},evts:[],done:0,log:[],edu:false,lvId:1,apiKey:'',demoMode:false};
+
+// ── GAME DATA ───────────────────────────────────────────────
+const EV={
+1:[
+  {id:'lp1',cat:'INVERSORES',urg:'high',edu:'lp_ddq',title:'LP Uruguayo — Primera Decisión',
+   desc:'Rodrigo F. (Family Office, Montevideo) confirmó interés formal en USD 100.000. Solicita DDQ completo y reunión en 15 días. Es tu primer LP institucional real.',
+   opts:[
+    {k:'A',lbl:'Avanzar inmediatamente',dsc:'Reunión en 10 días. Velocidad sobre perfección.',fx:{lp:100000,rep:12,risk:10,cmp:-8},con:{t:'pos',ti:'Primer LP Confirmado',bo:'Rodrigo acepta. <b style="color:#00c896">AUM LP: +USD 100.000</b>. El fondo da un salto. El DDQ fue entregado incompleto — Rodrigo lo nota pero acepta. Compliance bajo presión.'}},
+    {k:'B',lbl:'4 semanas de preparación completa',dsc:'DDQ impecable, auditoría legal, presentación institucional.',fx:{rep:7,cmp:10,mor:5},con:{t:'pos',ti:'Proceso Institucional Correcto',bo:'Rodrigo aprecia la profesionalidad. <b style="color:#00c896">Reputación reforzada.</b> El proceso continúa en turno 2. Un fondo rival también lo está tanteando — el tiempo juega.'}},
+    {k:'C',lbl:'Renegociar lock-up a 3 meses',dsc:'Intentar condiciones más atractivas para el LP.',fx:{rep:-5,risk:-5},con:{t:'neu',ti:'Señal de Debilidad',bo:'Rodrigo pide tiempo. <b style="color:#e84040">Negociar el lock-up = señal de que necesitás el capital urgente.</b> Los LPs institucionales lo interpretan así.'}},
+  ]},
+  {id:'tr1',cat:'INVERSORES',urg:'med',edu:'track_record',title:'Track Record Request',
+   desc:'Marcelo G. (empresario local, potencial USD 30k) pregunta: "¿Cuánto rendiste el último año?" Tenés 8m demo +18% y 6m live +11%, documentados.',
+   opts:[
+    {k:'A',lbl:'Resultados reales y completos',dsc:'8m demo +18%, 6m live +11%. Todo verificable.',fx:{rep:8,cmp:5,mor:5},con:{t:'pos',ti:'Transparencia Institucional',bo:'Marcelo aprecia la honestidad. <b style="color:#00c896">Reputación reforzada.</b> Pide reunión formal. Capital potencial: USD 30.000 en turno 2.'}},
+    {k:'B',lbl:'Backtesting como track record real',dsc:'Proyecciones históricas como si fueran resultados. Riesgo máximo.',fx:{rep:-20,cmp:-25,risk:20},con:{t:'neg',ti:'RIESGO CRÍTICO',bo:'<b style="color:#e84040">Marcelo contrata due diligence independiente.</b> El engaño queda expuesto. Reputación destruida en el círculo local. Potencial conflicto legal.'}},
+    {k:'C',lbl:'Período de observación de 3 meses',dsc:'"Antes de tu capital, te muestro mi proceso en tiempo real."',fx:{rep:6,cmp:8,mor:8},con:{t:'pos',ti:'Relación de Largo Plazo',bo:'Marcelo acepta. <b style="color:#00c896">Relación más sólida.</b> Capital llega en turno 3 con mayor convicción.'}},
+  ]}
+],
+2:[
+  {id:'rus2',cat:'MERCADO',urg:'med',edu:'pos_sizing',title:'Setup: Russell 2000',
+   desc:'Breakdown del soporte clave en Russell 2000 con volumen. Setup bajista de continuación. R/R teórico 1:3.',
+   opts:[
+    {k:'A',lbl:'Full position agresiva (40% AUM)',dsc:'Máximo del lado BARBELL. Stop definido.',fx:{risk:15,mor:5},roll:{p:.55,win:12000,los:-7000,rw:10,rl:-6},con:null},
+    {k:'B',lbl:'Half position conservadora (20% AUM)',dsc:'Preservar capital. El fondo es joven.',fx:{risk:6,cmp:5},roll:{p:.55,win:6000,los:-3500,rw:5,rl:-2},con:null},
+    {k:'C',lbl:'No operar — no cumple el checklist',dsc:'Disciplina: si no cumple los criterios, no entrás.',fx:{risk:-5,cmp:8,mor:3},con:{t:'neu',ti:'Disciplina sobre FOMO',bo:'El trade cierra +9% sin vos. <b style="color:#00c896">Sin pérdidas. Track record limpio.</b> El mercado siempre da oportunidades.'}},
+  ]},
+  {id:'loc2',cat:'INVERSORES',urg:'low',edu:'pitch',title:'Red de Empresarios Locales',
+   desc:'Un contacto puede organizar una presentación informal a 5 empresarios (USD 15-40k potencial c/u). Evento en 3 semanas.',
+   opts:[
+    {k:'A',lbl:'Presentación institucional completa',dsc:'One-pager, deck, simulaciones. 2 semanas de prep.',fx:{rep:12,med:8,mor:-5},con:{t:'pos',ti:'Expansión de Red',bo:'<b style="color:#00c896">2 de 5 empresarios quedaron interesados.</b> Capital potencial: USD 50-80k en turno 3. El nombre ZAR Capital empieza a circular.'}},
+    {k:'B',lbl:'Presentación mínima — priorizar trading',dsc:'Lo hacés pero sin over-preparar.',fx:{rep:3,mor:2},con:{t:'neu',ti:'Oportunidad Parcial',bo:'1 empresario interesado. Potencial: USD 15k. La presentación fue mediocre — el círculo lo nota.'}},
+    {k:'C',lbl:'Rechazar — demasiado pronto',dsc:'Primero consolidar LP y track record.',fx:{cmp:5,mor:5},con:{t:'neu',ti:'Foco Estratégico',bo:'Decisión defensiva válida. El contacto lo entiende pero no promete repetir la oportunidad.'}},
+  ]}
+],
+3:[
+  {id:'pod3',cat:'MEDIÁTICO',urg:'low',edu:'media_str',title:'Invitación: Podcast Financiero',
+   desc:'Un podcast de finanzas (5k oyentes) te invita a hablar sobre "inversión activa en Argentina". Visibilidad pero riesgo con el LP uruguayo que prefiere perfil bajo.',
+   opts:[
+    {k:'A',lbl:'Aceptar — ZAR necesita visibilidad',dsc:'Nombre del fondo en los oídos del mercado.',fx:{med:20,rep:5,cmp:-10,risk:5},con:{t:'neu',ti:'Double-Edged Sword',bo:'Buena presencia pública. Pero Rodrigo llama: <b style="color:#e84040">"Prefiero perfil bajo. Los fondos institucionales no hacen podcasts."</b> Relación tensionada.'}},
+    {k:'B',lbl:'Rechazar — perfil bajo institucional',dsc:'La visibilidad viene del track record.',fx:{cmp:8,rep:5,mor:3},con:{t:'pos',ti:'Decisión Institucional Correcta',bo:'<b style="color:#00c896">Rodrigo felicita la decisión.</b> "Los fondos serios no necesitan marketing en podcasts." Reputación institucional reforzada.'}},
+    {k:'C',lbl:'Aceptar como analista anónimo',dsc:'Participar sin mencionar ZAR Capital.',fx:{rep:3,med:8},con:{t:'pos',ti:'Balance Inteligente',bo:'Exposición controlada. Branding personal separado del vehículo del fondo. Rodrigo no se entera.'}},
+  ]},
+  {id:'leg3',cat:'REGULATORIO',urg:'high',edu:'fund_str',title:'Gap Legal Urgente — Uruguay',
+   desc:'El asesor en Uruguay detecta un gap en la estructura: requiere actualización para cumplir IRAE 2024. Costo estimado: USD 2.000 a 5.000.',
+   opts:[
+    {k:'A',lbl:'Solución completa ahora (USD 5.000)',dsc:'Inversión en estructura. Compliance impecable.',fx:{aum:-5000,cmp:20,rep:8,risk:-15},con:{t:'pos',ti:'Infraestructura Sólida',bo:'<b style="color:#00c896">Compliance al máximo.</b> El LP hace due diligence legal y queda 100% satisfecho. Inversión que se paga sola en confianza.'}},
+    {k:'B',lbl:'Solución parcial (USD 2.000)',dsc:'Resolver lo urgente. El resto espera capital adicional.',fx:{aum:-2000,cmp:8,risk:-5},con:{t:'neu',ti:'Solución Provisional',bo:'Lo urgente resuelto. Quedan puntos pendientes para turno 4. El LP acepta pero señala que necesita resolución completa antes de firmar.'}},
+    {k:'C',lbl:'Ignorar — sin capital suficiente',dsc:'Priorizar el LP y resolver con ese capital.',fx:{cmp:-15,risk:15,rep:-5},con:{t:'neg',ti:'Riesgo Estructural Alto',bo:'<b style="color:#e84040">PELIGROSO.</b> Rodrigo detecta el gap en su propio due diligence. Proceso en pausa.'}},
+  ]}
+],
+4:[
+  {id:'dd4',cat:'MERCADO',urg:'high',edu:'drawdown',title:'Primer Drawdown Real',
+   desc:'Un trade en GBP/CAD salió mal. -USD 3.500. Primer drawdown real con capital propio. Marcelo lo está viendo en tiempo real.',
+   opts:[
+    {k:'A',lbl:'Comunicar proactivamente',dsc:'Llamar a Marcelo antes de que pregunte.',fx:{rep:10,mor:5,cmp:5},con:{t:'pos',ti:'Gestión Profesional del Drawdown',bo:'Marcelo queda <b style="color:#00c896">impresionado.</b> "Todos pierden. Los profesionales lo comunican antes de que yo pregunte." Confianza reforzada.'}},
+    {k:'B',lbl:'No comunicar — esperar recuperación',dsc:'El drawdown es pequeño. Lo recuperás y nadie nota.',fx:{rep:-5,mor:-5,cmp:-5},con:{t:'neg',ti:'Oportunidad Perdida',bo:'Marcelo pregunta la semana siguiente. <b style="color:#e84040">La falta de comunicación lo incomoda.</b> "Si no comunica pérdidas pequeñas, ¿qué pasa en una crisis?"'}},
+    {k:'C',lbl:'Ajustar el sistema de riesgo',dsc:'Usar el drawdown como feedback del proceso.',fx:{risk:-10,cmp:5,mor:8},con:{t:'pos',ti:'Sistema Antifrágil',bo:'<b style="color:#00c896">Mejora sistémica.</b> Parámetros de riesgo optimizados. La disciplina de revisión es exactamente lo que los LPs quieren ver.'}},
+  ]},
+  {id:'lp4',cat:'INVERSORES',urg:'med',edu:'lp_rep',title:'Segunda Reunión con LP Uruguayo',
+   desc:'Rodrigo pide update formal: P&L, posiciones, compliance y proyección a 12 meses. Esta reunión puede destrabar la firma del Term Sheet.',
+   opts:[
+    {k:'A',lbl:'Presentación institucional completa',dsc:'P&L real, métricas de riesgo, proyecciones conservadoras.',fx:{rep:15,cmp:8,mor:8},con:{t:'pos',ti:'Gestión Institucional Demostrada',bo:'<b style="color:#00c896">Rodrigo queda altamente satisfecho.</b> "Esto es exactamente lo que espero." Proceso de firma del Term Sheet se activa para turno 5.'}},
+    {k:'B',lbl:'Datos reales sin proyecciones',dsc:'Lo que hay, sin adornar. Honesto pero básico.',fx:{rep:5,cmp:5},con:{t:'neu',ti:'Honesto pero Insuficiente',bo:'Rodrigo aprecia la honestidad pero esperaba más preparación. El Term Sheet se pospone a turno 6.'}},
+    {k:'C',lbl:'Proyecciones agresivas para impresionar',dsc:'Mostrar upside alto basado en backtesting.',fx:{rep:-12,cmp:-15,risk:10},con:{t:'neg',ti:'Credibilidad Dañada',bo:'<b style="color:#e84040">Rodrigo reconoce las proyecciones infladas.</b> El proceso se pausa.'}},
+  ]}
+],
+5:[
+  {id:'ts5',cat:'INVERSORES',urg:'high',edu:'fees',title:'Term Sheet — Firma del Primer LP',
+   desc:'Rodrigo listo para firmar. Términos: 1.5%+15%, hurdle 6%, HWM, lock-up 6 meses. Condición extra: informe mensual de gestión de riesgo.',
+   opts:[
+    {k:'A',lbl:'Aceptar todos los términos — firmar',dsc:'Informe mensual incluido. USD 100k entra al fondo.',fx:{lp:100000,rep:20,cmp:10,mor:15},con:{t:'pos',ti:'PRIMER LP INSTITUCIONAL FIRMADO',bo:'<b style="color:#00c896">AUM: USD 150.000</b> (50k propio + 100k LP). La era de incubación termina. El informe mensual es una inversión en relación, no una carga.'}},
+    {k:'B',lbl:'Negociar: informe trimestral',dsc:'Menos overhead operativo.',fx:{rep:-5,mor:-3},con:{t:'neu',ti:'Negociación Razonable',bo:'Rodrigo acepta el trimestral. Firma igual. AUM: USD 150k. Relación levemente tensionada.'}},
+    {k:'C',lbl:'Rechazar — intentar subir fee a 2%',dsc:'Intentar mejorar las economics del fondo.',fx:{rep:-8},con:{t:'neg',ti:'Error de Prioridades',bo:'<b style="color:#e84040">Rodrigo retira la oferta.</b> "Prioriza fees sobre el capital." El capital importa más que los fees en incubación.'}},
+  ]},
+  {id:'fed5',cat:'MACRO',urg:'med',edu:'fed_rates',title:'Fed — Señal Dovish',
+   desc:'La Fed señaliza posibles recortes de tasa en 2025. Los mercados anticipan rally en bonos. Tu lado BALANCEADO (UST 20%) puede beneficiarse.',
+   opts:[
+    {k:'A',lbl:'Incrementar UST a 35% del portfolio',dsc:'De 20% a 35%. Capturar rally anticipatorio.',fx:{risk:8,mor:5},roll:{p:.70,win:9000,los:-4000,rw:8,rl:-4},con:null},
+    {k:'B',lbl:'Mantener posición — observar',dsc:'El mercado puede revertir si la Fed cambia el tono.',fx:{cmp:5},con:{t:'neu',ti:'Paciencia Estratégica',bo:'UST sube +4% sin vos. Sin pérdidas adicionales. La paciencia también es una posición.'}},
+    {k:'C',lbl:'Rebalancear: reducir FX, cargar bonos',dsc:'Macro guide sobre technical setup.',fx:{risk:-8,rep:5},roll:{p:.65,win:6000,los:-2000,rw:6,rl:-3},con:null},
+  ]}
+],
+6:[
+  {id:'hire6',cat:'INTERNO',urg:'med',edu:'team',title:'Primer Hire: Analista Junior',
+   desc:'Estudiante de CFA Level II con Python y análisis fundamental te contacta. Propone equity 0.5% o salario USD 800/mes. El AUM puede absorberlo.',
+   opts:[
+    {k:'A',lbl:'Contratar con salario (USD 800/mes)',dsc:'Relación profesional clara. Sin equity comprometido.',fx:{aum:-1600,mor:12,rep:8,cmp:5},con:{t:'pos',ti:'Primer Integrante del Equipo',bo:'<b style="color:#00c896">Moral arriba.</b> Informes más profesionales. Los LPs ven esto como señal de madurez institucional.'}},
+    {k:'B',lbl:'Equity deal (0.5% del fondo)',dsc:'Sin costo mensual. Alineación de largo plazo.',fx:{mor:8,rep:5},con:{t:'neu',ti:'Equity Alignment',bo:'El analista está motivado. 0.5% puede complicar rondas futuras de LP — revisá con el asesor legal.'}},
+    {k:'C',lbl:'Rechazar — operar solo por ahora',dsc:'El AUM todavía no justifica el overhead.',fx:{mor:-5,cmp:-3},con:{t:'neu',ti:'Operación Lean',bo:'En turno 7 aparece una oportunidad que no podés aprovechar por capacidad limitada.'}},
+  ]},
+  {id:'cr6',cat:'MACRO',urg:'high',edu:'ar_macro',title:'Crisis Macro Argentina',
+   desc:'El BCRA anuncia restricciones cambiarias inesperadas. CEDEARs e instrumentos en pesos bajo turbulencia. El LP uruguayo llama para entender la exposición.',
+   opts:[
+    {k:'A',lbl:'Rotar hacia hard assets y USD',dsc:'Liquidar pesos. Cargar USD, oro, bonos dolarizados.',fx:{risk:-10,aum:-3000,cmp:5,mor:5},roll:{p:.62,win:6000,los:-2000,rw:8,rl:-4},con:null},
+    {k:'B',lbl:'Mantener y esperar normalización',dsc:'Las restricciones son temporales.',fx:{risk:12,mor:-8},con:{t:'neu',ti:'Paciencia en Crisis',bo:'Crisis se extiende 3 semanas. CEDEARs caen -12% en pesos pero se sostienen en USD. El LP llama tranquilo.'}},
+    {k:'C',lbl:'Comunicar crisis al LP con plan',dsc:'Proactividad total. El LP sabe antes de preguntar.',fx:{rep:12,cmp:8,mor:8},con:{t:'pos',ti:'Gestión de Crisis Profesional',bo:'<b style="color:#00c896">El LP felicita la comunicación.</b> "Supe de la crisis por vos antes de leerlo en Bloomberg."'}},
+  ]}
+]
+};
+
+const GL={
+lp_ddq:{ti:'LP y Due Diligence',su:'Qué es un LP y por qué el DDQ importa tanto',bo:'<b>LP (Limited Partner)</b> es el inversor que aporta capital. No gestiona. Vos sos el <b>GP (General Partner)</b> — tomás las decisiones.<br><br>El <b>DDQ</b> es el cuestionario que el LP usa para evaluar si confía en vos: AUM gestionado, estrategias de riesgo, auditoría, compliance, track record.<br><br><b>Regla de oro:</b> Un LP institucional prefiere esperar 4 semanas y recibir un DDQ impecable, antes que avanzar rápido con documentación incompleta.'},
+track_record:{ti:'Track Record',su:'El activo más valioso de un gestor',bo:'El track record es el historial de performance auditado. Es LA métrica que los LPs usan para decidir.<br><br><b>Errores comunes:</b><br>• Confundir backtesting con track record real = fraude<br>• Track record en cuentas demo: válido como aprendizaje, NO como historial institucional<br><br><b>Cómo comunicarlo bien:</b> "Tengo 14 meses verificables: 8m demo +18%, 6m real +11%. Estoy en construcción de track record." Honesto, profesional.'},
+pos_sizing:{ti:'Position Sizing y Riesgo',su:'Cuánto capital asignar por trade',bo:'El <b>position sizing</b> es cuánto capital asignás a cada trade. Es la decisión más importante en trading institucional.<br><br><b>Regla del 2%:</b> Nunca arriesgues más del 2% del AUM por trade. Con USD 50k: max pérdida por trade = USD 1.000.<br><br><b>R/R:</b> Si el stop es USD 1.000 y el objetivo USD 3.000 → R/R 1:3. Mínimo aceptable: 1:2.<br><br>Para fondos con capital de terceros: los LPs miran el drawdown máximo, no solo el retorno.'},
+pitch:{ti:'El Pitch a Inversores',su:'Cómo presentar un fondo emergente',bo:'Los inversores sofisticados buscan:<br><br><b>1. Proceso claro:</b> ¿Cómo tomás decisiones? ¿Tenés sistema?<br><b>2. Gestión de riesgo:</b> ¿Qué hacés cuando el mercado va en tu contra?<br><b>3. Honestidad sobre la etapa:</b> No infles lo que tenés.<br><b>4. Skin in the game:</b> ¿Tenés tu propio capital en el fondo?<br><br><b>Error fatal:</b> Proyecciones agresivas. Los inversores saben que el futuro es incierto — quieren ver que vos también lo sabés.'},
+media_str:{ti:'Estrategia de Visibilidad',su:'Por qué los fondos serios mantienen perfil bajo',bo:'Los grandes hedge funds rara vez hacen marketing público.<br><br><b>¿Por qué?</b><br>1. <b>Señal adversa:</b> Si necesitás un podcast para conseguir capital, los LPs asumen que nadie te da capital de forma privada.<br>2. <b>Riesgo regulatorio:</b> El marketing de fondos privados está regulado en muchos países.<br>3. <b>Ventaja competitiva:</b> Explicar tu estrategia públicamente es regalársela a tu competencia.<br><br><b>Excepción válida:</b> Branding personal del gestor (artículos técnicos, conferencias) separado del vehículo del fondo.'},
+fund_str:{ti:'Estructura Legal del Fondo',su:'Vehículo Uruguay y obligaciones',bo:'La estructura AR+UY es profesionalmente elegante.<br><br><b>IRAE:</b> Impuesto a la Renta de Actividades Económicas. Los fondos tienen tratamientos especiales que cambian con regulaciones.<br><br><b>Regla de oro:</b> El compliance legal es el costo de operar profesionalmente. USD 5.000 hoy evita USD 50.000 en problemas mañana.<br><br>El LP uruguayo hace due diligence legal propio. Si detecta gaps, pausa el proceso inmediatamente.'},
+drawdown:{ti:'Gestión del Drawdown',su:'Cómo los profesionales manejan las pérdidas',bo:'Un <b>drawdown</b> es la caída desde el máximo hasta un punto inferior. Es inevitable en cualquier estrategia.<br><br><b>Métricas clave:</b><br>• Maximum Drawdown (MaxDD)<br>• Recovery time<br>• Calmar Ratio: retorno anual / MaxDD<br><br><b>Para LPs, el drawdown importa MÁS que el retorno.</b> 20% con MaxDD 30% es peor que 15% con MaxDD 10%.<br><br>Comunicación proactiva durante un drawdown es una de las señales más fuertes de profesionalismo.'},
+lp_rep:{ti:'LP Reporting',su:'El contrato de confianza',bo:'El reporting periódico al LP es la base de la relación.<br><br><b>Reporte mensual estándar:</b><br>• P&L del mes vs benchmark<br>• Posiciones actuales (top 10)<br>• Métricas de riesgo (VaR, MaxDD, Sharpe)<br>• Commentary de mercado + outlook<br><br><b>Regla de oro:</b> El LP nunca debe enterarse de algo malo por terceros. Comunicación proactiva = reputación de largo plazo.'},
+fees:{ti:'Term Sheet — Fees y Estructura',su:'Cómo funcionan los fees de un hedge fund',bo:'<b>Management Fee (1.5%):</b> Sobre el AUM anualmente. Con USD 150k → USD 2.250/año. Cubre costos operativos.<br><br><b>Performance Fee (15%):</b> Solo si superás el <b>hurdle rate (6%)</b>. Si rendís 15%: cobrás 15% de (15%-6%) sobre AUM.<br><br><b>High Water Mark (HWM):</b> Solo cobrás performance fee sobre nuevos máximos.<br><br><b>Lock-up 6 meses:</b> El LP no puede retirar antes. Protege tu operativa.'},
+fed_rates:{ti:'Fed y Tasas de Interés',su:'Cómo la Fed mueve los mercados globales',bo:'<b>Impacto en activos:</b><br>• Tasas bajan → Bonos suben (precio inverso al yield)<br>• Tasas bajan → Acciones suben<br>• Tasas bajan → USD baja → Gold sube<br><br><b>Para tu BARBELL:</b><br>• Señal dovish → incrementar UST<br>• Señal hawkish → reducir duración, rotar a FX y commodities<br><br>"Comprar el rumor, vender el hecho" — las señales dovish a veces ya están priceadas.'},
+team:{ti:'Construir el Equipo',su:'El primer hire en un fondo emergente',bo:'<b>Skills prioritarias:</b><br>• Análisis cuantitativo / Python<br>• Reporting y Excel avanzado<br>• Compliance y procesos<br><br><b>Equity vs. salario:</b><br>• Salario → relación profesional clara, más control sobre cap table<br>• Equity → alineación larga, pero complica rondas futuras de LP<br><br>El primer hire debe multiplicar tu capacidad sin multiplicar tu riesgo de compliance.'},
+ar_macro:{ti:'Macro Argentina',su:'Operar en un ambiente de alto riesgo soberano',bo:'Argentina es uno de los ambientes macro más complejos del mundo. Para ZAR Capital, es riesgo y oportunidad simultánea.<br><br><b>Tu BARBELL como protección:</b><br>• 60% en instrumentos dolarizados → hedge natural<br>• 40% activo → captura volatilidad como oportunidad<br><br>El vehículo Uruguay aísla el riesgo regulatorio local — exactamente la estructura correcta para operar desde AR con capital internacional.'}
+};
+
+// ── UTILS ───────────────────────────────────────────────────
+function fmtA(v){const a=Math.abs(v),s=v<0?'-':'';if(a>=1e6)return s+'$'+(a/1e6).toFixed(1)+'M';if(a>=1000)return s+'$'+Math.round(a/1000)+'K';return s+'$'+a;}
+function clp(v){return Math.max(0,Math.min(100,Math.round(v)));}
+function $i(id){return document.getElementById(id);}
+function upM(id,bid,v,c){v=clp(v);$i(id).textContent=v;$i(id).style.color=c;$i(bid).style.width=v+'%';$i(bid).style.background=c;}
+
+// ── PERSISTENCE ─────────────────────────────────────────────
+function saveState(){
+  try{
+    const toSave={...S,apiKey:''};
+    localStorage.setItem(LSSAVE,JSON.stringify(toSave));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(LSSAVE);
+    if(raw){
+      const saved=JSON.parse(raw);
+      const key=S.apiKey;
+      Object.assign(S,saved);
+      if(key)S.apiKey=key;
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+// ── LEVEL SYSTEM ─────────────────────────────────────────────
+function checkLevelUp(){
+  const tot=S.aum+S.lp;
+  const cur=getLevel(tot,S.m.rep);
+  if(cur.id>S.lvId){
+    S.lvId=cur.id;
+    showLevelUp(cur);
+  }
+}
+function showLevelUp(lv){
+  $i('lu-name').textContent='NV.'+lv.id+' — '+lv.name;
+  $i('lu-name').style.color=lv.col;
+  $i('lu-desc').textContent=lv.desc;
+  const el=$i('lvup');
+  el.style.display='block';
+  el.style.animation='none';
+  requestAnimationFrame(()=>{el.style.animation='lvu .4s ease';});
+  setTimeout(()=>{el.style.display='none';},5000);
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function render(){
+  $i('h-turn').textContent=S.turn+' / '+S.tot;
+  $i('h-period').textContent=per(S.turn);
+  $i('h-phase').textContent=phase(S.turn);
+  const tot=S.aum+S.lp;
+  $i('m-aum').textContent=fmtA(tot);
+  $i('m-aum-sub').textContent=S.pend>0?'+'+fmtA(S.pend)+' pend.':'';
+  upM('m-rep','b-rep',S.m.rep,'#4a9eff');
+  const rc=S.m.risk>65?'#e84040':S.m.risk>45?'#c89040':'#00c896';
+  upM('m-risk','b-risk',S.m.risk,rc);
+  upM('m-mor','b-mor',S.m.mor,S.m.mor>50?'#00c896':'#e84040');
+  upM('m-med','b-med',S.m.med,'#3a4f65');
+  const cc=S.m.cmp>65?'#00c896':S.m.cmp>45?'#c89040':'#e84040';
+  upM('m-cmp','b-cmp',S.m.cmp,cc);
+  $i('a-own').textContent='USD '+S.aum.toLocaleString('es-AR');
+  $i('a-lp').textContent='USD '+S.lp.toLocaleString('es-AR');
+  $i('a-pend').textContent='USD '+S.pend.toLocaleString('es-AR');
+  $i('a-tot').textContent='USD '+tot.toLocaleString('es-AR');
+  const lv=getLevel(tot,S.m.rep);
+  const prog=getLvProg(tot,S.m.rep);
+  $i('lv-badge').textContent='NV.'+lv.id+' '+lv.name.toUpperCase();
+  $i('lv-badge').style.borderColor=lv.col;
+  $i('lv-badge').style.color=lv.col;
+  $i('lv-bar').style.width=prog+'%';
+  $i('lv-bar').style.background=lv.col;
+  renderEvts();
+  const rem=S.evts.filter(e=>!e.resolved).length;
+  const done=rem===0&&S.evts.length>0;
+  $i('nxt').disabled=!done||S.turn>=S.tot;
+  $i('evrem').textContent=rem>0?rem+' evento'+(rem>1?'s':'')+' pendiente'+(rem>1?'s':''):done&&S.turn<S.tot?'Listos para avanzar':S.turn>=S.tot?'Simulación completada':'';
+  saveState();
+}
+
+function renderEvts(){
+  const ec=$i('ec');
+  if(!S.evts.length){ec.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:160px;font-family:\'Barlow Condensed\',sans-serif;font-size:13px;letter-spacing:3px;color:#1e2c3a;text-transform:uppercase">Sin eventos activos</div>';return;}
+  ec.innerHTML=S.evts.map(e=>rEvt(e)).join('');
+}
+
+function rEvt(e){
+  const uc={high:'#e84040',med:'#c89040',low:'#3a4f65'};
+  const ul={high:'URGENTE',med:'NORMAL',low:'OPCIONAL'};
+  if(e.resolved)return`<div class="evc" style="background:#0c101a;border:1px solid #1a2535;border-left:3px solid #00c896;padding:10px 12px;opacity:.4;margin-bottom:8px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#3a4f65">✓ ${e.title}</div><div style="font-size:9px;color:#1e2c3a;margin-top:2px">Decisión: "${e._ch}"</div></div>`;
+  const lc=e.urg==='high'?'#e84040':e.urg==='med'?'#c89040':'#1a2535';
+  const bsTag=e.id&&e.id.startsWith('bs_')?'<span style="font-size:8px;background:rgba(232,64,64,.12);color:#e84040;padding:1px 6px;letter-spacing:1px;margin-left:6px">CISNE NEGRO</span>':'';
+  const eb=S.edu&&e.edu?`<button onclick="showEdu('${e.edu}')" style="margin-bottom:8px;font-size:9px;padding:2px 9px;background:rgba(136,96,255,.1);border:1px solid #8860ff;color:#8860ff;cursor:pointer;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;text-transform:uppercase">Explicar concepto</button>`:'';
+  const opts=e.opts.map((o,i)=>{
+    const tags=mkTags(o.fx,o.roll);
+    return`<button class="ob" onclick="res('${e.id}',${i})"><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:#c89040;min-width:14px;line-height:1.9;flex-shrink:0">${o.k}</span><div style="flex:1;min-width:0"><div style="font-size:10px;font-weight:600;margin-bottom:1px">${o.lbl}</div><div style="font-size:9px;color:#3a4f65;line-height:1.4">${o.dsc}</div><div class="efx" style="display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;max-height:0;overflow:hidden;transition:max-height .2s">${tags}</div></div></button>`;
+  }).join('');
+  return`<div class="evc" style="background:#0c101a;border:1px solid #1a2535;border-left:3px solid ${lc};padding:12px;margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><div style="display:flex;align-items:center"><span style="font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:#3a4f65;background:#121824;padding:1px 6px">${e.cat}</span>${bsTag}</div><span style="font-size:8px;text-transform:uppercase;letter-spacing:1px;color:${uc[e.urg]||'#3a4f65'}">● ${ul[e.urg]||'NORMAL'}</span></div><div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;margin-bottom:5px">${e.title}</div><div style="font-size:10px;color:#3a4f65;line-height:1.65;margin-bottom:9px">${e.desc}</div>${eb}<div>${opts}</div></div>`;
+}
+
+function mkTags(fx,roll){
+  let t='';
+  const tag=(l,ty)=>{const c={pos:'background:rgba(0,200,150,.12);color:#00c896',neg:'background:rgba(232,64,64,.12);color:#e84040',neu:'background:rgba(74,158,255,.12);color:#4a9eff'};return`<span style="font-size:8px;padding:1px 5px;font-weight:600;letter-spacing:.5px;${c[ty]}">${l}</span>`;};
+  if(fx){
+    if(fx.lp>0)t+=tag('LP +'+fmtA(fx.lp),'pos');
+    if(fx.aum>0)t+=tag('AUM +'+fmtA(fx.aum),'pos');
+    if(fx.aum<0)t+=tag('AUM '+fmtA(fx.aum),'neg');
+    if(fx.rep>0)t+=tag('Rep +'+fx.rep,'pos');else if(fx.rep<0)t+=tag('Rep '+fx.rep,'neg');
+    if(fx.risk>0)t+=tag('Riesgo +'+fx.risk,'neg');else if(fx.risk<0)t+=tag('Riesgo '+fx.risk,'pos');
+    if(fx.mor>0)t+=tag('Moral +'+fx.mor,'pos');else if(fx.mor<0)t+=tag('Moral '+fx.mor,'neg');
+    if(fx.cmp>0)t+=tag('Compl +'+fx.cmp,'pos');else if(fx.cmp<0)t+=tag('Compl '+fx.cmp,'neg');
+  }
+  if(roll){t+=tag(Math.round(roll.p*100)+'% win','neu');t+=tag('Win '+fmtA(roll.win),'pos');t+=tag('Loss '+fmtA(roll.los),'neg');}
+  return t;
+}
+
+// ── DECISION HANDLER ─────────────────────────────────────────
+function res(eid,oi){
+  const e=S.evts.find(x=>x.id===eid);
+  if(!e||e.resolved)return;
+  const o=e.opts[oi];
+  apFx(o.fx);
+  let con=o.con;
+  if(o.roll){
+    const w=Math.random()<o.roll.p;
+    S.aum=Math.max(0,S.aum+(w?o.roll.win:o.roll.los));
+    S.m.rep=clp(S.m.rep+(w?o.roll.rw:o.roll.rl));
+    con={t:w?'pos':'neg',ti:w?'Trade Ganador':'Stop Loss Ejecutado',bo:w?`Posición cerrada con ganancia. <b style="color:#00c896">P&L: ${fmtA(o.roll.win)}</b>. El setup técnico fue correcto. Track record reforzado.`:`Stop activado. <b style="color:#e84040">P&L: ${fmtA(o.roll.los)}</b>. La pérdida estaba definida de antemano — el sistema de riesgo funcionó correctamente.`};
+  }
+  e.resolved=true;e._ch=o.lbl;S.done++;
+  addLog(e.title+': "'+o.lbl+'"');
+  checkLevelUp();
+  if(con)showM(con);
+  render();
+}
+
+function apFx(fx){
+  if(!fx)return;
+  if(fx.aum)S.aum=Math.max(0,S.aum+fx.aum);
+  if(fx.lp){S.lp+=fx.lp;S.pend=Math.max(0,S.pend-fx.lp);}
+  if(fx.rep)S.m.rep=clp(S.m.rep+fx.rep);
+  if(fx.risk)S.m.risk=clp(S.m.risk+fx.risk);
+  if(fx.mor)S.m.mor=clp(S.m.mor+fx.mor);
+  if(fx.med)S.m.med=clp(S.m.med+fx.med);
+  if(fx.cmp)S.m.cmp=clp(S.m.cmp+fx.cmp);
+}
+
+function advance(){
+  if(S.turn>=S.tot){endGame();return;}
+  S.turn++;
+  const nd=EV[S.turn];
+  S.evts=JSON.parse(JSON.stringify(nd||[genG()]));
+  saveState();
+  render();
+  $i('ep').scrollTop=0;
+}
+
+function genG(){return{id:'gen'+S.turn,cat:'GESTIÓN',urg:'med',edu:null,title:'Revisión Bimestral del Portfolio',desc:'Fin del período. Revisar la allocation BARBELL y ajustar según condiciones de mercado.',opts:[{k:'A',lbl:'Rebalancear hacia defensivo',dsc:'Reducir riesgo, reforzar compliance.',fx:{risk:-8,cmp:5},con:{t:'pos',ti:'Portfolio Ajustado',bo:'<b style="color:#00c896">Riesgo reducido.</b> LP recibe informe con satisfacción.'}},{k:'B',lbl:'Mantener allocation actual',dsc:'Mercado estable.',fx:{mor:3},con:{t:'neu',ti:'Status Quo',bo:'Portfolio sin cambios. El mercado continúa en rango.'}},{k:'C',lbl:'Incrementar lado agresivo',dsc:'Señales de momentum positivo.',fx:{risk:10},roll:{p:.50,win:5000,los:-3000,rw:5,rl:-3},con:null}],resolved:false};}
+
+function addLog(txt){
+  S.log.push({t:S.turn,p:per(S.turn),tx:txt});
+  const l=$i('zlog');
+  if(!l)return;
+  const d=document.createElement('div');
+  d.className='loge';d.style.cssText='border-bottom:1px solid #1a2535;padding:7px 0';
+  d.innerHTML=`<div style="font-size:8px;color:#c89040;text-transform:uppercase;letter-spacing:1px;margin-bottom:1px">Turno ${S.turn} — ${per(S.turn)}</div><div style="font-size:9px;color:#3a4f65;line-height:1.5">${txt}</div>`;
+  l.insertBefore(d,l.firstChild);
+}
+
+// ── MODALS ───────────────────────────────────────────────────
+function showM(con){
+  const col={pos:'#00c896',neg:'#e84040',neu:'#c89040'};
+  const c=col[con.t]||'#c89040';
+  $i('macc').style.background=c;
+  $i('mtit').textContent=con.ti;$i('mtit').style.color=c;
+  $i('msub').textContent='RESULTADO DE TU DECISIÓN';
+  $i('mbod').innerHTML=con.bo;
+  $i('zmod').style.display='flex';
+}
+function closeM(){$i('zmod').style.display='none';}
+function showEdu(key){
+  const g=GL[key];if(!g)return;
+  $i('macc').style.background='#8860ff';
+  $i('mtit').textContent=g.ti;$i('mtit').style.color='#8860ff';
+  $i('msub').textContent=g.su.toUpperCase()+' — MODO EDUCATIVO';
+  $i('mbod').innerHTML=g.bo;
+  $i('zmod').style.display='flex';
+}
+function toggleEdu(){
+  S.edu=!S.edu;
+  const b=$i('edu-btn'),d=$i('edu-dot');
+  b.style.borderColor=S.edu?'#8860ff':'#1a2535';
+  b.style.color=S.edu?'#8860ff':'#3a4f65';
+  d.style.background=S.edu?'#8860ff':'#1a2535';
+  $i('fstat').textContent=S.edu?'Modo educativo ON':'';
+  render();
+}
+
+// ── CLAUDE API ───────────────────────────────────────────────
+async function apiCall(prompt,maxTok=600){
+  if(S.demoMode||!S.apiKey)return null;
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':S.apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTok,messages:[{role:'user',content:prompt}]})
+  });
+  if(!r.ok)throw new Error('API '+r.status);
+  const d=await r.json();
+  return d.content?.[0]?.text||'';
+}
+
+async function consultAI(){
+  const ab=$i('ai-btn');
+  ab.textContent='Analizando...';ab.disabled=true;
+  const tot=S.aum+S.lp;
+  const lv=getLevel(tot,S.m.rep);
+  const pend=S.evts.filter(e=>!e.resolved).map(e=>e.title).join(', ')||'ninguno';
+  const prompt=`Sos el Asesor Ejecutivo senior de ZAR Capital Partners (hedge fund barbell Argentina/Uruguay, Meridian Strategy). El Founder & CIO es Pedro.
+
+Estado actual:
+- AUM: USD ${tot.toLocaleString()} (propio: ${S.aum.toLocaleString()}, LP: ${S.lp.toLocaleString()}, en negociación: ${S.pend.toLocaleString()})
+- Nivel: ${lv.name} (${lv.stage}) | Turno: ${S.turn}/12 | Período: ${per(S.turn)}
+- Métricas: Reputación ${S.m.rep}/100 | Riesgo ${S.m.risk}/100 | Moral ${S.m.mor}/100 | Compliance ${S.m.cmp}/100
+- Eventos pendientes: ${pend}
+
+Escribí un briefing ejecutivo personal dirigido a Pedro. Máximo 180 palabras. Tono: profesional, directo, sin preámbulos. Señalá 1-2 prioridades críticas para este período.`;
+  try{
+    const tx=await apiCall(prompt,400);
+    if(!tx){
+      $i('macc').style.background='#3a4f65';$i('mtit').textContent='Modo Demo';$i('mtit').style.color='#3a4f65';
+      $i('msub').textContent='ASESOR EJECUTIVO — SIN API KEY';
+      $i('mbod').innerHTML='Configurá tu API key de Anthropic para activar el Asesor Ejecutivo con análisis en tiempo real.';
+    }else{
+      $i('macc').style.background='#4a9eff';$i('mtit').textContent='Asesor Ejecutivo — ZAR Capital';$i('mtit').style.color='#4a9eff';
+      $i('msub').textContent='BRIEFING EJECUTIVO — '+per(S.turn).toUpperCase();
+      $i('mbod').innerHTML=tx.replace(/\n/g,'<br>');
+    }
+  }catch(e){
+    $i('macc').style.background='#e84040';$i('mtit').textContent='Error de Conexión';$i('mtit').style.color='#e84040';
+    $i('msub').textContent='VERIFICÁ TU API KEY';
+    $i('mbod').innerHTML='No se pudo conectar con la API de Anthropic. Verificá que tu API key sea correcta (sk-ant-...).<br><br><button onclick="location.reload()" style="padding:3px 10px;background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:\'IBM Plex Mono\',monospace;font-size:10px;cursor:pointer">Recargar para cambiar key</button>';
+  }
+  $i('zmod').style.display='flex';
+  ab.textContent='Asesor Ejecutivo';ab.disabled=false;
+}
+
+async function genBlackSwan(){
+  const bb=$i('bs-btn');
+  if(S.evts.some(e=>e.id&&e.id.startsWith('bs_')&&!e.resolved)){
+    showM({t:'neg',ti:'Cisne Negro ya activo',bo:'Hay un evento Cisne Negro pendiente. Resolvelo antes de generar uno nuevo.'});return;
+  }
+  bb.textContent='Generando...';bb.disabled=true;
+  const tot=S.aum+S.lp;
+  const lv=getLevel(tot,S.m.rep);
+  const prompt=`Sos el generador de eventos del simulador ZAR Capital Partners (hedge fund barbell Argentina/Uruguay, Meridian Strategy).
+
+Estado actual:
+- AUM: USD ${tot.toLocaleString()} | Nivel: ${lv.name} (${lv.stage})
+- Turno: ${S.turn}/12 | Rep: ${S.m.rep} | Riesgo: ${S.m.risk} | Compliance: ${S.m.cmp}
+
+Generá UN evento Cisne Negro: inesperado, de alto impacto, realista para el nivel actual. No puede ser predecible.
+
+Respondé ÚNICAMENTE con JSON válido, sin markdown, sin explicación extra:
+{"title":"Título breve del evento","cat":"CATEGORÍA","urg":"high","desc":"Descripción del evento en 2-3 oraciones concretas y realistas.","opts":[{"k":"A","lbl":"Opción A","dsc":"Descripción estrategia A","fx":{"rep":8,"risk":-5,"mor":3,"cmp":2}},{"k":"B","lbl":"Opción B","dsc":"Descripción estrategia B","fx":{"rep":-5,"risk":10,"mor":-3,"cmp":0}},{"k":"C","lbl":"Opción C","dsc":"Descripción estrategia C","fx":{"rep":0,"risk":-3,"mor":5,"cmp":8}}]}`;
+  try{
+    const tx=await apiCall(prompt,500);
+    if(!tx){
+      showM({t:'neu',ti:'Cisne Negro — Modo Demo',bo:'Activá tu API key para generar Cisnes Negros únicos vía Claude. En modo demo no disponible.'});
+    }else{
+      const clean=tx.replace(/```json|```/g,'').trim();
+      const ev=JSON.parse(clean);
+      ev.id='bs_'+Date.now();ev.edu=null;ev.resolved=false;
+      S.evts.unshift(ev);
+      addLog('CISNE NEGRO generado: "'+ev.title+'"');
+      render();
+      $i('ep').scrollTop=0;
+    }
+  }catch(e){
+    showM({t:'neg',ti:'Error al generar Cisne Negro',bo:'No se pudo parsear la respuesta de la API. Intentá de nuevo.<br><br>Error: '+e.message});
+  }
+  bb.textContent='Cisne Negro';bb.disabled=false;
+}
+
+// ── END GAME ─────────────────────────────────────────────────
+function endGame(){
+  const tot=S.aum+S.lp;
+  const lv=getLevel(tot,S.m.rep);
+  let rat,col;
+  if(lv.id>=4&&S.m.rep>=80){rat='Jugador de Elite Global';col='#c89040';}
+  else if(S.m.rep>=60&&tot>=150000){rat='Fondo Operacional Consolidado';col='#00c896';}
+  else if(S.m.rep>=40){rat='En Desarrollo';col='#4a9eff';}
+  else{rat='Reestructuración Necesaria';col='#e84040';}
+  localStorage.removeItem(LSSAVE);
+  $i('macc').style.background=col;
+  $i('mtit').textContent='Simulación Completa — '+rat;$i('mtit').style.color=col;
+  $i('msub').textContent='REPORTE FINAL — ZAR CAPITAL PARTNERS';
+  $i('mbod').innerHTML=`<b>Resultados — 2 años de simulación:</b><br><br>
+AUM Final: <b style="color:${col}">USD ${tot.toLocaleString('es-AR')}</b><br>
+Nivel alcanzado: <b style="color:${lv.col}">${lv.name} (${lv.stage})</b><br>
+Reputación: <b style="color:#4a9eff">${S.m.rep}/100</b><br>
+Compliance: <b style="color:${S.m.cmp>65?'#00c896':'#e84040'}">${S.m.cmp}/100</b><br>
+Moral del equipo: ${S.m.mor}/100<br>
+Decisiones tomadas: ${S.done}<br><br>
+${tot>=200000?'<b style="color:#00c896">✓ Superaste USD 200k AUM — objetivo de incubación logrado.</b>':'<span style="color:#3a4f65">AUM por debajo del objetivo de USD 200k.</span>'}<br><br>
+<button onclick="resetGame()" style="margin-top:6px;padding:5px 16px;background:transparent;border:1px solid #c89040;color:#c89040;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px">Nueva Partida</button>`;
+  $i('zmod').style.display='flex';
+}
+
+function resetGame(){
+  localStorage.removeItem(LSSAVE);
+  location.reload();
+}
+
+// ── SETUP / LAUNCH ───────────────────────────────────────────
+function startGame(){
+  const key=$i('key-input').value.trim();
+  if(!key||!key.startsWith('sk-ant')){$i('key-err').style.display='block';return;}
+  S.apiKey=key;
+  localStorage.setItem(LSKEY,key);
+  launchGame();
+}
+
+function startDemo(){
+  S.demoMode=true;
+  launchGame();
+}
+
+function resetAndStart(){
+  localStorage.removeItem(LSSAVE);
+  $i('resume-notice').style.display='none';
+  const key=$i('key-input').value.trim();
+  if(key&&key.startsWith('sk-ant')){S.apiKey=key;localStorage.setItem(LSKEY,key);launchGame();}
+  else{startDemo();}
+}
+
+function launchGame(){
+  const loaded=loadState();
+  if(!loaded){
+    S.evts=JSON.parse(JSON.stringify(EV[1]));
+  }
+  $i('setup').style.display='none';
+  $i('main').style.display='flex';
+  if(!loaded){
+    addLog('ZAR Capital Partners iniciado. Capital propio: USD 50.000. Meridian Strategy (BARBELL) activa. LP uruguayo en negociación.');
+  }
+  render();
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+(function(){
+  const savedKey=localStorage.getItem(LSKEY);
+  const hasSave=!!localStorage.getItem(LSSAVE);
+  if(savedKey)$i('key-input').value=savedKey;
+  if(hasSave)$i('resume-notice').style.display='block';
+  if(hasSave&&savedKey){S.apiKey=savedKey;launchGame();}
+})();
+</script>
+</body>
+</html>
