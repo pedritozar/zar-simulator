@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZAR Capital — WorldMonitor 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Barlow+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;overflow:hidden;height:100vh;width:100vw}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#1e2c3a}
+#globe-wrap{position:fixed;inset:0;top:44px;z-index:1}
+.panel{position:fixed;background:rgba(7,9,14,0.92);border:1px solid #1a2535;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:10}
+.btn{background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;transition:all .2s}
+.btn:hover{border-color:#c89040;color:#c89040}
+.layer-row{display:flex;align-items:center;gap:7px;padding:5px 10px;cursor:pointer;border-bottom:1px solid #0f1620;transition:background .15s;user-select:none}
+.layer-row:hover{background:#121824}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:opacity .2s}
+.ev-row{padding:8px 10px;border-bottom:1px solid #0f1620;cursor:pointer;transition:background .15s}
+.ev-row:hover{background:#121824}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.loading-spin{animation:spin 1s linear infinite;display:inline-block}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div style="position:fixed;top:0;left:0;right:0;height:44px;background:#0c101a;border-bottom:1px solid #1a2535;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:20">
+  <div style="display:flex;align-items:center;gap:14px">
+    <div>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;letter-spacing:3px;color:#c89040">ZAR CAPITAL PARTNERS</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;color:#3a4f65;margin-left:10px">WORLDMONITOR 3D</span>
+    </div>
+    <div id="sim-status" style="font-size:8px;color:#3a4f65;letter-spacing:1px;border:1px solid #1a2535;padding:2px 8px">○ CARGANDO...</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div id="world-clock" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#3a4f65;letter-spacing:2px"></div>
+    <div id="market-status" style="font-size:8px;padding:2px 8px;border:1px solid #1a2535;color:#3a4f65;letter-spacing:1px"></div>
+    <a href="zar_capital_simulator.html" style="font-size:9px;padding:3px 10px;background:transparent;border:1px solid #c89040;color:#c89040;text-decoration:none;letter-spacing:1px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;transition:all .2s" onmouseover="this.style.background='rgba(200,144,64,.1)'" onmouseout="this.style.background='transparent'">← Simulador</a>
+  </div>
+</div>
+
+<!-- GLOBE -->
+<div id="globe-wrap"></div>
+
+<!-- LEFT PANEL: LAYERS + FUND STATE -->
+<div class="panel" style="top:60px;left:12px;width:210px">
+
+  <div style="padding:7px 10px;border-bottom:1px solid #1a2535;font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Capas del Mapa</div>
+
+  <div class="layer-row" onclick="toggleLayer('portfolio')">
+    <div class="ldot" id="dot-portfolio" style="background:#4a9eff"></div>
+    <span style="font-size:9px;flex:1">Portfolio ZAR</span>
+    <span id="ind-portfolio" style="font-size:9px;color:#00c896">ON</span>
+  </div>
+  <div class="layer-row" onclick="toggleLayer('hq')">
+    <div class="ldot" id="dot-hq" style="background:#c89040"></div>
+    <span style="font-size:9px;flex:1">Sedes del Fondo</span>
+    <span id="ind-hq" style="font-size:9px;color:#00c896">ON</span>
+  </div>
+  <div class="layer-row" onclick="toggleLayer('routes')">
+    <div class="ldot" id="dot-routes" style="background:#4a9eff;border-radius:2px"></div>
+    <span style="font-size:9px;flex:1">Rutas de Capital</span>
+    <span id="ind-routes" style="font-size:9px;color:#00c896">ON</span>
+  </div>
+  <div class="layer-row" onclick="toggleLayer('conflicts')">
+    <div class="ldot" id="dot-conflicts" style="background:#e84040"></div>
+    <span style="font-size:9px;flex:1">Zonas de Conflicto</span>
+    <span id="ind-conflicts" style="font-size:9px;color:#00c896">ON</span>
+  </div>
+  <div class="layer-row" onclick="toggleLayer('events')">
+    <div class="ldot" id="dot-events" style="background:#c89040"></div>
+    <span style="font-size:9px;flex:1">Eventos del Mundo</span>
+    <span id="ind-events" style="font-size:9px;color:#00c896">ON</span>
+  </div>
+  <div class="layer-row" onclick="toggleLayer('rings')">
+    <div class="ldot" id="dot-rings" style="background:#00c896"></div>
+    <span style="font-size:9px;flex:1">Rings de Alerta</span>
+    <span id="ind-rings" style="font-size:9px;color:#3a4f65">OFF</span>
+  </div>
+
+  <div style="padding:7px 10px;border-bottom:1px solid #1a2535;border-top:1px solid #1a2535;font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-top:2px">Rotación</div>
+  <div style="padding:7px 10px;display:flex;gap:4px">
+    <button class="btn" onclick="setSpeed(0)" style="flex:1;font-size:8px">PAUSA</button>
+    <button class="btn" onclick="setSpeed(0.3)" style="flex:1;font-size:8px">0.3x</button>
+    <button class="btn" onclick="setSpeed(1.5)" style="flex:1;font-size:8px">1.5x</button>
+  </div>
+
+  <div style="padding:7px 10px;border-top:1px solid #1a2535;border-bottom:1px solid #1a2535;font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Estado del Fondo</div>
+  <div style="padding:8px 10px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:9px;color:#3a4f65">Turno</span><span id="s-turn" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#c89040">—</span></div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:9px;color:#3a4f65">AUM</span><span id="s-aum" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#c89040">—</span></div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:9px;color:#3a4f65">LP</span><span id="s-lp" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#00c896">—</span></div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:9px;color:#3a4f65">Nivel</span><span id="s-level" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#4a9eff;text-align:right;max-width:120px">—</span></div>
+    <div style="display:flex;justify-content:space-between"><span style="font-size:9px;color:#3a4f65">Reputación</span><span id="s-rep" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#4a9eff">—</span></div>
+  </div>
+
+  <div style="padding:7px 10px;border-top:1px solid #1a2535;display:flex;flex-direction:column;gap:4px">
+    <button class="btn" onclick="generateWorldEvent()" style="border-color:#e84040;color:#e84040;width:100%;padding:5px">Cisne Negro Regional</button>
+    <button class="btn" onclick="refreshSimState()" style="width:100%;padding:4px">Sincronizar Simulador</button>
+  </div>
+</div>
+
+<!-- RIGHT PANEL: EVENT FEED + DETAIL -->
+<div class="panel" style="top:60px;right:12px;width:268px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;overflow:hidden">
+  <div style="padding:7px 10px;border-bottom:1px solid #1a2535;font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;flex-shrink:0">Feed de Eventos Globales</div>
+  <div id="event-feed" style="flex:1;overflow-y:auto"></div>
+
+  <div id="detail-panel" style="display:none;border-top:2px solid #c89040;flex-shrink:0">
+    <div style="padding:7px 10px;font-size:8px;color:#c89040;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #1a2535">Marcador Seleccionado</div>
+    <div id="detail-content" style="padding:10px"></div>
+  </div>
+</div>
+
+<!-- BOTTOM STATUS BAR -->
+<div style="position:fixed;bottom:0;left:0;right:0;height:32px;background:rgba(7,9,14,0.92);border-top:1px solid #1a2535;display:flex;align-items:center;padding:0 16px;gap:24px;z-index:20;backdrop-filter:blur(8px)">
+  <span style="font-size:8px;color:#3a4f65;letter-spacing:1px">ZAR CAPITAL PARTNERS — MERIDIAN STRATEGY — WORLDMONITOR v1.0</span>
+  <span id="coord-display" style="font-size:8px;color:#1e2c3a;letter-spacing:1px;margin-left:auto">LAT — LNG —</span>
+  <span style="font-size:8px;color:#1e2c3a;letter-spacing:1px">globe.gl</span>
+</div>
+
+<script src="https://unpkg.com/globe.gl"></script>
+<script>
+
+// ── DATA ──────────────────────────────────────────────────────
+const PORTFOLIO = [
+  {lat:40.71,lng:-74.01,label:'New York',sub:'Índices US · UST 20%',alloc:'35% AUM',color:'#4a9eff',radius:.55,alt:.015,type:'portfolio'},
+  {lat:51.51,lng:-.13,label:'London',sub:'GBP/CAD · Forex activo',alloc:'12% AUM',color:'#4a9eff',radius:.38,alt:.015,type:'portfolio'},
+  {lat:41.88,lng:-87.63,label:'Chicago',sub:'Commodities · Futuros',alloc:'10% AUM',color:'#e84040',radius:.35,alt:.015,type:'portfolio'},
+  {lat:48.86,lng:2.35,label:'Frankfurt / Paris',sub:'CEDEARs Europa · ETFs',alloc:'8% AUM',color:'#4a9eff',radius:.32,alt:.015,type:'portfolio'},
+  {lat:35.69,lng:139.69,label:'Tokyo',sub:'Expansión Futura — Nivel 4',alloc:'0% AUM',color:'#1e2c3a',radius:.28,alt:.01,type:'portfolio'},
+  {lat:55.75,lng:37.62,label:'Moscow',sub:'Expansión Futura — Nivel 4',alloc:'0% AUM',color:'#1e2c3a',radius:.28,alt:.01,type:'portfolio'},
+  {lat:-33.86,lng:151.21,label:'Sydney',sub:'AUD commodities · oro',alloc:'3% AUM',color:'#e84040',radius:.25,alt:.01,type:'portfolio'},
+];
+
+const HQ = [
+  {lat:-34.60,lng:-58.38,label:'Buenos Aires',sub:'Sede Operativa — ZAR Capital Partners',alloc:'CER · CEDEARs · HQ Operativo',color:'#c89040',radius:.75,alt:.025,type:'hq'},
+  {lat:-34.90,lng:-56.20,label:'Montevideo',sub:'Vehículo Legal — Meridian Fund I',alloc:'Estructura Uruguay · LPs',color:'#c89040',radius:.55,alt:.025,type:'hq'},
+];
+
+const CONFLICTS = [
+  {lat:49.0,lng:32.0,label:'Ucrania — Conflicto Activo',sub:'Riesgo: energía, cereales, rutas terrestres',level:'CRÍTICO',color:'#e84040',radius:1.4,alt:.008,type:'conflict'},
+  {lat:31.5,lng:34.75,label:'Medio Oriente — Gaza / Líbano',sub:'Riesgo: petróleo, rutas marítimas Suez',level:'ALTO',color:'#e84040',radius:1.1,alt:.008,type:'conflict'},
+  {lat:23.7,lng:121.0,label:'Estrecho de Taiwán',sub:'Riesgo: semiconductores, rutas del Pacífico',level:'LATENTE',color:'#c89040',radius:.9,alt:.008,type:'conflict'},
+  {lat:15.0,lng:18.0,label:'Sahel — África Central',sub:'Riesgo: minerales críticos, inestabilidad',level:'MEDIO',color:'#c89040',radius:.8,alt:.008,type:'conflict'},
+  {lat:24.0,lng:54.0,label:'Golfo Pérsico',sub:'Riesgo: petróleo, tensión Irán-Arabia',level:'MEDIO',color:'#c89040',radius:.7,alt:.008,type:'conflict'},
+];
+
+const WORLD_EVENTS = [
+  {lat:38.9,lng:-77.0,label:'Fed — FOMC Decision',sub:'Tasas sin cambio. Señal dovish para H2 2025. Impacto: UST rally.',date:'Abr 2025',impact:'ALTO',color:'#4a9eff',radius:.5,alt:.02,type:'event'},
+  {lat:52.52,lng:13.40,label:'BCE — Política Monetaria',sub:'Recorte de 25bps. EUR/USD bajo presión. Oportunidad FX.',date:'Mar 2025',impact:'MEDIO',color:'#4a9eff',radius:.4,alt:.02,type:'event'},
+  {lat:-23.55,lng:-46.63,label:'Brasil — Volatilidad EM',sub:'Lula presiona al Banco Central. CEDEARs BR afectados.',date:'Abr 2025',impact:'MEDIO',color:'#c89040',radius:.45,alt:.02,type:'event'},
+  {lat:1.35,lng:103.82,label:'OPEC+ — Reunión Singapur',sub:'Recorte producción +1M bbl/día. Petróleo +8%.',date:'May 2025',impact:'ALTO',color:'#c89040',radius:.45,alt:.02,type:'event'},
+  {lat:31.23,lng:121.47,label:'China — Estímulo Fiscal',sub:'CNY 2T de estímulo. Commodities base metales disparan.',date:'Mar 2025',impact:'ALTO',color:'#4a9eff',radius:.5,alt:.02,type:'event'},
+  {lat:28.63,lng:77.22,label:'India — Bonos Soberanos',sub:'Inclusión en índice JPM. Flujos EM positivos.',date:'Jun 2025',impact:'BAJO',color:'#00c896',radius:.35,alt:.02,type:'event'},
+];
+
+const ROUTES = [
+  {startLat:-34.60,startLng:-58.38,endLat:40.71,endLng:-74.01,color:'rgba(74,158,255,.7)',label:'BA → NY · Capital Flow principal'},
+  {startLat:-34.60,startLng:-58.38,endLat:-34.90,endLng:-56.20,color:'rgba(200,144,64,.9)',label:'BA → MVD · Estructura legal'},
+  {startLat:-34.90,startLng:-56.20,endLat:40.71,endLng:-74.01,color:'rgba(200,144,64,.6)',label:'MVD → NY · Flujo LP institucional'},
+  {startLat:40.71,startLng:-74.01,endLat:51.51,endLng:-.13,color:'rgba(74,158,255,.5)',label:'NY → LON · Forex GBP/CAD'},
+  {startLat:40.71,startLng:-74.01,endLat:41.88,endLng:-87.63,color:'rgba(232,64,64,.5)',label:'NY → CHI · Commodities'},
+  {startLat:-34.60,startLng:-58.38,endLat:48.86,endLng:2.35,color:'rgba(74,158,255,.3)',label:'BA → EUR · CEDEARs Europa'},
+  {startLat:-34.60,startLng:-58.38,endLat:35.69,endLng:139.69,color:'rgba(26,37,53,.6)',label:'BA → TYO · Ruta futura Nivel 4'},
+  {startLat:-34.60,startLng:-58.38,endLat:55.75,endLng:37.62,color:'rgba(26,37,53,.6)',label:'BA → MOW · Ruta futura Nivel 4'},
+];
+
+const RINGS_DATA = [
+  {lat:-34.60,lng:-58.38,maxR:3,propagationSpeed:1.5,repeatPeriod:800,color:'#c89040'},
+  {lat:40.71,lng:-74.01,maxR:3,propagationSpeed:1.5,repeatPeriod:1000,color:'#4a9eff'},
+  {lat:49.0,lng:32.0,maxR:4,propagationSpeed:2,repeatPeriod:600,color:'#e84040'},
+];
+
+// ── STATE ─────────────────────────────────────────────────────
+const L = {portfolio:true,hq:true,routes:true,conflicts:true,events:true,rings:false};
+let world = null;
+
+// ── GLOBE ─────────────────────────────────────────────────────
+function initGlobe(){
+  world = Globe()
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+    .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+    .atmosphereColor('#0a1e3a')
+    .atmosphereAltitude(0.20)
+    .width(window.innerWidth)
+    .height(window.innerHeight - 44)
+    .pointLabel(d => tooltip(d))
+    .onPointClick(d => showDetail(d))
+    .arcLabel(d => `<div style="background:rgba(7,9,14,.95);border:1px solid #1a2535;padding:5px 9px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#c0cbd8">${d.label}</div>`)
+    .ringsData([])
+    .ringColor(() => '#c89040')
+    .ringMaxRadius('maxR')
+    .ringPropagationSpeed('propagationSpeed')
+    .ringRepeatPeriod('repeatPeriod')
+    (document.getElementById('globe-wrap'));
+
+  world.controls().autoRotate = true;
+  world.controls().autoRotateSpeed = 0.3;
+  world.controls().enableZoom = true;
+
+  // Track mouse for coordinates
+  document.getElementById('globe-wrap').addEventListener('mousemove', e => {
+    const coords = world.toGlobeCoords(e.clientX, e.clientY - 44);
+    if(coords){
+      document.getElementById('coord-display').textContent =
+        `LAT ${coords.lat.toFixed(2)}° LNG ${coords.lng.toFixed(2)}°`;
+      document.getElementById('coord-display').style.color = '#3a4f65';
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    world.width(window.innerWidth).height(window.innerHeight - 44);
+  });
+
+  updateGlobe();
+}
+
+function tooltip(d){
+  const typeLabel = {portfolio:'PORTFOLIO',hq:'SEDE',conflict:'CONFLICTO',event:'EVENTO'}[d.type]||d.type;
+  return `<div style="background:rgba(7,9,14,.96);border:1px solid ${d.color};padding:9px 13px;font-family:'IBM Plex Mono',monospace;min-width:180px;max-width:230px">
+    <div style="font-size:8px;color:${d.color};letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">${typeLabel}</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:${d.color};letter-spacing:1px;margin-bottom:3px">${d.label}</div>
+    <div style="font-size:9px;color:#c0cbd8;line-height:1.5">${d.sub||''}</div>
+    ${d.alloc?`<div style="font-size:9px;color:#3a4f65;margin-top:3px">Exposición: ${d.alloc}</div>`:''}
+    ${d.level?`<div style="font-size:9px;color:#e84040;margin-top:2px">Riesgo: ${d.level}</div>`:''}
+    ${d.impact?`<div style="font-size:9px;color:#c89040;margin-top:2px">Impacto: ${d.impact}</div>`:''}
+    ${d.date?`<div style="font-size:9px;color:#3a4f65;margin-top:2px">${d.date}</div>`:''}
+    <div style="font-size:8px;color:#1e2c3a;margin-top:5px">Click para más detalle</div>
+  </div>`;
+}
+
+function updateGlobe(){
+  if(!world)return;
+  let pts = [];
+  if(L.portfolio) pts = pts.concat(PORTFOLIO);
+  if(L.hq) pts = pts.concat(HQ);
+  if(L.conflicts) pts = pts.concat(CONFLICTS);
+  if(L.events) pts = pts.concat(WORLD_EVENTS);
+
+  world
+    .pointsData(pts)
+    .pointColor('color')
+    .pointRadius('radius')
+    .pointAltitude('alt')
+    .arcsData(L.routes ? ROUTES : [])
+    .arcColor('color')
+    .arcAltitude(0.22)
+    .arcStroke(.35)
+    .arcDashLength(.35)
+    .arcDashGap(.18)
+    .arcDashAnimateTime(2800)
+    .ringsData(L.rings ? RINGS_DATA : [])
+    .ringColor(d => d.color)
+    .ringMaxRadius('maxR')
+    .ringPropagationSpeed('propagationSpeed')
+    .ringRepeatPeriod('repeatPeriod');
+}
+
+function toggleLayer(name){
+  L[name] = !L[name];
+  const ind = document.getElementById('ind-'+name);
+  const dot = document.getElementById('dot-'+name);
+  if(ind){ind.textContent=L[name]?'ON':'OFF';ind.style.color=L[name]?'#00c896':'#3a4f65';}
+  if(dot){dot.style.opacity=L[name]?'1':'.25';}
+  updateGlobe();
+}
+
+function setSpeed(s){
+  if(!world)return;
+  world.controls().autoRotate = s > 0;
+  world.controls().autoRotateSpeed = s;
+}
+
+// ── DETAIL PANEL ─────────────────────────────────────────────
+function showDetail(d){
+  const dp = document.getElementById('detail-panel');
+  const dc = document.getElementById('detail-content');
+  dp.style.display = 'block';
+  const col = d.color || '#c0cbd8';
+  dc.innerHTML = `
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:${col};letter-spacing:1px;margin-bottom:3px">${d.label}</div>
+    <div style="font-size:9px;color:#c0cbd8;line-height:1.5;margin-bottom:6px">${d.sub||''}</div>
+    ${d.alloc?`<div style="font-size:9px;color:#3a4f65;margin-bottom:2px">Exposición: <span style="color:#c89040">${d.alloc}</span></div>`:''}
+    ${d.level?`<div style="font-size:9px;color:#3a4f65;margin-bottom:2px">Riesgo: <span style="color:#e84040">${d.level}</span></div>`:''}
+    ${d.impact?`<div style="font-size:9px;color:#3a4f65;margin-bottom:2px">Impacto: <span style="color:#c89040">${d.impact}</span></div>`:''}
+    ${d.date?`<div style="font-size:9px;color:#3a4f65;margin-bottom:6px">${d.date}</div>`:''}
+    <div style="display:flex;gap:5px;margin-top:8px">
+      <button onclick="flyTo(${d.lat},${d.lng})" style="flex:1;font-size:9px;padding:4px;background:transparent;border:1px solid #1a2535;color:#3a4f65;cursor:pointer;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;transition:all .2s" onmouseover="this.style.borderColor='#c89040';this.style.color='#c89040'" onmouseout="this.style.borderColor='#1a2535';this.style.color='#3a4f65'">Zoom</button>
+      <button onclick="injectToSim('${d.label.replace(/'/g,"\\'")}','${(d.sub||'').replace(/'/g,"\\'")}','${col}')" style="flex:2;font-size:9px;padding:4px;background:transparent;border:1px solid ${col};color:${col};cursor:pointer;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;transition:all .2s">→ Inyectar al Simulador</button>
+    </div>
+  `;
+  flyTo(d.lat, d.lng);
+}
+
+function flyTo(lat, lng){
+  if(world) world.pointOfView({lat, lng, altitude:1.8}, 1200);
+}
+
+// ── EVENT FEED ────────────────────────────────────────────────
+function renderFeed(){
+  const all = [...WORLD_EVENTS, ...CONFLICTS];
+  const feed = document.getElementById('event-feed');
+  feed.innerHTML = all.map((e,i) => `
+    <div class="ev-row" onclick='showDetail(${JSON.stringify(e).replace(/'/g,"&#39;")})'>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px">
+        <span style="font-size:9px;font-weight:600;color:${e.color};line-height:1.3;flex:1;margin-right:4px">${e.label}</span>
+        <span style="font-size:8px;color:${e.color};border:1px solid ${e.color};padding:0 4px;flex-shrink:0;letter-spacing:.5px">${e.impact||e.level||''}</span>
+      </div>
+      <div style="font-size:9px;color:#3a4f65;line-height:1.45">${e.sub}</div>
+      ${e.date?`<div style="font-size:8px;color:#1e2c3a;margin-top:2px">${e.date}</div>`:''}
+    </div>
+  `).join('');
+}
+
+// ── SIMULATOR LINK ────────────────────────────────────────────
+function refreshSimState(){
+  try{
+    const raw = localStorage.getItem('zcp_state_v3');
+    const st = document.getElementById('sim-status');
+    if(raw){
+      const sim = JSON.parse(raw);
+      const tot = (sim.aum||0) + (sim.lp||0);
+      const fmtA = v => v>=1000000?'$'+(v/1000000).toFixed(1)+'M':v>=1000?'$'+Math.round(v/1000)+'K':'$'+v;
+      document.getElementById('s-turn').textContent = (sim.turn||1)+'/12';
+      document.getElementById('s-aum').textContent = fmtA(tot);
+      document.getElementById('s-lp').textContent = fmtA(sim.lp||0);
+      document.getElementById('s-rep').textContent = (sim.m?.rep||0)+'/100';
+      const LVNAMES = ['','Analista Solitario','Firma Boutique','Hedge Fund','Jugador Global','Dinastía Estelar'];
+      document.getElementById('s-level').textContent = 'NV.'+(sim.lvId||1)+' '+(LVNAMES[sim.lvId||1]||'');
+      st.textContent = '● SIMULADOR CONECTADO';
+      st.style.color = '#00c896';
+      st.style.borderColor = '#00c896';
+
+      // Update HQ pulse based on fund level
+      const lvl = sim.lvId || 1;
+      if(lvl >= 2){
+        // Add more portfolio points based on confirmed LPs
+        updatePortfolioFromSim(sim);
+      }
+    } else {
+      st.textContent = '○ SIN PARTIDA ACTIVA';
+      st.style.color = '#3a4f65';
+      st.style.borderColor = '#1a2535';
+    }
+  }catch(e){
+    document.getElementById('sim-status').textContent = '○ ERROR';
+  }
+}
+
+function updatePortfolioFromSim(sim){
+  // Dynamic update of globe based on sim state - extend in future versions
+}
+
+function injectToSim(label, sub, color){
+  try{
+    const ev = {
+      id:'world_'+Date.now(),
+      cat:'GEOPOLÍTICO',
+      urg:'high',
+      edu:null,
+      title:'WorldMonitor: '+label,
+      desc:sub+' El WorldMonitor detectó este evento con impacto directo potencial sobre el portfolio de ZAR Capital Partners.',
+      opts:[
+        {k:'A',lbl:'Cobertura preventiva',dsc:'Ajustar exposición antes del impacto.',fx:{risk:-8,cmp:5,mor:3},con:{t:'pos',ti:'Cobertura Anticipada',bo:'Portfolio ajustado preventivamente. <b style="color:#00c896">Riesgo reducido.</b> La anticipación es la ventaja del gestor informado.'}},
+        {k:'B',lbl:'Mantener y monitorear',dsc:'El evento puede no materializarse.',fx:{risk:5},con:{t:'neu',ti:'Posición Mantenida',bo:'Decisión de esperar. El mercado digiere el evento en las próximas semanas.'}},
+        {k:'C',lbl:'Capitalizar la volatilidad',dsc:'Caos = oportunidad para el lado agresivo.',fx:{risk:15,mor:5},roll:{p:.50,win:9000,los:-5500,rw:8,rl:-6},con:null}
+      ],
+      resolved:false
+    };
+    localStorage.setItem('zcp_world_event', JSON.stringify(ev));
+
+    // Show confirmation
+    const msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#0c101a;border:1px solid #00c896;color:#00c896;font-family:"IBM Plex Mono",monospace;font-size:9px;padding:8px 16px;z-index:999;letter-spacing:1px;transition:opacity .5s';
+    msg.textContent = '✓ EVENTO INYECTADO — Abrí el Simulador para verlo';
+    document.body.appendChild(msg);
+    setTimeout(()=>{msg.style.opacity='0';setTimeout(()=>msg.remove(),600);}, 2500);
+  }catch(e){
+    alert('Error al inyectar evento.');
+  }
+}
+
+function generateWorldEvent(){
+  const pool = [
+    {label:'Terremoto Mag.7+ en Japón',sub:'Mercados asiáticos bajo presión. Yen volátil. Seguros disparan.'},
+    {label:'Colapso bancario en Europa Central',sub:'Contagio sistémico. Fuga hacia UST y oro. EUR bajo presión.'},
+    {label:'Huelga portuaria China — 30 días',sub:'Rutas comerciales del Pacífico bloqueadas. Commodities +15%.'},
+    {label:'Elecciones relámpago en Argentina',sub:'Volatilidad extrema en CER y CEDEARs locales. Riesgo país +800bps.'},
+    {label:'Escalada militar en Taiwán',sub:'Semiconductores en crisis. Tech global -12%. Fuga a bonos.'},
+    {label:'Default soberano inesperado EM',sub:'Contagio a bonos emergentes. Flujos hacia USD y UST.'},
+    {label:'Pandemia animal — impacto commodities',sub:'Proteínas y granos bajo presión. Commodities ag. +25%.'},
+    {label:'Ciberataque a SWIFT',sub:'Sistema financiero global afectado. Crypto como alternativa temporal.'},
+    {label:'Devaluación sorpresa del Yuan',sub:'FX asiático en caos. USD/CNH dispara. Exportadores chinos presionados.'},
+  ];
+  const ev = pool[Math.floor(Math.random() * pool.length)];
+  injectToSim(ev.label, ev.sub, '#e84040');
+}
+
+// ── CLOCK + MARKET STATUS ─────────────────────────────────────
+function updateClock(){
+  const now = new Date();
+  const d = now.toUTCString();
+  document.getElementById('world-clock').textContent = d.slice(5,25)+' UTC';
+
+  try{
+    const nyNow = new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
+    const t = nyNow.getHours()*60 + nyNow.getMinutes();
+    const wd = nyNow.getDay();
+    const ms = document.getElementById('market-status');
+    if(wd===0||wd===6){
+      ms.textContent='MERCADOS CERRADOS';ms.style.color='#1e2c3a';ms.style.borderColor='#1a2535';
+    } else if(t>=570&&t<960){
+      ms.textContent='● NYSE ABIERTO';ms.style.color='#00c896';ms.style.borderColor='#00c896';
+    } else if(t>=240&&t<570){
+      ms.textContent='◐ PRE-MARKET NY';ms.style.color='#c89040';ms.style.borderColor='#c89040';
+    } else if(t>=960&&t<1200){
+      ms.textContent='◑ AFTER-HOURS';ms.style.color='#c89040';ms.style.borderColor='#c89040';
+    } else {
+      ms.textContent='○ MERCADOS CERRADOS';ms.style.color='#1e2c3a';ms.style.borderColor='#1a2535';
+    }
+  }catch(e){}
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  initGlobe();
+  renderFeed();
+  refreshSimState();
+  updateClock();
+  setInterval(updateClock, 1000);
+  setInterval(refreshSimState, 4000);
+});
+</script>
+</body>
+</html>
