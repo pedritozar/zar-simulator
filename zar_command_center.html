@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZAR Capital — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Barlow+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#07090e;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#1e2c3a}
+.btn{background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;transition:all .2s}
+.btn:hover{border-color:#c89040;color:#c89040}
+.btn:disabled{opacity:.4;cursor:default}
+.btn-gold{background:#c89040;border:none;color:#000;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;cursor:pointer;transition:all .2s}
+.btn-gold:hover{background:#d4a050}
+.btn-gold:disabled{opacity:.4;cursor:default}
+input,select,textarea{background:#121824;border:1px solid #1a2535;color:#c0cbd8;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:6px 9px;outline:none;transition:border-color .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:#c89040}
+select option{background:#121824}
+label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px}
+.card{background:#0c101a;border:1px solid #1a2535;padding:12px}
+.tag{font-size:8px;padding:1px 6px;letter-spacing:.5px;font-weight:600}
+.tag-pos{background:rgba(0,200,150,.12);color:#00c896}
+.tag-neg{background:rgba(232,64,64,.12);color:#e84040}
+.tag-neu{background:rgba(74,158,255,.12);color:#4a9eff}
+.tag-warn{background:rgba(200,144,64,.12);color:#c89040}
+@keyframes fdi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.ani{animation:fdi .25s ease}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:50px;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0">
+  <div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;letter-spacing:4px;color:#c89040">ZAR CAPITAL PARTNERS</div>
+    <div style="font-size:9px;letter-spacing:2px;color:#3a4f65;text-transform:uppercase">Command Center — Gestión Institucional</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div id="fund-aum" style="text-align:right"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px">AUM Total</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#c89040">—</div></div>
+    <div id="fund-turn" style="text-align:right"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px">Turno</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">—</div></div>
+    <div style="display:flex;gap:6px">
+      <a href="zar_capital_simulator.html" style="text-decoration:none"><button class="btn" style="border-color:#c89040;color:#c89040">← Simulador</button></a>
+      <a href="worldmonitor.html" target="_blank"><button class="btn">WorldMonitor</button></a>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div style="display:flex;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0">
+  <button class="tab-btn" onclick="showTab('mesa')" id="tab-mesa" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid #c89040;color:#c89040;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Mesa de Operaciones</button>
+  <button class="tab-btn" onclick="showTab('lps')" id="tab-lps" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Pipeline Inversores</button>
+  <button class="tab-btn" onclick="showTab('cal')" id="tab-cal" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Calendario</button>
+  <button class="tab-btn" onclick="showTab('rep')" id="tab-rep" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Reportes</button>
+  <button class="tab-btn" onclick="showTab('ctas')" id="tab-ctas" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cuentas y Brokers</button>
+</div>
+
+<!-- CONTENT AREA -->
+<div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+
+<!-- ═══ MESA DE OPERACIONES ═══ -->
+<div id="tab-mesa-content" style="flex:1;overflow:hidden;display:flex">
+
+  <!-- LEFT: FORM -->
+  <div style="width:320px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
+
+    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Registrar Operación</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label>Sistema</label>
+        <select id="f-sistema">
+          <option value="TESLA">🚀 TESLA (intraday)</option>
+          <option value="MALETA">💼 MALETA (swing)</option>
+        </select>
+      </div>
+      <div>
+        <label>Dirección</label>
+        <select id="f-dir">
+          <option value="LONG">LONG</option>
+          <option value="SHORT">SHORT</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px">
+      <label>Activo / Par</label>
+      <input type="text" id="f-par" placeholder="GBP/USD, XAUUSD, US30...">
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label>Fecha Entrada</label>
+        <input type="date" id="f-fecha">
+      </div>
+      <div>
+        <label>Riesgo (%)</label>
+        <input type="number" id="f-riesgo" value="0.33" step="0.01" min="0.1" max="2">
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label>Entrada</label>
+        <input type="number" id="f-entrada" placeholder="0.0000" step="0.0001">
+      </div>
+      <div>
+        <label>Stop Loss</label>
+        <input type="number" id="f-sl" placeholder="0.0000" step="0.0001">
+      </div>
+      <div>
+        <label>Take Profit</label>
+        <input type="number" id="f-tp" placeholder="0.0000" step="0.0001">
+      </div>
+    </div>
+
+    <div id="rr-preview" style="background:#121824;border:1px solid #1a2535;padding:7px;margin-bottom:8px;display:none">
+      <div style="display:flex;justify-content:space-between">
+        <span style="font-size:9px;color:#3a4f65">R/R Teórico</span><span id="rr-val" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#c89040">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="font-size:9px;color:#3a4f65">Monto en riesgo</span><span id="rr-monto" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#e84040">—</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px">
+      <label>Link TradingView</label>
+      <input type="text" id="f-tv" placeholder="https://www.tradingview.com/x/...">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label>Nota para el equipo</label>
+      <textarea id="f-nota" rows="3" placeholder="Contexto del setup, confluencias, condiciones de mercado..."></textarea>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label>Estado actual</label>
+      <select id="f-estado">
+        <option value="EN CURSO">En curso</option>
+        <option value="GANADA">Ganada (TP)</option>
+        <option value="STOP">Stop Loss</option>
+        <option value="CANCELADA">Cancelada</option>
+      </select>
+    </div>
+
+    <div id="f-resultado-wrap" style="margin-bottom:10px;display:none">
+      <label>Resultado (%)</label>
+      <input type="number" id="f-resultado" placeholder="ej: 1.5 o -0.33" step="0.01">
+    </div>
+
+    <button class="btn-gold" onclick="registrarTrade()" style="width:100%;margin-bottom:8px">Registrar Operación</button>
+    <button class="btn" onclick="verificarConAPI()" id="btn-verify" style="width:100%">Verificar con API (Alpha Vantage)</button>
+
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #1a2535">
+      <label>Alpha Vantage API Key</label>
+      <input type="password" id="av-key" placeholder="Tu key de alphavantage.co">
+      <div style="font-size:8px;color:#1e2c3a;margin-top:3px;line-height:1.5">Gratis en alphavantage.co — detecta automáticamente si tocó TP o SL</div>
+      <button class="btn" onclick="saveAVKey()" style="width:100%;margin-top:5px">Guardar Key</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: METRICS + LOG -->
+  <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+
+    <!-- KPIs -->
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid #1a2535;flex-shrink:0">
+      <div style="padding:10px 12px;border-right:1px solid #1a2535">
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Trades</div>
+        <div id="k-total" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">0</div>
+      </div>
+      <div style="padding:10px 12px;border-right:1px solid #1a2535">
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Win Rate</div>
+        <div id="k-wr" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#00c896">—</div>
+      </div>
+      <div style="padding:10px 12px;border-right:1px solid #1a2535">
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">P&L Neto</div>
+        <div id="k-pnl" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">0R</div>
+      </div>
+      <div style="padding:10px 12px;border-right:1px solid #1a2535">
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">R/R Prom.</div>
+        <div id="k-rr" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">—</div>
+      </div>
+      <div style="padding:10px 12px;border-right:1px solid #1a2535">
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Expectancy</div>
+        <div id="k-exp" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#4a9eff">—</div>
+      </div>
+      <div style="padding:10px 12px">
+        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">En Curso</div>
+        <div id="k-open" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">0</div>
+      </div>
+    </div>
+
+    <!-- TRADE LOG -->
+    <div style="flex:1;overflow-y:auto;padding:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Bitácora del Fondo — Meridian Strategy</div>
+        <div style="display:flex;gap:6px">
+          <select id="filter-sistema" onchange="renderLog()" style="width:auto;font-size:9px;padding:3px 7px">
+            <option value="">Todos los sistemas</option>
+            <option value="TESLA">TESLA</option>
+            <option value="MALETA">MALETA</option>
+          </select>
+          <select id="filter-estado" onchange="renderLog()" style="width:auto;font-size:9px;padding:3px 7px">
+            <option value="">Todos</option>
+            <option value="EN CURSO">En curso</option>
+            <option value="GANADA">Ganadas</option>
+            <option value="STOP">Stops</option>
+          </select>
+        </div>
+      </div>
+      <div id="trade-log"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PIPELINE INVERSORES ═══ -->
+<div id="tab-lps-content" style="flex:1;overflow-y:auto;display:none;align-items:center;justify-content:center">
+  <div style="text-align:center;padding:60px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:4px;color:#1e2c3a;text-transform:uppercase;margin-bottom:8px">Pipeline de Inversores</div>
+    <div style="font-size:10px;color:#1e2c3a;letter-spacing:1px">CRM de LPs · Onboarding · Satisfacción · Riesgo de salida</div>
+    <div style="margin-top:20px;font-size:9px;color:#1a2535;border:1px solid #1a2535;display:inline-block;padding:6px 16px;letter-spacing:1px">PRÓXIMA SESIÓN</div>
+  </div>
+</div>
+
+<!-- ═══ CALENDARIO ═══ -->
+<div id="tab-cal-content" style="flex:1;overflow-y:auto;display:none;align-items:center;justify-content:center">
+  <div style="text-align:center;padding:60px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:4px;color:#1e2c3a;text-transform:uppercase;margin-bottom:8px">Calendario del Fondo</div>
+    <div style="font-size:10px;color:#1e2c3a;letter-spacing:1px">Lock-ups · Management fees · Reportes · Reuniones · Vencimientos</div>
+    <div style="margin-top:20px;font-size:9px;color:#1a2535;border:1px solid #1a2535;display:inline-block;padding:6px 16px;letter-spacing:1px">PRÓXIMA SESIÓN</div>
+  </div>
+</div>
+
+<!-- ═══ REPORTES ═══ -->
+<div id="tab-rep-content" style="flex:1;overflow-y:auto;display:none;align-items:center;justify-content:center">
+  <div style="text-align:center;padding:60px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:4px;color:#1e2c3a;text-transform:uppercase;margin-bottom:8px">Reportes & Track Record</div>
+    <div style="font-size:10px;color:#1e2c3a;letter-spacing:1px">Performance mensual · Sharpe ratio · MaxDD · Comparación benchmark</div>
+    <div style="margin-top:20px;font-size:9px;color:#1a2535;border:1px solid #1a2535;display:inline-block;padding:6px 16px;letter-spacing:1px">PRÓXIMA SESIÓN</div>
+  </div>
+</div>
+
+<!-- ═══ CUENTAS Y BROKERS ═══ -->
+<div id="tab-ctas-content" style="flex:1;overflow-y:auto;display:none;padding:14px">
+  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Estado de Cuentas — Meridian Strategy</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+    <div class="card">
+      <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">CMC Markets · Demo</div>
+      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
+      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('cmc-demo',this.value)">
+      <div style="font-size:8px;color:#1e2c3a">Estrategia: TESLA + MALETA</div>
+    </div>
+    <div class="card">
+      <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">CMC Markets · Live</div>
+      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
+      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('cmc-live',this.value)">
+      <div style="font-size:8px;color:#1e2c3a">Capital real · Gestión activa</div>
+    </div>
+    <div class="card">
+      <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">MT5 · Demo</div>
+      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
+      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('mt5-demo',this.value)">
+      <div style="font-size:8px;color:#1e2c3a">Desarrollo de sistemas</div>
+    </div>
+    <div class="card">
+      <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">MT5 · Live</div>
+      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
+      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('mt5-live',this.value)">
+      <div style="font-size:8px;color:#1e2c3a">Prop firm · Challenge activo</div>
+    </div>
+  </div>
+  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Gastos Operativos del Fondo</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    <div class="card">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:4px">Equipo (mensual)</div>
+      <input type="number" placeholder="USD 0">
+    </div>
+    <div class="card">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:4px">Costos legales UY</div>
+      <input type="number" placeholder="USD 0">
+    </div>
+    <div class="card">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:4px">Fees de brokers</div>
+      <input type="number" placeholder="USD 0">
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div id="zmod" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:100;align-items:center;justify-content:center">
+  <div style="background:#0c101a;border:1px solid #1a2535;max-width:440px;width:92%;padding:20px;max-height:85vh;overflow-y:auto">
+    <div id="macc" style="height:3px;margin:-20px -20px 14px;background:#00c896"></div>
+    <div id="mtit" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;color:#00c896"></div>
+    <div id="msub" style="font-size:9px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1a2535"></div>
+    <div id="mbod" style="font-size:11px;color:#c0cbd8;line-height:1.9"></div>
+    <button class="btn" onclick="closeM()" style="margin-top:14px">Cerrar</button>
+  </div>
+</div>
+
+<script>
+const LSCC='zcp_cc_v1';
+const LSSIM='zcp_state_v3';
+const LSAVKEY='zcp_avkey';
+
+// ── STATE ─────────────────────────────────────────────────────
+let CC={trades:[],cuentas:{}};
+
+function saveCC(){try{localStorage.setItem(LSCC,JSON.stringify(CC));}catch(e){}}
+function loadCC(){try{const r=localStorage.getItem(LSCC);if(r)CC=JSON.parse(r);}catch(e){}}
+
+// ── TABS ──────────────────────────────────────────────────────
+const TABS=['mesa','lps','cal','rep','ctas'];
+function showTab(id){
+  TABS.forEach(t=>{
+    const c=document.getElementById('tab-'+t+'-content');
+    const b=document.getElementById('tab-'+t);
+    if(c){c.style.display='none';}
+    if(b){b.style.borderBottomColor='transparent';b.style.color='#3a4f65';}
+  });
+  const el=document.getElementById('tab-'+id+'-content');
+  const btn=document.getElementById('tab-'+id);
+  if(el){el.style.display='flex';el.style.flexDirection='column';}
+  if(btn){btn.style.borderBottomColor='#c89040';btn.style.color='#c89040';}
+}
+
+// ── FUND STATE FROM SIMULATOR ──────────────────────────────────
+function loadSimState(){
+  try{
+    const r=localStorage.getItem(LSSIM);
+    if(r){
+      const s=JSON.parse(r);
+      const tot=(s.aum||0)+(s.lp||0);
+      const fmtA=v=>v>=1000000?'$'+(v/1000000).toFixed(1)+'M':v>=1000?'$'+Math.round(v/1000)+'K':'$'+v;
+      document.getElementById('fund-aum').querySelector('div:last-child').textContent=fmtA(tot);
+      document.getElementById('fund-turn').querySelector('div:last-child').textContent=(s.turn||1)+'/12';
+    }
+  }catch(e){}
+}
+
+// ── R/R PREVIEW ───────────────────────────────────────────────
+function calcRR(){
+  const entrada=parseFloat(document.getElementById('f-entrada').value);
+  const sl=parseFloat(document.getElementById('f-sl').value);
+  const tp=parseFloat(document.getElementById('f-tp').value);
+  const riesgo=parseFloat(document.getElementById('f-riesgo').value)||0.33;
+  const dir=document.getElementById('f-dir').value;
+  const wrap=document.getElementById('rr-preview');
+  if(!entrada||!sl||!tp){wrap.style.display='none';return;}
+  const slDist=Math.abs(entrada-sl);
+  const tpDist=Math.abs(tp-entrada);
+  const rr=(tpDist/slDist).toFixed(2);
+  try{
+    const sim=JSON.parse(localStorage.getItem(LSSIM)||'{}');
+    const aum=(sim.aum||50000)+(sim.lp||0);
+    const monto=((aum*riesgo)/100).toFixed(0);
+    document.getElementById('rr-monto').textContent='USD '+Number(monto).toLocaleString();
+  }catch(e){}
+  document.getElementById('rr-val').textContent='1:'+rr;
+  wrap.style.display='block';
+}
+
+['f-entrada','f-sl','f-tp','f-riesgo','f-dir'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',calcRR);
+});
+
+document.getElementById('f-estado').addEventListener('change',function(){
+  const w=document.getElementById('f-resultado-wrap');
+  w.style.display=(this.value==='GANADA'||this.value==='STOP')?'block':'none';
+});
+
+// ── REGISTER TRADE ────────────────────────────────────────────
+function registrarTrade(){
+  const par=document.getElementById('f-par').value.trim();
+  const entrada=parseFloat(document.getElementById('f-entrada').value);
+  const sl=parseFloat(document.getElementById('f-sl').value);
+  const tp=parseFloat(document.getElementById('f-tp').value);
+  if(!par||!entrada||!sl||!tp){showM({t:'neg',ti:'Datos incompletos',sub:'',bo:'Completá: Activo/Par, Entrada, SL y TP antes de registrar.'});return;}
+
+  const estado=document.getElementById('f-estado').value;
+  const resultado=parseFloat(document.getElementById('f-resultado').value)||null;
+  const riesgo=parseFloat(document.getElementById('f-riesgo').value)||0.33;
+  const slDist=Math.abs(entrada-sl);
+  const tpDist=Math.abs(tp-entrada);
+  const rrTeo=(tpDist/slDist).toFixed(2);
+
+  const trade={
+    id:'tr_'+Date.now(),
+    fecha:document.getElementById('f-fecha').value||new Date().toISOString().slice(0,10),
+    par,
+    sistema:document.getElementById('f-sistema').value,
+    dir:document.getElementById('f-dir').value,
+    entrada,sl,tp,riesgo,
+    rrTeo,
+    estado,
+    resultado,
+    tv:document.getElementById('f-tv').value.trim(),
+    nota:document.getElementById('f-nota').value.trim(),
+    ts:Date.now()
+  };
+
+  CC.trades.unshift(trade);
+  saveCC();
+
+  if((estado==='GANADA'||estado==='STOP')&&resultado!==null){
+    updateSimAUM(trade);
+  }
+
+  renderLog();
+  renderKPIs();
+  resetForm();
+  showM({t:'pos',ti:'Operación Registrada',sub:'BITÁCORA DEL FONDO',bo:`<b style="color:#00c896">${par}</b> · ${trade.sistema} · ${trade.dir}<br><br>R/R Teórico: 1:${rrTeo}<br>Estado: ${estado}<br>${resultado!==null?'Resultado: '+(resultado>0?'+':'')+resultado+'%':''}<br><br>${trade.tv?'<a href="'+trade.tv+'" style="color:#4a9eff;font-size:9px">Ver en TradingView →</a>':''}`});
+}
+
+function updateSimAUM(trade){
+  try{
+    const simRaw=localStorage.getItem(LSSIM);
+    if(!simRaw)return;
+    const sim=JSON.parse(simRaw);
+    const aum=(sim.aum||50000)+(sim.lp||0);
+    const montoRiesgo=(aum*trade.riesgo)/100;
+    let pnl=0;
+    if(trade.estado==='GANADA'){
+      pnl=montoRiesgo*parseFloat(trade.rrTeo);
+      sim.aum=Math.max(0,(sim.aum||50000)+pnl);
+      sim.m.rep=Math.min(100,(sim.m.rep||30)+3);
+      sim.m.mor=Math.min(100,(sim.m.mor||70)+5);
+    } else if(trade.estado==='STOP'){
+      pnl=-montoRiesgo;
+      sim.aum=Math.max(0,(sim.aum||50000)+pnl);
+      sim.m.risk=Math.min(100,(sim.m.risk||45)+3);
+    }
+    if(!sim.log)sim.log=[];
+    sim.log.unshift({t:sim.turn,p:'Mesa Ops',tx:`${trade.par} ${trade.dir} · ${trade.sistema} · ${trade.estado} · P&L: ${pnl>=0?'+':''}USD ${Math.abs(pnl).toFixed(0)}`});
+    localStorage.setItem(LSSIM,JSON.stringify(sim));
+    loadSimState();
+  }catch(e){}
+}
+
+// ── ALPHA VANTAGE VERIFY ───────────────────────────────────────
+async function verificarConAPI(){
+  const par=document.getElementById('f-par').value.trim();
+  const entrada=parseFloat(document.getElementById('f-entrada').value);
+  const sl=parseFloat(document.getElementById('f-sl').value);
+  const tp=parseFloat(document.getElementById('f-tp').value);
+  const fecha=document.getElementById('f-fecha').value;
+  const dir=document.getElementById('f-dir').value;
+  const avKey=localStorage.getItem(LSAVKEY)||document.getElementById('av-key').value.trim();
+  if(!par||!entrada||!sl||!tp||!fecha){showM({t:'neg',ti:'Datos incompletos',sub:'',bo:'Completá todos los campos antes de verificar con la API.'});return;}
+  if(!avKey){showM({t:'neu',ti:'API Key requerida',sub:'ALPHA VANTAGE',bo:'Ingresá tu API key de alphavantage.co en el campo de abajo. Es gratuita y tarda 2 minutos obtenerla.'});return;}
+
+  const btn=document.getElementById('btn-verify');
+  btn.textContent='Consultando...';btn.disabled=true;
+
+  try{
+    const sym=par.replace('/','').toUpperCase();
+    const url=`https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=${sym.slice(0,3)}&to_symbol=${sym.slice(3)}&apikey=${avKey}&outputsize=compact`;
+    const r=await fetch(url);
+    const d=await r.json();
+    const ts=d['Time Series FX (Daily)'];
+    if(!ts){throw new Error('Sin datos para '+par);}
+
+    const fechaEntrada=new Date(fecha);
+    const hoy=new Date();
+    let tpHit=false,slHit=false,hitDate='';
+
+    for(const [dateStr,vals] of Object.entries(ts)){
+      const dt=new Date(dateStr);
+      if(dt<=fechaEntrada)continue;
+      if(dt>hoy)continue;
+      const hi=parseFloat(vals['2. high']);
+      const lo=parseFloat(vals['3. low']);
+      if(dir==='LONG'){
+        if(hi>=tp&&!tpHit&&!slHit){tpHit=true;hitDate=dateStr;}
+        if(lo<=sl&&!tpHit&&!slHit){slHit=true;hitDate=dateStr;}
+      } else {
+        if(lo<=tp&&!tpHit&&!slHit){tpHit=true;hitDate=dateStr;}
+        if(hi>=sl&&!tpHit&&!slHit){slHit=true;hitDate=dateStr;}
+      }
+      if(tpHit||slHit)break;
+    }
+
+    if(tpHit){
+      document.getElementById('f-estado').value='GANADA';
+      document.getElementById('f-resultado-wrap').style.display='block';
+      const rrTeo=Math.abs(tp-entrada)/Math.abs(sl-entrada);
+      document.getElementById('f-resultado').value=(rrTeo*parseFloat(document.getElementById('f-riesgo').value||'0.33')).toFixed(2);
+      showM({t:'pos',ti:'TP Alcanzado',sub:'VERIFICACIÓN ALPHA VANTAGE',bo:`<b style="color:#00c896">Take Profit alcanzado el ${hitDate}</b><br><br>El precio de ${par} tocó tu objetivo de ${tp}.<br>La operación fue GANADA.`});
+    } else if(slHit){
+      document.getElementById('f-estado').value='STOP';
+      document.getElementById('f-resultado-wrap').style.display='block';
+      document.getElementById('f-resultado').value=(-parseFloat(document.getElementById('f-riesgo').value||'0.33')).toFixed(2);
+      showM({t:'neg',ti:'Stop Loss Activado',sub:'VERIFICACIÓN ALPHA VANTAGE',bo:`<b style="color:#e84040">Stop Loss activado el ${hitDate}</b><br><br>El precio de ${par} tocó tu stop de ${sl}.<br>El sistema de riesgo funcionó correctamente.`});
+    } else {
+      document.getElementById('f-estado').value='EN CURSO';
+      showM({t:'neu',ti:'Operación En Curso',sub:'VERIFICACIÓN ALPHA VANTAGE',bo:`Ni el TP (${tp}) ni el SL (${sl}) fueron tocados entre ${fecha} y hoy.<br><br>La operación sigue <b style="color:#c89040">EN CURSO</b>.`});
+    }
+  }catch(e){
+    showM({t:'neg',ti:'Error de Verificación',sub:'ALPHA VANTAGE',bo:'No se pudo verificar automáticamente.<br><br>Posibles causas:<br>• Par no soportado (probá con divisas principales: EURUSD, GBPUSD, etc.)<br>• API key inválida<br>• Límite de requests alcanzado (25/día en plan gratuito)<br><br>Podés ingresar el resultado manualmente.'});
+  }
+  btn.textContent='Verificar con API (Alpha Vantage)';btn.disabled=false;
+}
+
+function saveAVKey(){
+  const k=document.getElementById('av-key').value.trim();
+  if(!k){return;}
+  localStorage.setItem(LSAVKEY,k);
+  showM({t:'pos',ti:'API Key Guardada',sub:'ALPHA VANTAGE',bo:'Tu key quedó guardada en este dispositivo. La verificación automática de trades ya está activa.'});
+}
+
+// ── RENDER ────────────────────────────────────────────────────
+function renderKPIs(){
+  const trades=CC.trades;
+  const cerradas=trades.filter(t=>t.estado==='GANADA'||t.estado==='STOP');
+  const ganadas=trades.filter(t=>t.estado==='GANADA');
+  const enCurso=trades.filter(t=>t.estado==='EN CURSO');
+  const wr=cerradas.length>0?Math.round((ganadas.length/cerradas.length)*100):null;
+  const pnlR=cerradas.reduce((acc,t)=>{
+    if(t.resultado!=null)return acc+t.resultado;
+    return acc+(t.estado==='GANADA'?parseFloat(t.rrTeo||1):-parseFloat(t.riesgo||0.33));
+  },0);
+  const rrProm=ganadas.length>0?(ganadas.reduce((a,t)=>a+parseFloat(t.rrTeo||1),0)/ganadas.length).toFixed(2):null;
+  const exp=cerradas.length>0?(pnlR/cerradas.length).toFixed(2):null;
+
+  document.getElementById('k-total').textContent=trades.length;
+  document.getElementById('k-wr').textContent=wr!==null?wr+'%':'—';
+  document.getElementById('k-wr').style.color=wr>=50?'#00c896':'#e84040';
+  document.getElementById('k-pnl').textContent=(pnlR>=0?'+':'')+pnlR.toFixed(2)+'R';
+  document.getElementById('k-pnl').style.color=pnlR>=0?'#00c896':'#e84040';
+  document.getElementById('k-rr').textContent=rrProm?'1:'+rrProm:'—';
+  document.getElementById('k-exp').textContent=exp?(exp>=0?'+':'')+exp+'R':'—';
+  document.getElementById('k-exp').style.color=exp&&parseFloat(exp)>=0?'#00c896':'#e84040';
+  document.getElementById('k-open').textContent=enCurso.length;
+}
+
+function renderLog(){
+  const fs=document.getElementById('filter-sistema').value;
+  const fe=document.getElementById('filter-estado').value;
+  let trades=CC.trades.filter(t=>{
+    if(fs&&t.sistema!==fs)return false;
+    if(fe&&t.estado!==fe)return false;
+    return true;
+  });
+  const log=document.getElementById('trade-log');
+  if(!trades.length){log.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:120px;font-size:10px;color:#1e2c3a;letter-spacing:2px;text-transform:uppercase">Sin operaciones registradas</div>';return;}
+  const stCol={GANADA:'#00c896',STOP:'#e84040','EN CURSO':'#c89040',CANCELADA:'#3a4f65'};
+  log.innerHTML=trades.map(t=>`
+    <div class="ani" style="background:#0c101a;border:1px solid #1a2535;border-left:3px solid ${stCol[t.estado]||'#1a2535'};padding:10px 12px;margin-bottom:7px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#c0cbd8">${t.par}</span>
+          <span class="tag ${t.dir==='LONG'?'tag-pos':'tag-neg'}">${t.dir}</span>
+          <span class="tag tag-warn">${t.sistema}</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${stCol[t.estado]||'#3a4f65'}">${t.estado}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${t.resultado!=null?`<span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:${parseFloat(t.resultado)>=0?'#00c896':'#e84040'}">${parseFloat(t.resultado)>=0?'+':''}${t.resultado}%</span>`:''}
+          <span style="font-size:9px;color:#3a4f65">${t.fecha}</span>
+          <button onclick="eliminarTrade('${t.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:9px;padding:1px 4px">×</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;margin-bottom:${t.nota||t.tv?'5px':'0'}">
+        <span style="font-size:9px;color:#3a4f65">Entrada: <span style="color:#c0cbd8">${t.entrada}</span></span>
+        <span style="font-size:9px;color:#3a4f65">SL: <span style="color:#e84040">${t.sl}</span></span>
+        <span style="font-size:9px;color:#3a4f65">TP: <span style="color:#00c896">${t.tp}</span></span>
+        <span style="font-size:9px;color:#3a4f65">R/R: <span style="color:#c89040">1:${t.rrTeo}</span></span>
+        <span style="font-size:9px;color:#3a4f65">Riesgo: <span style="color:#c0cbd8">${t.riesgo}%</span></span>
+      </div>
+      ${t.nota?`<div style="font-size:9px;color:#3a4f65;line-height:1.5;margin-bottom:3px">"${t.nota}"</div>`:''}
+      ${t.tv?`<a href="${t.tv}" target="_blank" style="font-size:8px;color:#4a9eff;letter-spacing:.5px;text-decoration:none">Ver análisis en TradingView →</a>`:''}
+    </div>
+  `).join('');
+}
+
+function eliminarTrade(id){
+  CC.trades=CC.trades.filter(t=>t.id!==id);
+  saveCC();renderLog();renderKPIs();
+}
+
+function resetForm(){
+  ['f-par','f-entrada','f-sl','f-tp','f-tv','f-nota'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.value='';
+  });
+  document.getElementById('f-riesgo').value='0.33';
+  document.getElementById('f-estado').value='EN CURSO';
+  document.getElementById('f-resultado').value='';
+  document.getElementById('rr-preview').style.display='none';
+  document.getElementById('f-resultado-wrap').style.display='none';
+  const hoy=new Date().toISOString().slice(0,10);
+  document.getElementById('f-fecha').value=hoy;
+}
+
+function saveCta(id,val){
+  CC.cuentas[id]=parseFloat(val)||0;
+  saveCC();
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function showM(con){
+  const col={pos:'#00c896',neg:'#e84040',neu:'#c89040'};
+  const c=col[con.t]||'#c89040';
+  document.getElementById('macc').style.background=c;
+  document.getElementById('mtit').textContent=con.ti;document.getElementById('mtit').style.color=c;
+  document.getElementById('msub').textContent=con.sub||'ZAR CAPITAL PARTNERS';
+  document.getElementById('mbod').innerHTML=con.bo;
+  document.getElementById('zmod').style.display='flex';
+}
+function closeM(){document.getElementById('zmod').style.display='none';}
+
+// ── INIT ──────────────────────────────────────────────────────
+(function(){
+  loadCC();
+  loadSimState();
+  setInterval(loadSimState,4000);
+  const avKey=localStorage.getItem(LSAVKEY);
+  if(avKey)document.getElementById('av-key').value=avKey;
+  const hoy=new Date().toISOString().slice(0,10);
+  document.getElementById('f-fecha').value=hoy;
+  renderLog();
+  renderKPIs();
+  showTab('mesa');
+})();
+</script>
+</body>
+</html>
