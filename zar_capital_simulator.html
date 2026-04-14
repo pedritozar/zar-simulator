@@ -170,7 +170,7 @@ input:focus{border-color:#c89040}
 <script>
 const LSSAVE='zcp_state_v3';
 const LSKEY='zcp_apikey';
-const HARDKEY='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';
+
 
 // ── LEVEL SYSTEM ────────────────────────────────────────────
 const LEVELS=[
@@ -662,9 +662,15 @@ function launchGame(){
 
 // ── INIT ─────────────────────────────────────────────────────
 (function(){
-  S.apiKey=HARDKEY;
-  localStorage.setItem(LSKEY,HARDKEY);
-  launchGame();
+  const savedKey=localStorage.getItem(LSKEY);
+  const hasSave=!!localStorage.getItem(LSSAVE);
+  if(savedKey){
+    $i('key-input').value=savedKey;
+    S.apiKey=savedKey;
+    launchGame();
+  } else {
+    if(hasSave)$i('resume-notice').style.display='block';
+  }
 })();
 </script>
 </body>
