@@ -150,9 +150,37 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
     </div>
 
     <button class="btn-gold" onclick="registrarTrade()" style="width:100%;margin-bottom:8px">Registrar Operación</button>
-    <button class="btn" onclick="verificarConAPI()" id="btn-verify" style="width:100%">Verificar con API (Alpha Vantage)</button>
+    <button class="btn" onclick="verificarConAPI()" id="btn-verify" style="width:100%;margin-bottom:12px">Verificar con API (Alpha Vantage)</button>
 
-    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #1a2535">
+    <div style="border-top:1px solid #1a2535;padding-top:12px;margin-bottom:10px">
+      <div style="font-size:8px;color:#4a9eff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Equipo de Analistas</div>
+      <div style="font-size:9px;color:#3a4f65;line-height:1.6;margin-bottom:8px">Convocá al equipo de research para generar ideas de inversión. Mezclan datos macro reales con el universo del fondo.</div>
+      <div style="margin-bottom:8px">
+        <label>Enfoque del research</label>
+        <select id="research-focus">
+          <option value="macro">Macro global (Fed, BCE, commodities)</option>
+          <option value="equity">Renta variable (acciones, CEDEARs)</option>
+          <option value="fixed">Renta fija (bonos, crédito)</option>
+          <option value="private">Capital privado (PE, VC, unicornios)</option>
+          <option value="infra">Infraestructura (energía, real estate)</option>
+          <option value="geo">Geopolítica (conflictos, oportunidades)</option>
+          <option value="libre">Libre — que el equipo decida</option>
+        </select>
+      </div>
+      <div style="margin-bottom:8px">
+        <label>Modo narrativo</label>
+        <select id="research-modo">
+          <option value="real">Real — solo datos reales</option>
+          <option value="hibrido">Híbrido — real + ficción del universo</option>
+          <option value="ficcion">Ficción — universo alternativo del fondo</option>
+        </select>
+      </div>
+      <button class="btn" onclick="convocarResearch()" id="btn-research" style="width:100%;border-color:#4a9eff;color:#4a9eff;padding:6px">Convocar Research Team</button>
+    </div>
+
+    <div id="research-output" style="display:none;margin-bottom:10px"></div>
+
+    <div style="border-top:1px solid #1a2535;padding-top:10px">
       <label>Alpha Vantage API Key</label>
       <input type="password" id="av-key" placeholder="Tu key de alphavantage.co">
       <div style="font-size:8px;color:#1e2c3a;margin-top:3px;line-height:1.5">Gratis en alphavantage.co — detecta automáticamente si tocó TP o SL</div>
@@ -243,46 +271,61 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 
 <!-- ═══ CUENTAS Y BROKERS ═══ -->
 <div id="tab-ctas-content" style="flex:1;overflow-y:auto;display:none;padding:14px">
-  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Estado de Cuentas — Meridian Strategy</div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Infraestructura Financiera — ZAR Capital Partners</div>
+    <button class="btn" onclick="addBroker()" style="border-color:#c89040;color:#c89040">+ Agregar Corredor</button>
+  </div>
+
+  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Corredores & Bolsas de Ejecución</div>
+  <div id="brokers-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px"></div>
+
+  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Vehículo Legal & Custodia</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
     <div class="card">
-      <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">CMC Markets · Demo</div>
-      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
-      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('cmc-demo',this.value)">
-      <div style="font-size:8px;color:#1e2c3a">Estrategia: TESLA + MALETA</div>
+      <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Meridian Fund I — Uruguay</div>
+      <label>Capital custodiado (USD)</label>
+      <input type="number" placeholder="0" id="cta-uy" onchange="saveCtaVal('uy',this.value)" style="margin-bottom:6px">
+      <label>Banco / Custodio</label>
+      <input type="text" placeholder="Banco real o ficticio..." id="cta-uy-banco" onchange="saveCtaVal('uy-banco',this.value)">
     </div>
     <div class="card">
-      <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">CMC Markets · Live</div>
-      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
-      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('cmc-live',this.value)">
-      <div style="font-size:8px;color:#1e2c3a">Capital real · Gestión activa</div>
+      <div style="font-size:8px;color:#4a9eff;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Capital No Asignado</div>
+      <label>Efectivo disponible (USD)</label>
+      <input type="number" placeholder="0" id="cta-cash" onchange="saveCtaVal('cash',this.value)" style="margin-bottom:6px">
+      <div style="font-size:8px;color:#1e2c3a;line-height:1.5">Capital listo para desplegar en próximas oportunidades</div>
     </div>
     <div class="card">
-      <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">MT5 · Demo</div>
-      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
-      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('mt5-demo',this.value)">
-      <div style="font-size:8px;color:#1e2c3a">Desarrollo de sistemas</div>
-    </div>
-    <div class="card">
-      <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">MT5 · Live</div>
-      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">Balance</div>
-      <input type="number" placeholder="USD 0" style="margin-bottom:5px" onchange="saveCta('mt5-live',this.value)">
-      <div style="font-size:8px;color:#1e2c3a">Prop firm · Challenge activo</div>
+      <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">ZAR Capital — Buenos Aires</div>
+      <label>Sede operativa</label>
+      <input type="text" placeholder="Dirección / oficina" id="cta-ba" onchange="saveCtaVal('ba',this.value)" style="margin-bottom:6px">
+      <label>Estado operativo</label>
+      <select id="cta-ba-est" onchange="saveCtaVal('ba-est',this.value)">
+        <option>Monoambiente (Nivel 1)</option>
+        <option>Oficina boutique (Nivel 2)</option>
+        <option>Piso corporativo (Nivel 3)</option>
+        <option>Rascacielos (Nivel 4)</option>
+      </select>
     </div>
   </div>
-  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Gastos Operativos del Fondo</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+
+  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Gastos Operativos Mensuales</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
     <div class="card">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:4px">Equipo (mensual)</div>
-      <input type="number" placeholder="USD 0">
+      <label>Equipo (salarios)</label>
+      <input type="number" placeholder="USD 0" onchange="saveCtaVal('gasto-equipo',this.value)">
     </div>
     <div class="card">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:4px">Costos legales UY</div>
-      <input type="number" placeholder="USD 0">
+      <label>Estructura legal UY</label>
+      <input type="number" placeholder="USD 0" onchange="saveCtaVal('gasto-legal',this.value)">
     </div>
     <div class="card">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:4px">Fees de brokers</div>
-      <input type="number" placeholder="USD 0">
+      <label>Fees de corredores</label>
+      <input type="number" placeholder="USD 0" onchange="saveCtaVal('gasto-fees',this.value)">
+    </div>
+    <div class="card">
+      <label>Tecnología & data</label>
+      <input type="number" placeholder="USD 0" onchange="saveCtaVal('gasto-tech',this.value)">
     </div>
   </div>
 </div>
@@ -594,9 +637,111 @@ function resetForm(){
   document.getElementById('f-fecha').value=hoy;
 }
 
-function saveCta(id,val){
-  CC.cuentas[id]=parseFloat(val)||0;
+function saveCta(id,val){CC.cuentas[id]=parseFloat(val)||0;saveCC();}
+
+function saveCtaVal(key,val){if(!CC.cuentas)CC.cuentas={};CC.cuentas[key]=val;saveCC();}
+
+function addBroker(){
+  if(!CC.brokers)CC.brokers=[];
+  CC.brokers.push({id:'br_'+Date.now(),nombre:'',plaza:'',tipo:'real',balance:0,notas:''});
+  saveCC();renderBrokers();
+}
+function deleteBroker(id){CC.brokers=CC.brokers.filter(b=>b.id!==id);saveCC();renderBrokers();}
+function updateBroker(id,field,val){const b=CC.brokers&&CC.brokers.find(x=>x.id===id);if(b){b[field]=val;saveCC();}}
+
+function renderBrokers(){
+  if(!CC.brokers)CC.brokers=[];
+  const grid=document.getElementById('brokers-grid');if(!grid)return;
+  if(!CC.brokers.length){
+    grid.innerHTML=`<div class="card" style="grid-column:span 3;text-align:center;padding:20px"><div style="font-size:9px;color:#1e2c3a;letter-spacing:1px">Sin corredores — hacé clic en "+ Agregar Corredor"</div></div>`;return;
+  }
+  grid.innerHTML=CC.brokers.map(b=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span class="tag ${b.tipo==='real'?'tag-pos':'tag-neu'}">${b.tipo==='real'?'REAL':'FICTICIO'}</span>
+        <button onclick="deleteBroker('${b.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:11px">×</button>
+      </div>
+      <label>Nombre del corredor</label>
+      <input type="text" value="${b.nombre||''}" placeholder="IB, Saxo, ZAR Prime..." onchange="updateBroker('${b.id}','nombre',this.value)" style="margin-bottom:5px">
+      <label>Plaza de ejecución</label>
+      <input type="text" value="${b.plaza||''}" placeholder="NY, Londres, Moscú, Tokio..." onchange="updateBroker('${b.id}','plaza',this.value)" style="margin-bottom:5px">
+      <label>Tipo</label>
+      <select onchange="updateBroker('${b.id}','tipo',this.value);renderBrokers()" style="margin-bottom:5px">
+        <option value="real" ${b.tipo==='real'?'selected':''}>Real</option>
+        <option value="ficticio" ${b.tipo==='ficticio'?'selected':''}>Ficticio</option>
+      </select>
+      <label>Capital asignado (USD)</label>
+      <input type="number" value="${b.balance||''}" placeholder="0" onchange="updateBroker('${b.id}','balance',parseFloat(this.value)||0)" style="margin-bottom:5px">
+      <label>Notas</label>
+      <input type="text" value="${b.notas||''}" placeholder="Mercados, instrumentos..." onchange="updateBroker('${b.id}','notas',this.value)">
+    </div>
+  `).join('');
+}
+
+async function convocarResearch(){
+  const btn=document.getElementById('btn-research');
+  const out=document.getElementById('research-output');
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey){showM({t:'neu',ti:'API Key requerida',sub:'',bo:'Necesitás la API key del simulador para convocar al equipo de research.'});return;}
+  btn.textContent='Analizando...';btn.disabled=true;
+  const focus=document.getElementById('research-focus').value;
+  const modo=document.getElementById('research-modo').value;
+  const focusMap={macro:'macro global (Fed, tasas, inflación, commodities)',equity:'renta variable (acciones, ETFs, CEDEARs)',fixed:'renta fija (bonos soberanos, crédito privado)',private:'capital privado (private equity, venture capital, unicornios)',infra:'infraestructura (energía, real estate, logística)',geo:'oportunidades geopolíticas (conflictos, sanciones, apertura de mercados)',libre:'cualquier oportunidad que el equipo identifique'};
+  const modoInstr={real:'Usá solo datos y noticias reales actuales.',hibrido:'Mezclá datos macro reales con el universo ficticio del fondo ZAR Capital. Podés crear empresas o proyectos ficticios que coexisten con el mundo real.',ficcion:'Estás en el universo alternativo de ZAR Capital Partners. Inventá empresas, proyectos y oportunidades completamente ficticias pero financieramente coherentes.'};
+  let simCtx='';
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12 | Reputación: ${sim.m?.rep||30}/100`;}catch(e){}
+  const prompt=`Sos el equipo de Research & Strategy de ZAR Capital Partners (hedge fund barbell Argentina/Uruguay, Meridian Strategy).
+Estado del fondo: ${simCtx}
+Fecha: ${new Date().toLocaleDateString('es-AR')}
+Enfoque: ${focusMap[focus]}
+Modo: ${modoInstr[modo]}
+Generá exactamente 3 ideas de inversión concretas para el fondo. Respondé SOLO en JSON válido sin markdown:
+{"ideas":[{"titulo":"string","tipo":"AGRESIVO|BALANCEADO","tesis":"2 oraciones max","riesgo":"string","retorno":"string","plazo":"Corto|Mediano|Largo","modo":"real|ficticio"},{"titulo":"","tipo":"","tesis":"","riesgo":"","retorno":"","plazo":"","modo":""},{"titulo":"","tipo":"","tesis":"","riesgo":"","retorno":"","plazo":"","modo":""}]}`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const tx=d.content?.[0]?.text||'';
+    const clean=tx.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    const ideas=parsed.ideas||[];
+    out.style.display='block';
+    out.innerHTML=`<div style="font-size:8px;color:#4a9eff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;margin-top:4px">Research Team · ${new Date().toLocaleDateString('es-AR')} · Modo ${modo.toUpperCase()}</div>`+ideas.map((idea,i)=>`
+      <div class="card ani" style="margin-bottom:6px;border-left:3px solid ${idea.tipo==='AGRESIVO'?'#e84040':'#4a9eff'}" id="idea-${i}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${idea.titulo}</span>
+          <div style="display:flex;gap:4px">
+            <span class="tag ${idea.tipo==='AGRESIVO'?'tag-neg':'tag-neu'}">${idea.tipo}</span>
+            <span class="tag" style="background:rgba(255,255,255,.04);color:${idea.modo==='real'?'#00c896':'#8860ff'}">${(idea.modo||'').toUpperCase()}</span>
+          </div>
+        </div>
+        <div style="font-size:9px;color:#c0cbd8;line-height:1.5;margin-bottom:5px">${idea.tesis}</div>
+        <div style="display:flex;gap:10px;margin-bottom:4px">
+          <span style="font-size:8px;color:#3a4f65">Retorno: <span style="color:#00c896">${idea.retorno}</span></span>
+          <span style="font-size:8px;color:#3a4f65">Plazo: <span style="color:#c0cbd8">${idea.plazo}</span></span>
+        </div>
+        <div style="font-size:8px;color:#e84040;margin-bottom:6px">Riesgo: ${idea.riesgo}</div>
+        <div style="display:flex;gap:4px">
+          <button onclick="aprobarIdea(${i})" style="flex:1;padding:4px;background:rgba(0,200,150,.1);border:1px solid #00c896;color:#00c896;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px">Aprobar →</button>
+          <button onclick="rechazarIdea(${i})" style="flex:1;padding:4px;background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px">Rechazar</button>
+        </div>
+      </div>`).join('');
+    window._lastResearchIdeas=ideas;
+  }catch(e){showM({t:'neg',ti:'Error del Research Team',sub:'',bo:'No se pudo generar las ideas.<br><br>'+e.message});}
+  btn.textContent='Convocar Research Team';btn.disabled=false;
+}
+
+function aprobarIdea(i){
+  const ideas=window._lastResearchIdeas||[];const idea=ideas[i];if(!idea)return;
+  if(!CC.ideas)CC.ideas=[];
+  CC.ideas.unshift({...idea,aprobada:true,fecha:new Date().toISOString().slice(0,10),id:'idea_'+Date.now()});
   saveCC();
+  const card=document.getElementById('idea-'+i);
+  if(card){card.style.opacity='.4';card.style.borderLeftColor='#00c896';}
+  showM({t:'pos',ti:'Idea Aprobada',sub:'RESEARCH TEAM → PORTFOLIO',bo:`<b style="color:#00c896">${idea.titulo}</b> fue aprobada y agregada al portfolio del fondo.`});
+}
+function rechazarIdea(i){
+  const card=document.getElementById('idea-'+i);
+  if(card){card.style.opacity='.3';card.style.borderLeftColor='#1a2535';}
 }
 
 // ── MODAL ─────────────────────────────────────────────────────
@@ -622,6 +767,7 @@ function closeM(){document.getElementById('zmod').style.display='none';}
   document.getElementById('f-fecha').value=hoy;
   renderLog();
   renderKPIs();
+  renderBrokers();
   showTab('mesa');
 })();
 </script>
