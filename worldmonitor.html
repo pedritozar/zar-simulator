@@ -425,7 +425,7 @@ function injectToSim(label, sub, color){
 
     // Show confirmation
     const msg = document.createElement('div');
-    msg.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#0c101a;border:1px solid #00c896;color:#00c896;font-family:"IBM Plex Mono",monospace;font-size:9px;padding:8px 16px;z-index:999;letter-spacing:1px;transition:opacity .5s';
+    msg.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--bg-secondary);border:1px solid #00c896;color:#00c896;font-family:"IBM Plex Mono",monospace;font-size:9px;padding:8px 16px;z-index:999;letter-spacing:1px;transition:opacity .5s';
     msg.textContent = '✓ EVENTO INYECTADO — Abrí el Simulador para verlo';
     document.body.appendChild(msg);
     setTimeout(()=>{msg.style.opacity='0';setTimeout(()=>msg.remove(),600);}, 2500);

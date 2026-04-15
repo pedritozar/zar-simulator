@@ -1147,28 +1147,30 @@ Generá exactamente 3 ideas de inversión concretas para el fondo. Respondé SOL
     const clean=tx.replace(/```json|```/g,'').trim();
     const parsed=JSON.parse(clean);
     const ideas=parsed.ideas||[];
-    out.style.display='block';
-    out.innerHTML=`<div style="font-size:8px;color:#4a9eff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;margin-top:4px">Research Team · ${new Date().toLocaleDateString('es-AR')} · Modo ${modo.toUpperCase()}</div>`+ideas.map((idea,i)=>`
-      <div class="card ani" style="margin-bottom:6px;border-left:3px solid ${idea.tipo==='AGRESIVO'?'#e84040':'#4a9eff'}" id="idea-${i}">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${idea.titulo}</span>
+    out.style.display='none';
+    window._lastResearchIdeas=ideas;
+    const modalBody=`<div style="max-height:65vh;overflow-y:auto;padding-right:6px">`+
+      ideas.map((idea,i)=>`
+      <div style="background:var(--bg-secondary);border:1px solid var(--border);border-left:3px solid ${idea.tipo==='AGRESIVO'?'#e84040':'#4a9eff'};padding:10px 12px;margin-bottom:8px;border-radius:1px" id="idea-${i}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700">${idea.titulo}</span>
           <div style="display:flex;gap:4px">
             <span class="tag ${idea.tipo==='AGRESIVO'?'tag-neg':'tag-neu'}">${idea.tipo}</span>
             <span class="tag" style="background:rgba(255,255,255,.04);color:${idea.modo==='real'?'#00c896':'#8860ff'}">${(idea.modo||'').toUpperCase()}</span>
           </div>
         </div>
-        <div style="font-size:9px;color:var(--text-main);line-height:1.5;margin-bottom:5px">${idea.tesis}</div>
-        <div style="display:flex;gap:10px;margin-bottom:4px">
-          <span style="font-size:8px;color:var(--text-muted)">Retorno: <span style="color:#00c896">${idea.retorno}</span></span>
-          <span style="font-size:8px;color:var(--text-muted)">Plazo: <span style="color:var(--text-main)">${idea.plazo}</span></span>
+        <div style="font-size:9px;color:var(--text-main);line-height:1.6;margin-bottom:5px">${idea.tesis}</div>
+        <div style="display:flex;gap:12px;margin-bottom:4px">
+          <span style="font-size:8px;color:var(--text-muted)">Retorno: <b style="color:#00c896">${idea.retorno}</b></span>
+          <span style="font-size:8px;color:var(--text-muted)">Plazo: <b style="color:var(--text-main)">${idea.plazo}</b></span>
         </div>
-        <div style="font-size:8px;color:#e84040;margin-bottom:6px">Riesgo: ${idea.riesgo}</div>
-        <div style="display:flex;gap:4px">
-          <button onclick="aprobarIdea(${i})" style="flex:1;padding:4px;background:rgba(0,200,150,.1);border:1px solid #00c896;color:#00c896;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px">Aprobar →</button>
-          <button onclick="rechazarIdea(${i})" style="flex:1;padding:4px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px">Rechazar</button>
+        <div style="font-size:8px;color:#e84040;margin-bottom:8px">↓ Riesgo: ${idea.riesgo}</div>
+        <div style="display:flex;gap:5px">
+          <button onclick="aprobarIdea(${i})" style="flex:1;padding:5px;background:rgba(0,200,150,.1);border:1px solid #00c896;color:#00c896;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px;text-transform:uppercase">✓ Aprobar</button>
+          <button onclick="rechazarIdea(${i})" style="flex:1;padding:5px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px;text-transform:uppercase">✕ Rechazar</button>
         </div>
-      </div>`).join('');
-    window._lastResearchIdeas=ideas;
+      </div>`).join('')+`</div>`;
+    showM({t:'neu',ti:'Research Team — Ideas de Inversión',sub:new Date().toLocaleDateString('es-AR')+' · MODO '+modo.toUpperCase(),bo:modalBody});
   }catch(e){showM({t:'neg',ti:'Error del Research Team',sub:'',bo:'No se pudo generar las ideas.<br><br>'+e.message});}
   btn.textContent='Convocar Research Team';btn.disabled=false;
 }

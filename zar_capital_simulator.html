@@ -653,7 +653,7 @@ function addLog(txt){
   const l=$i('zlog');
   if(!l)return;
   const d=document.createElement('div');
-  d.className='loge';d.style.cssText='border-bottom:1px solid #1a2535;padding:7px 0';
+  d.className='loge';d.style.cssText='border-bottom:1px solid var(--border);padding:7px 0';
   d.innerHTML=`<div style="font-size:8px;color:#c89040;text-transform:uppercase;letter-spacing:1px;margin-bottom:1px">Turno ${S.turn} — ${per(S.turn)}</div><div style="font-size:9px;color:var(--text-muted);line-height:1.5">${txt}</div>`;
   l.insertBefore(d,l.firstChild);
 }
