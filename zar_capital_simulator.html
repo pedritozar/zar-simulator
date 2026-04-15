@@ -70,6 +70,7 @@ input:focus{border-color:#c89040}
       </div>
       <div id="h-phase" style="background:#121824;border:1px solid #c89040;color:#c89040;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px">INCUBACIÓN</div>
       <a href="worldmonitor.html" target="_blank" style="display:flex;align-items:center;gap:5px;padding:3px 10px;background:#121824;border:1px solid #1a2535;color:#3a4f65;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor='#4a9eff';this.style.color='#4a9eff'" onmouseout="this.style.borderColor='#1a2535';this.style.color='#3a4f65'"><span style="width:6px;height:6px;border-radius:50%;background:#4a9eff;flex-shrink:0;display:inline-block"></span>WorldMonitor 3D</a>
+      <a href="zar_command_center.html" target="_blank" style="display:flex;align-items:center;gap:5px;padding:3px 10px;background:#121824;border:1px solid #1a2535;color:#3a4f65;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor='#00c896';this.style.color='#00c896'" onmouseout="this.style.borderColor='#1a2535';this.style.color='#3a4f65'"><span style="width:6px;height:6px;border-radius:50%;background:#00c896;flex-shrink:0;display:inline-block"></span>Command Center</a>
     </div>
   </div>
 
@@ -142,6 +143,7 @@ input:focus{border-color:#c89040}
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <span id="evrem" style="font-size:9px;color:#3a4f65;letter-spacing:1px;text-transform:uppercase"></span>
+      <button class="btn" onclick="confirmReset()" style="border-color:#e84040;color:#e84040">Reset</button>
       <button id="nxt" class="btn-gold" onclick="advance()" disabled>Siguiente Bimestre</button>
     </div>
   </div>
@@ -622,7 +624,32 @@ ${tot>=200000?'<b style="color:#00c896">✓ Superaste USD 200k AUM — objetivo 
 
 function resetGame(){
   localStorage.removeItem(LSSAVE);
+  localStorage.removeItem('zcp_world_event');
   location.reload();
+}
+
+function confirmReset(){
+  $i('macc').style.background='#e84040';
+  $i('mtit').textContent='Resetear Partida';
+  $i('mtit').style.color='#e84040';
+  $i('msub').textContent='ESTA ACCIÓN NO SE PUEDE DESHACER';
+  $i('mbod').innerHTML='Vas a borrar toda la partida y empezar desde cero.<br><br><div style="display:flex;gap:8px;margin-top:10px"><button onclick="closeM()" class="btn" style="flex:1;padding:5px">Cancelar</button><button onclick="resetGame()" style="flex:2;padding:5px 14px;background:#e84040;border:none;color:#fff;font-family:\'IBM Plex Mono\',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;text-transform:uppercase">Sí, resetear</button></div>';
+  $i('zmod').style.display='flex';
+}
+
+function checkWorldEvents(){
+  try{
+    const raw=localStorage.getItem('zcp_world_event');
+    if(!raw)return;
+    const ev=JSON.parse(raw);
+    if(ev&&!S.evts.find(e=>e.id===ev.id)){
+      S.evts.unshift(ev);
+      localStorage.removeItem('zcp_world_event');
+      addLog('WorldMonitor: "'+ev.title+'" recibido');
+      render();
+      showM({t:'neu',ti:'Evento del WorldMonitor',bo:'<b style="color:#4a9eff">'+ev.title+'</b><br><br>'+ev.desc+'<br><br>El evento aparece activo en el dashboard.'});
+    }
+  }catch(e){}
 }
 
 // ── SETUP / LAUNCH ───────────────────────────────────────────
@@ -658,6 +685,7 @@ function launchGame(){
     addLog('ZAR Capital Partners iniciado. Capital propio: USD 50.000. Meridian Strategy (BARBELL) activa. LP uruguayo en negociación.');
   }
   render();
+  setInterval(checkWorldEvents, 3000);
 }
 
 // ── INIT ─────────────────────────────────────────────────────
