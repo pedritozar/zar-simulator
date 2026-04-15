@@ -51,6 +51,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 <div style="display:flex;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0">
   <button class="tab-btn" onclick="showTab('mesa')" id="tab-mesa" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid #c89040;color:#c89040;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Mesa de Operaciones</button>
   <button class="tab-btn" onclick="showTab('lps')" id="tab-lps" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Pipeline Inversores</button>
+  <button class="tab-btn" onclick="showTab('mundo')" id="tab-mundo" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Motor Global</button>
   <button class="tab-btn" onclick="showTab('cal')" id="tab-cal" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Calendario</button>
   <button class="tab-btn" onclick="showTab('rep')" id="tab-rep" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Reportes</button>
   <button class="tab-btn" onclick="showTab('ctas')" id="tab-ctas" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cuentas y Brokers</button>
@@ -243,11 +244,117 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 </div>
 
 <!-- ═══ PIPELINE INVERSORES ═══ -->
-<div id="tab-lps-content" style="flex:1;overflow-y:auto;display:none;align-items:center;justify-content:center">
-  <div style="text-align:center;padding:60px">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:4px;color:#1e2c3a;text-transform:uppercase;margin-bottom:8px">Pipeline de Inversores</div>
-    <div style="font-size:10px;color:#1e2c3a;letter-spacing:1px">CRM de LPs · Onboarding · Satisfacción · Riesgo de salida</div>
-    <div style="margin-top:20px;font-size:9px;color:#1a2535;border:1px solid #1a2535;display:inline-block;padding:6px 16px;letter-spacing:1px">PRÓXIMA SESIÓN</div>
+<div id="tab-lps-content" style="flex:1;overflow-y:auto;display:none;flex-direction:column;padding:14px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">CRM de Inversores — ZAR Capital Partners</div>
+    <button class="btn" onclick="addLP()" style="border-color:#c89040;color:#c89040">+ Agregar Inversor</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px;background:#0c101a;border:1px solid #1a2535;padding:10px">
+    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">LPs Activos</div><div id="lp-activos" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#00c896">0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">En Pipeline</div><div id="lp-pipeline" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Capital Activo</div><div id="lp-cap-activo" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">$0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Capital Pipeline</div><div id="lp-cap-pipe" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#3a4f65">$0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Satisfacción Prom.</div><div id="lp-sat" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#4a9eff">—</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">En Riesgo</div><div id="lp-riesgo" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#e84040">0</div></div>
+  </div>
+  <div id="lp-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div>
+</div>
+
+<!-- ═══ MOTOR GLOBAL ═══ -->
+<div id="tab-mundo-content" style="flex:1;overflow:hidden;display:none;flex-direction:column">
+  <div style="display:flex;flex:1;overflow:hidden">
+
+    <!-- LEFT: CONTROLS -->
+    <div style="width:280px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Motor Político-Económico Global</div>
+
+      <div style="margin-bottom:10px">
+        <label>Región del mundo</label>
+        <select id="mundo-region">
+          <option value="global">Global (todas las regiones)</option>
+          <option value="latam">América Latina</option>
+          <option value="norteamerica">América del Norte</option>
+          <option value="europa">Europa</option>
+          <option value="asia">Asia-Pacífico</option>
+          <option value="medio_oriente">Medio Oriente</option>
+          <option value="africa">África</option>
+          <option value="eurasia">Eurasia (Rusia / CEI)</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label>Sector</label>
+        <select id="mundo-sector">
+          <option value="todos">Todos los sectores</option>
+          <option value="privado">Sector privado (empresas, startups, unicornios)</option>
+          <option value="financiero">Sector financiero (bancos, fondos, fintech)</option>
+          <option value="energia">Energía (petróleo, renovables, nuclear)</option>
+          <option value="infra">Infraestructura (transporte, logística, obras)</option>
+          <option value="tech">Tecnología (IA, semiconductores, datos)</option>
+          <option value="politico">Político (elecciones, gobiernos, regímenes)</option>
+          <option value="geopolitico">Geopolítico (tensiones, alianzas, sanciones)</option>
+          <option value="comercio">Comercio (acuerdos, proteccionismo, aranceles)</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label>Orientación política</label>
+        <select id="mundo-ideo">
+          <option value="mixto">Mixto (toda la gama)</option>
+          <option value="liberal">Liberal / Pro-mercado</option>
+          <option value="intervencionista">Intervencionista / Estado presente</option>
+          <option value="populista">Populista (izquierda o derecha)</option>
+          <option value="autocratico">Autocrático / Sin elecciones</option>
+          <option value="tecnocratico">Tecnocrático / Reformista</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label>Modo narrativo</label>
+        <select id="mundo-modo">
+          <option value="hibrido">Híbrido (real + ficción del universo)</option>
+          <option value="real">Solo datos reales</option>
+          <option value="ficcion">Universo alternativo ZAR</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label>Intensidad</label>
+        <select id="mundo-intensidad">
+          <option value="normal">Normal — evolución gradual</option>
+          <option value="alta">Alta — eventos disruptivos</option>
+          <option value="crisis">Crisis — shocks sistémicos</option>
+        </select>
+      </div>
+
+      <button class="btn-gold" onclick="generarMundo()" id="btn-mundo" style="width:100%;margin-bottom:8px">Actualizar Motor Global</button>
+      <button class="btn" onclick="crearEntidadManual()" style="width:100%;margin-bottom:8px;border-color:#8860ff;color:#8860ff">+ Crear Entidad Manual</button>
+      <button class="btn" onclick="inyectarAlSimulador()" id="btn-inj" style="width:100%;border-color:#e84040;color:#e84040" disabled>→ Inyectar al Simulador</button>
+
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid #1a2535">
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:5px">Última actualización</div>
+        <div id="mundo-ts" style="font-size:9px;color:#1e2c3a">—</div>
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-top:8px;margin-bottom:5px">Entidades en el universo</div>
+        <div id="mundo-count" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#c89040">0</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: WORLD FEED -->
+    <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+      <div style="display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid #1a2535;flex-shrink:0">
+        <button onclick="filterMundo('todo')" id="mf-todo" class="btn" style="border-color:#c89040;color:#c89040">Todo</button>
+        <button onclick="filterMundo('empresa')" id="mf-empresa" class="btn">Empresas</button>
+        <button onclick="filterMundo('politico')" id="mf-politico" class="btn">Político</button>
+        <button onclick="filterMundo('geo')" id="mf-geo" class="btn">Geopolítico</button>
+        <button onclick="filterMundo('financiero')" id="mf-financiero" class="btn">Financiero</button>
+        <div style="margin-left:auto;font-size:8px;color:#3a4f65;display:flex;align-items:center;gap:6px">
+          <span id="mundo-impacto-badge" style="display:none" class="tag tag-neg">IMPACTA AL FONDO</span>
+        </div>
+      </div>
+      <div id="mundo-feed" style="flex:1;overflow-y:auto;padding:12px">
+        <div style="display:flex;align-items:center;justify-content:center;height:200px;font-size:10px;color:#1e2c3a;letter-spacing:2px;text-transform:uppercase">El motor global está en silencio — activalo para ver el mundo moverse</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -355,7 +462,7 @@ function saveCC(){try{localStorage.setItem(LSCC,JSON.stringify(CC));}catch(e){}}
 function loadCC(){try{const r=localStorage.getItem(LSCC);if(r)CC=JSON.parse(r);}catch(e){}}
 
 // ── TABS ──────────────────────────────────────────────────────
-const TABS=['mesa','lps','cal','rep','ctas'];
+const TABS=['mesa','lps','mundo','cal','rep','ctas'];
 function showTab(id){
   TABS.forEach(t=>{
     const c=document.getElementById('tab-'+t+'-content');
@@ -744,7 +851,224 @@ function rechazarIdea(i){
   if(card){card.style.opacity='.3';card.style.borderLeftColor='#1a2535';}
 }
 
-// ── MODAL ─────────────────────────────────────────────────────
+// ── PIPELINE INVERSORES ──────────────────────────────────────
+function addLP(){
+  if(!CC.lps)CC.lps=[];
+  CC.lps.unshift({id:'lp_'+Date.now(),nombre:'',tipo:'Family Office',pais:'',capital:0,etapa:'LEAD',satisfaccion:80,riesgo:'BAJO',contacto:'',notas:'',historial:[]});
+  saveCC();renderLPs();
+}
+function deleteLP(id){CC.lps=CC.lps.filter(l=>l.id!==id);saveCC();renderLPs();}
+function updateLP(id,field,val){
+  const l=CC.lps&&CC.lps.find(x=>x.id===id);
+  if(l){
+    l[field]=field==='capital'||field==='satisfaccion'?(parseFloat(val)||0):val;
+    if(field==='satisfaccion'){l.riesgo=l.satisfaccion<50?'CRÍTICO':l.satisfaccion<65?'ALTO':l.satisfaccion<80?'MEDIO':'BAJO';}
+    saveCC();renderLPKPIs();
+  }
+}
+function addContacto(id){
+  const l=CC.lps&&CC.lps.find(x=>x.id===id);
+  if(!l)return;
+  const texto=prompt('Nota de contacto:');
+  if(!texto)return;
+  if(!l.historial)l.historial=[];
+  l.historial.unshift({fecha:new Date().toISOString().slice(0,10),nota:texto});
+  saveCC();renderLPs();
+}
+
+function renderLPKPIs(){
+  if(!CC.lps)CC.lps=[];
+  const activos=CC.lps.filter(l=>l.etapa==='ACTIVO'||l.etapa==='FIRMADO');
+  const pipeline=CC.lps.filter(l=>!['ACTIVO','FIRMADO'].includes(l.etapa));
+  const fmtA=v=>v>=1000000?'$'+(v/1000000).toFixed(1)+'M':v>=1000?'$'+Math.round(v/1000)+'K':'$'+v;
+  const capActivo=activos.reduce((a,l)=>a+(l.capital||0),0);
+  const capPipe=pipeline.reduce((a,l)=>a+(l.capital||0),0);
+  const sats=CC.lps.filter(l=>l.satisfaccion>0);
+  const satProm=sats.length>0?Math.round(sats.reduce((a,l)=>a+l.satisfaccion,0)/sats.length):0;
+  const enRiesgo=CC.lps.filter(l=>l.riesgo==='CRÍTICO'||l.riesgo==='ALTO').length;
+  document.getElementById('lp-activos').textContent=activos.length;
+  document.getElementById('lp-pipeline').textContent=pipeline.length;
+  document.getElementById('lp-cap-activo').textContent=fmtA(capActivo);
+  document.getElementById('lp-cap-pipe').textContent=fmtA(capPipe);
+  document.getElementById('lp-sat').textContent=satProm>0?satProm+'/100':'—';
+  document.getElementById('lp-sat').style.color=satProm>=70?'#00c896':satProm>=50?'#c89040':'#e84040';
+  document.getElementById('lp-riesgo').textContent=enRiesgo;
+}
+
+function renderLPs(){
+  if(!CC.lps)CC.lps=[];
+  renderLPKPIs();
+  const grid=document.getElementById('lp-grid');if(!grid)return;
+  if(!CC.lps.length){
+    grid.innerHTML='<div class="card" style="grid-column:span 2;text-align:center;padding:20px"><div style="font-size:9px;color:#1e2c3a">Sin inversores en el CRM — hacé clic en "+ Agregar Inversor"</div></div>';return;
+  }
+  const etapaCol={LEAD:'#3a4f65',INTERESADO:'#c89040',DDQ:'#4a9eff',NEGOCIANDO:'#8860ff',FIRMADO:'#00c896',ACTIVO:'#00c896'};
+  const riesgoCol={BAJO:'#00c896',MEDIO:'#c89040',ALTO:'#e84040','CRÍTICO':'#e84040'};
+  grid.innerHTML=CC.lps.map(l=>`
+    <div class="card ani" style="border-left:3px solid ${etapaCol[l.etapa]||'#1a2535'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="display:flex;gap:5px;align-items:center">
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${etapaCol[l.etapa]||'#3a4f65'}">${l.etapa}</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${riesgoCol[l.riesgo]||'#3a4f65'}">RIESGO ${l.riesgo}</span>
+        </div>
+        <button onclick="deleteLP('${l.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:11px">×</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+        <div><label>Nombre / Entidad</label><input type="text" value="${l.nombre||''}" placeholder="Rodrigo F. — Family Office" onchange="updateLP('${l.id}','nombre',this.value)"></div>
+        <div><label>Tipo</label><select onchange="updateLP('${l.id}','tipo',this.value)"><option ${l.tipo==='Family Office'?'selected':''}>Family Office</option><option ${l.tipo==='Institucional'?'selected':''}>Institucional</option><option ${l.tipo==='HNW Individual'?'selected':''}>HNW Individual</option><option ${l.tipo==='Fondo de Fondos'?'selected':''}>Fondo de Fondos</option><option ${l.tipo==='Empresario'?'selected':''}>Empresario</option><option ${l.tipo==='Ficticio'?'selected':''}>Ficticio</option></select></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+        <div><label>País / Ciudad</label><input type="text" value="${l.pais||''}" placeholder="Montevideo, Uruguay" onchange="updateLP('${l.id}','pais',this.value)"></div>
+        <div><label>Capital comprometido (USD)</label><input type="number" value="${l.capital||''}" placeholder="0" onchange="updateLP('${l.id}','capital',this.value)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+        <div><label>Etapa del pipeline</label><select onchange="updateLP('${l.id}','etapa',this.value)"><option ${l.etapa==='LEAD'?'selected':''}>LEAD</option><option ${l.etapa==='INTERESADO'?'selected':''}>INTERESADO</option><option ${l.etapa==='DDQ'?'selected':''}>DDQ</option><option ${l.etapa==='NEGOCIANDO'?'selected':''}>NEGOCIANDO</option><option ${l.etapa==='FIRMADO'?'selected':''}>FIRMADO</option><option ${l.etapa==='ACTIVO'?'selected':''}>ACTIVO</option></select></div>
+        <div><label>Satisfacción (0-100)</label><input type="number" value="${l.satisfaccion||80}" min="0" max="100" onchange="updateLP('${l.id}','satisfaccion',this.value)"><div style="height:3px;background:#1a2535;margin-top:3px;border-radius:2px;overflow:hidden"><div style="height:100%;background:${riesgoCol[l.riesgo]||'#3a4f65'};width:${l.satisfaccion||80}%;transition:width .4s"></div></div></div>
+      </div>
+      <div style="margin-bottom:6px"><label>Próxima acción / Contacto</label><input type="text" value="${l.contacto||''}" placeholder="Reunión 15 abril — DDQ pendiente" onchange="updateLP('${l.id}','contacto',this.value)"></div>
+      <div style="margin-bottom:6px"><label>Notas</label><input type="text" value="${l.notas||''}" placeholder="Contexto, preferencias, restricciones..." onchange="updateLP('${l.id}','notas',this.value)"></div>
+      <div style="display:flex;gap:5px">
+        <button onclick="addContacto('${l.id}')" class="btn" style="flex:1;font-size:8px">+ Contacto</button>
+        ${l.historial&&l.historial.length?`<span style="font-size:8px;color:#3a4f65;display:flex;align-items:center">${l.historial.length} contacto${l.historial.length>1?'s':''}</span>`:''}
+      </div>
+      ${l.historial&&l.historial.length?`<div style="margin-top:6px;padding-top:6px;border-top:1px solid #1a2535">${l.historial.slice(0,2).map(h=>`<div style="font-size:8px;color:#3a4f65;margin-bottom:2px"><span style="color:#1e2c3a">${h.fecha}</span> — ${h.nota}</div>`).join('')}</div>`:''}
+    </div>
+  `).join('');
+}
+
+// ── MOTOR GLOBAL ──────────────────────────────────────────────
+let _mundoEventos=[];
+let _mundoFilter='todo';
+
+async function generarMundo(){
+  const btn=document.getElementById('btn-mundo');
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey){showM({t:'neu',ti:'API Key requerida',sub:'',bo:'Necesitás la API key del simulador para activar el Motor Global.'});return;}
+  btn.textContent='Generando...';btn.disabled=true;
+
+  const region=document.getElementById('mundo-region').value;
+  const sector=document.getElementById('mundo-sector').value;
+  const ideo=document.getElementById('mundo-ideo').value;
+  const modo=document.getElementById('mundo-modo').value;
+  const intensidad=document.getElementById('mundo-intensidad').value;
+
+  let simCtx='';
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12 | Nivel: NV.${sim.lvId||1}`;}catch(e){}
+
+  const modoInstr={hibrido:'Mezclá eventos reales actuales con entidades ficticias del universo ZAR Capital. Podés inventar empresas, países ficticios, partidos políticos o líderes.',real:'Usá solo eventos y entidades reales del mundo actual.',ficcion:'Todo el contenido es del universo alternativo de ZAR Capital Partners. Inventá libremente países, empresas, líderes, conflictos.'};
+  const intInstr={normal:'Evolución gradual y orgánica.',alta:'Eventos disruptivos e inesperados.',crisis:'Shocks sistémicos, crisis profundas, cambios radicales.'};
+
+  const prompt=`Sos el Motor Político-Económico Global del universo de ZAR Capital Partners.
+Fecha real: ${new Date().toLocaleDateString('es-AR')} | Estado del fondo: ${simCtx}
+Región: ${region} | Sector: ${sector} | Ideología: ${ideo}
+Modo: ${modoInstr[modo]} | Intensidad: ${intInstr[intensidad]}
+
+Generá exactamente 6 eventos del mundo. Mezclar entre: empresas/unicornios naciendo o quebrando, elecciones y cambios políticos, estatizaciones/privatizaciones, tensiones geopolíticas, acuerdos comerciales, crisis sectoriales, oportunidades de inversión.
+
+Respondé SOLO en JSON válido sin markdown:
+{"eventos":[
+  {"id":"ev1","titulo":"string","tipo":"empresa|politico|geo|financiero|comercio","region":"string","descripcion":"2 oraciones","impacto_fondo":"ALTO|MEDIO|BAJO|NINGUNO","oportunidad":"string o null","riesgo":"string o null","modo":"real|ficticio","inyectable":true|false},
+  {...},{"..."},{"..."},{"..."},{"..."}
+]}`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const tx=d.content?.[0]?.text||'';
+    const parsed=JSON.parse(tx.replace(/```json|```/g,'').trim());
+    const nuevos=parsed.eventos||[];
+    _mundoEventos=[...nuevos,..._mundoEventos].slice(0,50);
+    if(!CC.mundoEntidades)CC.mundoEntidades=0;
+    CC.mundoEntidades+=nuevos.filter(e=>e.tipo==='empresa').length;
+    saveCC();
+    document.getElementById('mundo-ts').textContent=new Date().toLocaleTimeString('es-AR');
+    document.getElementById('mundo-count').textContent=CC.mundoEntidades||0;
+    const inyectables=nuevos.filter(e=>e.inyectable&&e.impacto_fondo!=='NINGUNO');
+    if(inyectables.length>0){
+      document.getElementById('btn-inj').disabled=false;
+      document.getElementById('mundo-impacto-badge').style.display='inline';
+      window._mundoInyectable=inyectables[0];
+    }
+    renderMundo();
+  }catch(e){
+    showM({t:'neg',ti:'Error del Motor Global',sub:'',bo:'No se pudo generar el estado del mundo.<br><br>'+e.message});
+  }
+  btn.textContent='Actualizar Motor Global';btn.disabled=false;
+}
+
+function filterMundo(tipo){
+  _mundoFilter=tipo;
+  ['todo','empresa','politico','geo','financiero'].forEach(t=>{
+    const b=document.getElementById('mf-'+t);
+    if(b){b.style.borderColor=t===tipo?'#c89040':'#1a2535';b.style.color=t===tipo?'#c89040':'#3a4f65';}
+  });
+  renderMundo();
+}
+
+function renderMundo(){
+  const feed=document.getElementById('mundo-feed');if(!feed)return;
+  const eventos=_mundoFilter==='todo'?_mundoEventos:_mundoEventos.filter(e=>e.tipo===_mundoFilter);
+  if(!eventos.length){feed.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:200px;font-size:10px;color:#1e2c3a;letter-spacing:2px;text-transform:uppercase">Sin eventos para este filtro</div>';return;}
+  const tipoCol={empresa:'#c89040',politico:'#4a9eff',geo:'#e84040',financiero:'#00c896',comercio:'#8860ff'};
+  const impCol={ALTO:'#e84040',MEDIO:'#c89040',BAJO:'#4a9eff',NINGUNO:'#1e2c3a'};
+  feed.innerHTML=eventos.map((e,i)=>`
+    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${tipoCol[e.tipo]||'#1a2535'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <div style="display:flex;gap:5px;align-items:center">
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${tipoCol[e.tipo]||'#3a4f65'}">${e.tipo?.toUpperCase()}</span>
+          <span style="font-size:8px;color:#3a4f65">${e.region}</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${e.modo==='real'?'#00c896':'#8860ff'}">${e.modo?.toUpperCase()}</span>
+        </div>
+        <span class="tag" style="background:rgba(255,255,255,.04);color:${impCol[e.impacto_fondo]||'#1e2c3a'}">IMPACTO ${e.impacto_fondo}</span>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px">${e.titulo}</div>
+      <div style="font-size:9px;color:#c0cbd8;line-height:1.5;margin-bottom:5px">${e.descripcion}</div>
+      ${e.oportunidad?`<div style="font-size:8px;color:#00c896;margin-bottom:3px">↑ ${e.oportunidad}</div>`:''}
+      ${e.riesgo?`<div style="font-size:8px;color:#e84040;margin-bottom:5px">↓ ${e.riesgo}</div>`:''}
+      ${e.inyectable&&e.impacto_fondo!=='NINGUNO'?`<button onclick="inyectarEvento(${i})" class="btn" style="font-size:8px;border-color:#e84040;color:#e84040">→ Inyectar al Simulador</button>`:''}
+    </div>
+  `).join('');
+}
+
+function inyectarEvento(i){
+  const ev=_mundoEventos[i];if(!ev)return;
+  const worldEv={
+    id:'mundo_'+Date.now(),
+    cat:'GEOPOLÍTICO',
+    urg:ev.impacto_fondo==='ALTO'?'high':'med',
+    edu:null,
+    title:'Motor Global: '+ev.titulo,
+    desc:ev.descripcion+(ev.oportunidad?' Oportunidad: '+ev.oportunidad:'')+(ev.riesgo?' Riesgo: '+ev.riesgo:''),
+    opts:[
+      {k:'A',lbl:'Posicionarse activamente',dsc:'Capitalizar el evento para el fondo.',fx:{risk:8,mor:5},con:{t:'pos',ti:'Posición Activa',bo:'ZAR Capital toma posición. El evento queda registrado en la bitácora institucional.'}},
+      {k:'B',lbl:'Monitorear y esperar',dsc:'El evento necesita confirmación.',fx:{cmp:5},con:{t:'neu',ti:'Posición de Espera',bo:'El equipo monitorea. Se revisará en la próxima reunión de research.'}},
+      {k:'C',lbl:'Cobertura preventiva',dsc:'Reducir exposición ante la incertidumbre.',fx:{risk:-8,cmp:5},con:{t:'pos',ti:'Cobertura Activada',bo:'Portfolio ajustado preventivamente. Riesgo reducido.'}}
+    ],
+    resolved:false
+  };
+  localStorage.setItem('zcp_world_event',JSON.stringify(worldEv));
+  showM({t:'pos',ti:'Evento Inyectado',sub:'MOTOR GLOBAL → SIMULADOR',bo:`<b style="color:#00c896">${ev.titulo}</b><br><br>El evento aparece activo en el Simulador. Abrilo para tomar la decisión.`});
+}
+
+function inyectarAlSimulador(){
+  const ev=window._mundoInyectable;
+  if(ev){const i=_mundoEventos.findIndex(e=>e.id===ev.id);if(i>=0)inyectarEvento(i);}
+}
+
+function crearEntidadManual(){
+  const nombre=prompt('Nombre de la entidad (empresa, banco, startup, país...):');
+  if(!nombre)return;
+  const tipo=prompt('Tipo (empresa/banco/startup/unicornio/gobierno/otro):','empresa');
+  const region=prompt('Región/País:','Buenos Aires, Argentina');
+  const desc=prompt('Descripción breve:','');
+  if(!nombre)return;
+  _mundoEventos.unshift({id:'manual_'+Date.now(),titulo:nombre,tipo:tipo||'empresa',region:region||'Global',descripcion:desc||'Entidad creada manualmente en el universo ZAR Capital.',impacto_fondo:'BAJO',oportunidad:null,riesgo:null,modo:'ficticio',inyectable:false});
+  if(!CC.mundoEntidades)CC.mundoEntidades=0;
+  CC.mundoEntidades++;
+  saveCC();
+  document.getElementById('mundo-count').textContent=CC.mundoEntidades;
+  renderMundo();
+}
 function showM(con){
   const col={pos:'#00c896',neg:'#e84040',neu:'#c89040'};
   const c=col[con.t]||'#c89040';
@@ -768,6 +1092,7 @@ function closeM(){document.getElementById('zmod').style.display='none';}
   renderLog();
   renderKPIs();
   renderBrokers();
+  renderLPs();
   showTab('mesa');
 })();
 </script>
