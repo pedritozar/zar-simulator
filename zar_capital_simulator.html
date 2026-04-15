@@ -6,22 +6,47 @@
 <title>ZAR Capital Partners — Meridian Strategy Simulator</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Barlow+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
+:root {
+  --bg-primary: #07090e;
+  --bg-secondary: #0c101a;
+  --bg-input: #121824;
+  --bg-panel: rgba(7,9,14,0.92);
+  --border: #1a2535;
+  --border-subtle: #0f1620;
+  --text-dim: #1e2c3a;
+  --text-muted: #3a4f65;
+  --text-main: #c0cbd8;
+}
+@media(prefers-color-scheme:light){
+  :root {
+    --bg-primary: #f5f0e8;
+    --bg-secondary: #ede8de;
+    --bg-input: #e8e2d6;
+    --bg-panel: rgba(245,240,232,0.96);
+    --border: #c8b89a;
+    --border-subtle: #ddd5c2;
+    --text-dim: #9a8a70;
+    --text-muted: #6a5a40;
+    --text-main: #1a1a2e;
+  }
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 ::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:#1e2c3a;border-radius:2px}
-body{background:#07090e;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
-#setup{display:flex;align-items:center;justify-content:center;height:100vh;background:#07090e}
+::-webkit-scrollbar-thumb{background:var(--text-dim);border-radius:2px}
+body{background:var(--bg-primary);color:var(--text-main);font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#setup{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg-primary)}
 #main{display:none;flex-direction:column;height:100vh}
-.btn{padding:4px 12px;background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .2s}
+.btn{padding:4px 12px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .2s}
 .btn:hover{border-color:#c89040;color:#c89040}
 .btn:disabled{opacity:.4;cursor:default;pointer-events:none}
 .btn-gold{background:#c89040;border:none;color:#000;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:6px 18px;cursor:pointer;transition:all .2s}
 .btn-gold:disabled{opacity:.35;cursor:default;pointer-events:none}
 .btn-gold:not(:disabled):hover{background:#d4a050}
-.ob{display:flex;gap:9px;padding:8px 10px;background:#121824;border:1px solid #1a2535;cursor:pointer;width:100%;color:#c0cbd8;font-family:'IBM Plex Mono',monospace;text-align:left;transition:all .15s;margin-bottom:4px}
+.ob{display:flex;gap:9px;padding:8px 10px;background:var(--bg-input);border:1px solid var(--border);cursor:pointer;width:100%;color:var(--text-main);font-family:'IBM Plex Mono',monospace;text-align:left;transition:all .15s;margin-bottom:4px}
 .ob:hover{border-color:#c89040!important;background:#111d2a!important}
 .ob:hover .efx{max-height:30px!important}
-input[type=text],input[type=password]{background:#121824;border:1px solid #1a2535;color:#c0cbd8;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 12px;outline:none;transition:border-color .2s;width:100%}
+input[type=text],input[type=password]{background:var(--bg-input);border:1px solid var(--border);color:var(--text-main);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 12px;outline:none;transition:border-color .2s;width:100%}
 input:focus{border-color:#c89040}
 @keyframes sli{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
 @keyframes fdi{from{opacity:0}to{opacity:1}}
@@ -30,8 +55,6 @@ input:focus{border-color:#c89040}
 .loge{animation:fdi .25s ease}
 #lvup{animation:lvu .4s ease}
 
-@media(prefers-color-scheme:light){
-  ::-webkit-scrollbar-thumb{background:#c8b89a}
   body{background:#f5f0e8;color:#1a1a2e}
   #setup{background:#f5f0e8}
   .btn{border-color:#c8b89a;color:#7a6a50}
@@ -48,14 +71,14 @@ input:focus{border-color:#c89040}
 <div id="setup">
   <div style="max-width:440px;width:92%">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;letter-spacing:5px;color:#c89040;text-transform:uppercase">ZAR CAPITAL PARTNERS</div>
-    <div style="font-size:9px;letter-spacing:2px;color:#3a4f65;text-transform:uppercase;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid #1a2535">Meridian Strategy — Global Barbell Fund Simulator</div>
+    <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)">Meridian Strategy — Global Barbell Fund Simulator</div>
 
-    <div style="font-size:9px;color:#3a4f65;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">Anthropic API Key</div>
+    <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">Anthropic API Key</div>
     <input type="password" id="key-input" placeholder="sk-ant-api03-..." style="margin-bottom:6px">
-    <div style="font-size:9px;color:#1e2c3a;line-height:1.6;margin-bottom:20px">La clave se guarda en localStorage. Nunca sale de tu dispositivo.</div>
+    <div style="font-size:9px;color:var(--text-dim);line-height:1.6;margin-bottom:20px">La clave se guarda en localStorage. Nunca sale de tu dispositivo.</div>
     <button class="btn-gold" onclick="startGame()" style="width:100%;padding:9px">Iniciar Simulación</button>
     <div id="key-err" style="font-size:9px;color:#e84040;margin-top:7px;display:none">Ingresá una API key válida (sk-ant-...)</div>
-    <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a2535;display:flex;gap:8px">
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:8px">
       <button class="btn" onclick="startDemo()" style="flex:1;padding:6px">Modo Demo (sin API key)</button>
       <button class="btn" onclick="resetAndStart()" style="flex:1;padding:6px">Nueva Partida</button>
     </div>
@@ -67,93 +90,93 @@ input:focus{border-color:#c89040}
 <div id="main">
 
   <!-- HEADER -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:50px;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:50px;background:var(--bg-secondary);border-bottom:1px solid var(--border);flex-shrink:0">
     <div>
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;letter-spacing:4px;color:#c89040;text-transform:uppercase">ZAR CAPITAL PARTNERS</div>
-      <div style="font-size:9px;letter-spacing:2px;color:#3a4f65;text-transform:uppercase;margin-top:1px">Meridian Strategy — Global Barbell Fund</div>
+      <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-top:1px">Meridian Strategy — Global Barbell Fund</div>
     </div>
     <div style="display:flex;gap:14px;align-items:center">
-      <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Turno</div><div id="h-turn" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700">1 / 12</div></div>
-      <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Período</div><div id="h-period" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700">ENE-FEB 2025</div></div>
+      <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Turno</div><div id="h-turn" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700">1 / 12</div></div>
+      <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Período</div><div id="h-period" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700">ENE-FEB 2025</div></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-        <div id="lv-badge" style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border:1px solid #3a4f65;color:#3a4f65;transition:all .4s">NV.1 ANALISTA SOLITARIO</div>
-        <div style="width:120px;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="lv-bar" style="height:100%;background:#3a4f65;width:5%;transition:width .8s ease,background .4s ease"></div></div>
+        <div id="lv-badge" style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border:1px solid var(--text-muted);color:var(--text-muted);transition:all .4s">NV.1 ANALISTA SOLITARIO</div>
+        <div style="width:120px;height:2px;background:var(--border);border-radius:1px;overflow:hidden"><div id="lv-bar" style="height:100%;background:var(--text-muted);width:5%;transition:width .8s ease,background .4s ease"></div></div>
       </div>
-      <div id="h-phase" style="background:#121824;border:1px solid #c89040;color:#c89040;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px">INCUBACIÓN</div>
-      <a href="worldmonitor.html" target="_blank" style="display:flex;align-items:center;gap:5px;padding:3px 10px;background:#121824;border:1px solid #1a2535;color:#3a4f65;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor='#4a9eff';this.style.color='#4a9eff'" onmouseout="this.style.borderColor='#1a2535';this.style.color='#3a4f65'"><span style="width:6px;height:6px;border-radius:50%;background:#4a9eff;flex-shrink:0;display:inline-block"></span>WorldMonitor 3D</a>
-      <a href="zar_command_center.html" target="_blank" style="display:flex;align-items:center;gap:5px;padding:3px 10px;background:#121824;border:1px solid #1a2535;color:#3a4f65;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor='#00c896';this.style.color='#00c896'" onmouseout="this.style.borderColor='#1a2535';this.style.color='#3a4f65'"><span style="width:6px;height:6px;border-radius:50%;background:#00c896;flex-shrink:0;display:inline-block"></span>Command Center</a>
+      <div id="h-phase" style="background:var(--bg-input);border:1px solid #c89040;color:#c89040;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px">INCUBACIÓN</div>
+      <a href="worldmonitor.html" target="_blank" style="display:flex;align-items:center;gap:5px;padding:3px 10px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-muted);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor='#4a9eff';this.style.color='#4a9eff'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'"><span style="width:6px;height:6px;border-radius:50%;background:#4a9eff;flex-shrink:0;display:inline-block"></span>WorldMonitor 3D</a>
+      <a href="zar_command_center.html" target="_blank" style="display:flex;align-items:center;gap:5px;padding:3px 10px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-muted);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor='#00c896';this.style.color='#00c896'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'"><span style="width:6px;height:6px;border-radius:50%;background:#00c896;flex-shrink:0;display:inline-block"></span>Command Center</a>
     </div>
   </div>
 
   <!-- METRICS BAR -->
-  <div style="display:grid;grid-template-columns:1.75fr repeat(5,1fr);border-bottom:1px solid #1a2535;background:#0c101a;flex-shrink:0;height:54px">
-    <div style="padding:7px 14px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
-      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">AUM Total</span>
+  <div style="display:grid;grid-template-columns:1.75fr repeat(5,1fr);border-bottom:1px solid var(--border);background:var(--bg-secondary);flex-shrink:0;height:54px">
+    <div style="padding:7px 14px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">AUM Total</span>
       <div style="display:flex;align-items:baseline;gap:5px">
         <span id="m-aum" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">$50K</span>
-        <span id="m-aum-sub" style="font-size:9px;color:#3a4f65"></span>
+        <span id="m-aum-sub" style="font-size:9px;color:var(--text-muted)"></span>
       </div>
     </div>
-    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
-      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Reputación</span>
-      <div style="display:flex;align-items:center;gap:5px"><span id="m-rep" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#4a9eff">30</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-rep" style="height:100%;border-radius:1px;background:#4a9eff;width:30%;transition:width .6s ease"></div></div></div>
+    <div style="padding:7px 11px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Reputación</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-rep" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#4a9eff">30</span><div style="flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden"><div id="b-rep" style="height:100%;border-radius:1px;background:#4a9eff;width:30%;transition:width .6s ease"></div></div></div>
     </div>
-    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
-      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Riesgo</span>
-      <div style="display:flex;align-items:center;gap:5px"><span id="m-risk" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#e84040">45</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-risk" style="height:100%;border-radius:1px;background:#e84040;width:45%;transition:width .6s ease"></div></div></div>
+    <div style="padding:7px 11px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Riesgo</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-risk" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#e84040">45</span><div style="flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden"><div id="b-risk" style="height:100%;border-radius:1px;background:#e84040;width:45%;transition:width .6s ease"></div></div></div>
     </div>
-    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
-      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Moral</span>
-      <div style="display:flex;align-items:center;gap:5px"><span id="m-mor" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#00c896">70</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-mor" style="height:100%;border-radius:1px;background:#00c896;width:70%;transition:width .6s ease"></div></div></div>
+    <div style="padding:7px 11px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Moral</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-mor" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#00c896">70</span><div style="flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden"><div id="b-mor" style="height:100%;border-radius:1px;background:#00c896;width:70%;transition:width .6s ease"></div></div></div>
     </div>
-    <div style="padding:7px 11px;border-right:1px solid #1a2535;display:flex;flex-direction:column;justify-content:space-between">
-      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Exposición</span>
-      <div style="display:flex;align-items:center;gap:5px"><span id="m-med" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#3a4f65">15</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-med" style="height:100%;border-radius:1px;background:#3a4f65;width:15%;transition:width .6s ease"></div></div></div>
+    <div style="padding:7px 11px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between">
+      <span style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Exposición</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-med" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--text-muted)">15</span><div style="flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden"><div id="b-med" style="height:100%;border-radius:1px;background:var(--text-muted);width:15%;transition:width .6s ease"></div></div></div>
     </div>
     <div style="padding:7px 11px;display:flex;flex-direction:column;justify-content:space-between">
-      <span style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px">Compliance</span>
-      <div style="display:flex;align-items:center;gap:5px"><span id="m-cmp" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#00c896">85</span><div style="flex:1;height:2px;background:#1a2535;border-radius:1px;overflow:hidden"><div id="b-cmp" style="height:100%;border-radius:1px;background:#00c896;width:85%;transition:width .6s ease"></div></div></div>
+      <span style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Compliance</span>
+      <div style="display:flex;align-items:center;gap:5px"><span id="m-cmp" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#00c896">85</span><div style="flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden"><div id="b-cmp" style="height:100%;border-radius:1px;background:#00c896;width:85%;transition:width .6s ease"></div></div></div>
     </div>
   </div>
 
   <!-- CONTENT -->
   <div style="display:flex;flex:1;overflow:hidden">
-    <div id="ep" style="flex:1;overflow-y:auto;padding:12px;border-right:1px solid #1a2535"><div id="ec"></div></div>
+    <div id="ep" style="flex:1;overflow-y:auto;padding:12px;border-right:1px solid var(--border)"><div id="ec"></div></div>
     <div style="width:272px;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0">
-      <div style="padding:11px;border-bottom:1px solid #1a2535;overflow-y:auto;flex-shrink:0">
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:2px;margin-bottom:5px">Capital</div>
-        <div style="background:#121824;border:1px solid #1a2535;padding:8px;margin-bottom:9px">
-          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:#3a4f65">Capital propio</span><span id="a-own" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#c89040">USD 50,000</span></div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:#3a4f65">LP confirmado</span><span id="a-lp" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#00c896">USD 0</span></div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:9px;color:#3a4f65">En negociación</span><span id="a-pend" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#3a4f65">USD 100,000</span></div>
-          <div style="border-top:1px solid #1a2535;padding-top:4px;display:flex;justify-content:space-between"><span style="font-size:9px;color:#c0cbd8;font-weight:600">AUM Total</span><span id="a-tot" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700">USD 50,000</span></div>
+      <div style="padding:11px;border-bottom:1px solid var(--border);overflow-y:auto;flex-shrink:0">
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px">Capital</div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);padding:8px;margin-bottom:9px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:var(--text-muted)">Capital propio</span><span id="a-own" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#c89040">USD 50,000</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:var(--text-muted)">LP confirmado</span><span id="a-lp" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:#00c896">USD 0</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:9px;color:var(--text-muted)">En negociación</span><span id="a-pend" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--text-muted)">USD 100,000</span></div>
+          <div style="border-top:1px solid var(--border);padding-top:4px;display:flex;justify-content:space-between"><span style="font-size:9px;color:var(--text-main);font-weight:600">AUM Total</span><span id="a-tot" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700">USD 50,000</span></div>
         </div>
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:2px;margin-bottom:5px">Meridian Barbell</div>
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px">Meridian Barbell</div>
         <div style="font-size:8px;color:#e84040;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Agresivo 40%</div>
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">FX</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;width:37.5%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">Commodities</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;opacity:.65;width:25%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">10%</span></div>
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:6px"><span style="font-size:9px;width:64px">Índices</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;opacity:.45;width:37.5%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">FX</span><div style="flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;width:37.5%"></div></div><span style="font-size:9px;color:var(--text-muted);width:24px;text-align:right">15%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">Commodities</span><div style="flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;opacity:.65;width:25%"></div></div><span style="font-size:9px;color:var(--text-muted);width:24px;text-align:right">10%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:6px"><span style="font-size:9px;width:64px">Índices</span><div style="flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;background:#e84040;opacity:.45;width:37.5%"></div></div><span style="font-size:9px;color:var(--text-muted);width:24px;text-align:right">15%</span></div>
         <div style="font-size:8px;color:#4a9eff;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Balanceado 60%</div>
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">UST/Bonos</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;width:33%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">20%</span></div>
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">CER</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.72;width:25%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">CEDEARs</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.5;width:25%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">15%</span></div>
-        <div style="display:flex;align-items:center;gap:4px"><span style="font-size:9px;width:64px">ETFs</span><div style="flex:1;height:3px;background:#1a2535;border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.32;width:17%"></div></div><span style="font-size:9px;color:#3a4f65;width:24px;text-align:right">10%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">UST/Bonos</span><div style="flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;width:33%"></div></div><span style="font-size:9px;color:var(--text-muted);width:24px;text-align:right">20%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">CER</span><div style="flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.72;width:25%"></div></div><span style="font-size:9px;color:var(--text-muted);width:24px;text-align:right">15%</span></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px"><span style="font-size:9px;width:64px">CEDEARs</span><div style="flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.5;width:25%"></div></div><span style="font-size:9px;color:var(--text-muted);width:24px;text-align:right">15%</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span style="font-size:9px;width:64px">ETFs</span><div style="flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;background:#4a9eff;opacity:.32;width:17%"></div></div><span style="font-size:9px;color:var(--text-muted);width:24px;text-align:right">10%</span></div>
       </div>
-      <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:2px;padding:8px 11px 4px;flex-shrink:0">Bitácora</div>
+      <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;padding:8px 11px 4px;flex-shrink:0">Bitácora</div>
       <div id="zlog" style="flex:1;overflow-y:auto;padding:0 11px 10px"></div>
     </div>
   </div>
 
   <!-- FOOTER -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:40px;background:#0c101a;border-top:1px solid #1a2535;flex-shrink:0">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:40px;background:var(--bg-secondary);border-top:1px solid var(--border);flex-shrink:0">
     <div style="display:flex;align-items:center;gap:7px">
-      <button id="edu-btn" class="btn" onclick="toggleEdu()" style="display:flex;align-items:center;gap:5px"><div id="edu-dot" style="width:5px;height:5px;border-radius:50%;background:#1a2535;transition:all .2s;flex-shrink:0"></div>Modo Educativo</button>
+      <button id="edu-btn" class="btn" onclick="toggleEdu()" style="display:flex;align-items:center;gap:5px"><div id="edu-dot" style="width:5px;height:5px;border-radius:50%;background:var(--border);transition:all .2s;flex-shrink:0"></div>Modo Educativo</button>
       <button id="bs-btn" class="btn" onclick="genBlackSwan()" style="border-color:#e84040;color:#e84040">Cisne Negro</button>
       <button id="ai-btn" class="btn" onclick="consultAI()">Asesor Ejecutivo</button>
-      <span id="fstat" style="font-size:9px;color:#3a4f65;letter-spacing:1px;text-transform:uppercase"></span>
+      <span id="fstat" style="font-size:9px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase"></span>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
-      <span id="evrem" style="font-size:9px;color:#3a4f65;letter-spacing:1px;text-transform:uppercase"></span>
+      <span id="evrem" style="font-size:9px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase"></span>
       <button class="btn" onclick="confirmReset()" style="border-color:#e84040;color:#e84040">Reset</button>
       <button id="nxt" class="btn-gold" onclick="advance()" disabled>Siguiente Bimestre</button>
     </div>
@@ -162,21 +185,21 @@ input:focus{border-color:#c89040}
 
 <!-- ── MODAL (fixed) ────────────────────────────────────────── -->
 <div id="zmod" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:100;align-items:center;justify-content:center">
-  <div style="background:#0c101a;border:1px solid #1a2535;max-width:460px;width:92%;max-height:85vh;overflow-y:auto;padding:22px">
+  <div style="background:var(--bg-secondary);border:1px solid var(--border);max-width:460px;width:92%;max-height:85vh;overflow-y:auto;padding:22px">
     <div id="macc" style="height:3px;margin:-22px -22px 16px;background:#00c896"></div>
     <div id="mtit" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;color:#00c896"></div>
-    <div id="msub" style="font-size:9px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1a2535"></div>
-    <div id="mbod" style="font-size:11px;color:#c0cbd8;line-height:1.9"></div>
+    <div id="msub" style="font-size:9px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)"></div>
+    <div id="mbod" style="font-size:11px;color:var(--text-main);line-height:1.9"></div>
     <button class="btn" onclick="closeM()" style="margin-top:14px">Continuar</button>
   </div>
 </div>
 
 <!-- ── LEVEL UP NOTIFICATION (fixed) ───────────────────────── -->
 <div id="lvup" style="display:none;position:fixed;top:60px;right:18px;z-index:200">
-  <div style="background:#0c101a;border:1px solid #c89040;padding:12px 16px;max-width:260px">
-    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px">NIVEL DESBLOQUEADO</div>
+  <div style="background:var(--bg-secondary);border:1px solid #c89040;padding:12px 16px;max-width:260px">
+    <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px">NIVEL DESBLOQUEADO</div>
     <div id="lu-name" style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:2px;color:#c89040;text-transform:uppercase"></div>
-    <div id="lu-desc" style="font-size:9px;color:#3a4f65;margin-top:3px;line-height:1.5"></div>
+    <div id="lu-desc" style="font-size:9px;color:var(--text-muted);margin-top:3px;line-height:1.5"></div>
   </div>
 </div>
 
@@ -187,7 +210,7 @@ const LSKEY='zcp_apikey';
 
 // ── LEVEL SYSTEM ────────────────────────────────────────────
 const LEVELS=[
-  {id:1,name:'Analista Solitario',stage:'Monoambiente',aum:0,rep:0,col:'#3a4f65',desc:'Capital propio. Solo vos y el mercado.'},
+  {id:1,name:'Analista Solitario',stage:'Monoambiente',aum:0,rep:0,col:'var(--text-muted)',desc:'Capital propio. Solo vos y el mercado.'},
   {id:2,name:'Firma Boutique',stage:'Oficina',aum:100000,rep:40,col:'#4a9eff',desc:'Primer LP. Primeros empleados. Oficina boutique en BA.'},
   {id:3,name:'Hedge Fund Consolidado',stage:'Rascacielos',aum:500000,rep:60,col:'#c89040',desc:'M&A, reguladores, inversores institucionales.'},
   {id:4,name:'Jugador Global',stage:'Multinacional',aum:2000000,rep:80,col:'#00c896',desc:'Geopolítica, monopolios. El 3D Globe se activa.'},
@@ -474,7 +497,7 @@ function render(){
   const rc=S.m.risk>65?'#e84040':S.m.risk>45?'#c89040':'#00c896';
   upM('m-risk','b-risk',S.m.risk,rc);
   upM('m-mor','b-mor',S.m.mor,S.m.mor>50?'#00c896':'#e84040');
-  upM('m-med','b-med',S.m.med,'#3a4f65');
+  upM('m-med','b-med',S.m.med,'var(--text-muted)');
   const cc=S.m.cmp>65?'#00c896':S.m.cmp>45?'#c89040':'#e84040';
   upM('m-cmp','b-cmp',S.m.cmp,cc);
   $i('a-own').textContent='USD '+S.aum.toLocaleString('es-AR');
@@ -498,22 +521,22 @@ function render(){
 
 function renderEvts(){
   const ec=$i('ec');
-  if(!S.evts.length){ec.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:160px;font-family:\'Barlow Condensed\',sans-serif;font-size:13px;letter-spacing:3px;color:#1e2c3a;text-transform:uppercase">Sin eventos activos</div>';return;}
+  if(!S.evts.length){ec.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:160px;font-family:\'Barlow Condensed\',sans-serif;font-size:13px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase">Sin eventos activos</div>';return;}
   ec.innerHTML=S.evts.map(e=>rEvt(e)).join('');
 }
 
 function rEvt(e){
-  const uc={high:'#e84040',med:'#c89040',low:'#3a4f65'};
+  const uc={high:'#e84040',med:'#c89040',low:'var(--text-muted)'};
   const ul={high:'URGENTE',med:'NORMAL',low:'OPCIONAL'};
-  if(e.resolved)return`<div class="evc" style="background:#0c101a;border:1px solid #1a2535;border-left:3px solid #00c896;padding:10px 12px;opacity:.4;margin-bottom:8px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#3a4f65">✓ ${e.title}</div><div style="font-size:9px;color:#1e2c3a;margin-top:2px">Decisión: "${e._ch}"</div></div>`;
-  const lc=e.urg==='high'?'#e84040':e.urg==='med'?'#c89040':'#1a2535';
+  if(e.resolved)return`<div class="evc" style="background:var(--bg-secondary);border:1px solid var(--border);border-left:3px solid #00c896;padding:10px 12px;opacity:.4;margin-bottom:8px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--text-muted)">✓ ${e.title}</div><div style="font-size:9px;color:var(--text-dim);margin-top:2px">Decisión: "${e._ch}"</div></div>`;
+  const lc=e.urg==='high'?'#e84040':e.urg==='med'?'#c89040':'var(--border)';
   const bsTag=e.id&&e.id.startsWith('bs_')?'<span style="font-size:8px;background:rgba(232,64,64,.12);color:#e84040;padding:1px 6px;letter-spacing:1px;margin-left:6px">CISNE NEGRO</span>':'';
   const eb=S.edu&&e.edu?`<button onclick="showEdu('${e.edu}')" style="margin-bottom:8px;font-size:9px;padding:2px 9px;background:rgba(136,96,255,.1);border:1px solid #8860ff;color:#8860ff;cursor:pointer;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;text-transform:uppercase">Explicar concepto</button>`:'';
   const opts=e.opts.map((o,i)=>{
     const tags=mkTags(o.fx,o.roll);
-    return`<button class="ob" onclick="res('${e.id}',${i})"><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:#c89040;min-width:14px;line-height:1.9;flex-shrink:0">${o.k}</span><div style="flex:1;min-width:0"><div style="font-size:10px;font-weight:600;margin-bottom:1px">${o.lbl}</div><div style="font-size:9px;color:#3a4f65;line-height:1.4">${o.dsc}</div><div class="efx" style="display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;max-height:0;overflow:hidden;transition:max-height .2s">${tags}</div></div></button>`;
+    return`<button class="ob" onclick="res('${e.id}',${i})"><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:#c89040;min-width:14px;line-height:1.9;flex-shrink:0">${o.k}</span><div style="flex:1;min-width:0"><div style="font-size:10px;font-weight:600;margin-bottom:1px">${o.lbl}</div><div style="font-size:9px;color:var(--text-muted);line-height:1.4">${o.dsc}</div><div class="efx" style="display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;max-height:0;overflow:hidden;transition:max-height .2s">${tags}</div></div></button>`;
   }).join('');
-  return`<div class="evc" style="background:#0c101a;border:1px solid #1a2535;border-left:3px solid ${lc};padding:12px;margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><div style="display:flex;align-items:center"><span style="font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:#3a4f65;background:#121824;padding:1px 6px">${e.cat}</span>${bsTag}</div><span style="font-size:8px;text-transform:uppercase;letter-spacing:1px;color:${uc[e.urg]||'#3a4f65'}">● ${ul[e.urg]||'NORMAL'}</span></div><div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;margin-bottom:5px">${e.title}</div><div style="font-size:10px;color:#3a4f65;line-height:1.65;margin-bottom:9px">${e.desc}</div>${eb}<div>${opts}</div></div>`;
+  return`<div class="evc" style="background:var(--bg-secondary);border:1px solid var(--border);border-left:3px solid ${lc};padding:12px;margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><div style="display:flex;align-items:center"><span style="font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);background:var(--bg-input);padding:1px 6px">${e.cat}</span>${bsTag}</div><span style="font-size:8px;text-transform:uppercase;letter-spacing:1px;color:${uc[e.urg]||'var(--text-muted)'}">● ${ul[e.urg]||'NORMAL'}</span></div><div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;margin-bottom:5px">${e.title}</div><div style="font-size:10px;color:var(--text-muted);line-height:1.65;margin-bottom:9px">${e.desc}</div>${eb}<div>${opts}</div></div>`;
 }
 
 function mkTags(fx,roll){
@@ -631,7 +654,7 @@ function addLog(txt){
   if(!l)return;
   const d=document.createElement('div');
   d.className='loge';d.style.cssText='border-bottom:1px solid #1a2535;padding:7px 0';
-  d.innerHTML=`<div style="font-size:8px;color:#c89040;text-transform:uppercase;letter-spacing:1px;margin-bottom:1px">Turno ${S.turn} — ${per(S.turn)}</div><div style="font-size:9px;color:#3a4f65;line-height:1.5">${txt}</div>`;
+  d.innerHTML=`<div style="font-size:8px;color:#c89040;text-transform:uppercase;letter-spacing:1px;margin-bottom:1px">Turno ${S.turn} — ${per(S.turn)}</div><div style="font-size:9px;color:var(--text-muted);line-height:1.5">${txt}</div>`;
   l.insertBefore(d,l.firstChild);
 }
 
@@ -657,9 +680,9 @@ function showEdu(key){
 function toggleEdu(){
   S.edu=!S.edu;
   const b=$i('edu-btn'),d=$i('edu-dot');
-  b.style.borderColor=S.edu?'#8860ff':'#1a2535';
-  b.style.color=S.edu?'#8860ff':'#3a4f65';
-  d.style.background=S.edu?'#8860ff':'#1a2535';
+  b.style.borderColor=S.edu?'#8860ff':'var(--border)';
+  b.style.color=S.edu?'#8860ff':'var(--text-muted)';
+  d.style.background=S.edu?'#8860ff':'var(--border)';
   $i('fstat').textContent=S.edu?'Modo educativo ON':'';
   render();
 }
@@ -704,7 +727,7 @@ Escribí un briefing ejecutivo personal dirigido a Pedro. Incorporá referencias
   try{
     const tx=await apiCall(prompt,400);
     if(!tx){
-      $i('macc').style.background='#3a4f65';$i('mtit').textContent='Modo Demo';$i('mtit').style.color='#3a4f65';
+      $i('macc').style.background='var(--text-muted)';$i('mtit').textContent='Modo Demo';$i('mtit').style.color='var(--text-muted)';
       $i('msub').textContent='ASESOR EJECUTIVO — SIN API KEY';
       $i('mbod').innerHTML='Configurá tu API key de Anthropic para activar el Asesor Ejecutivo con análisis en tiempo real.';
     }else{
@@ -715,7 +738,7 @@ Escribí un briefing ejecutivo personal dirigido a Pedro. Incorporá referencias
   }catch(e){
     $i('macc').style.background='#e84040';$i('mtit').textContent='Error de Conexión';$i('mtit').style.color='#e84040';
     $i('msub').textContent='VERIFICÁ TU API KEY';
-    $i('mbod').innerHTML='No se pudo conectar con la API de Anthropic. Verificá que tu API key sea correcta (sk-ant-...).<br><br><button onclick="location.reload()" style="padding:3px 10px;background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:\'IBM Plex Mono\',monospace;font-size:10px;cursor:pointer">Recargar para cambiar key</button>';
+    $i('mbod').innerHTML='No se pudo conectar con la API de Anthropic. Verificá que tu API key sea correcta (sk-ant-...).<br><br><button onclick="location.reload()" style="padding:3px 10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:\'IBM Plex Mono\',monospace;font-size:10px;cursor:pointer">Recargar para cambiar key</button>';
   }
   $i('zmod').style.display='flex';
   ab.textContent='Asesor Ejecutivo';ab.disabled=false;
@@ -778,7 +801,7 @@ Reputación: <b style="color:#4a9eff">${S.m.rep}/100</b><br>
 Compliance: <b style="color:${S.m.cmp>65?'#00c896':'#e84040'}">${S.m.cmp}/100</b><br>
 Moral del equipo: ${S.m.mor}/100<br>
 Decisiones tomadas: ${S.done}<br><br>
-${tot>=200000?'<b style="color:#00c896">✓ Superaste USD 200k AUM — objetivo de incubación logrado.</b>':'<span style="color:#3a4f65">AUM por debajo del objetivo de USD 200k.</span>'}<br><br>
+${tot>=200000?'<b style="color:#00c896">✓ Superaste USD 200k AUM — objetivo de incubación logrado.</b>':'<span style="color:var(--text-muted)">AUM por debajo del objetivo de USD 200k.</span>'}<br><br>
 <button onclick="resetGame()" style="margin-top:6px;padding:5px 16px;background:transparent;border:1px solid #c89040;color:#c89040;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px">Nueva Partida</button>`;
   $i('zmod').style.display='flex';
 }

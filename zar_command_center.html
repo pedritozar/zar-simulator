@@ -6,20 +6,45 @@
 <title>ZAR Capital — Command Center</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Barlow+Condensed:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
+:root {
+  --bg-primary: #07090e;
+  --bg-secondary: #0c101a;
+  --bg-input: #121824;
+  --bg-panel: rgba(7,9,14,0.92);
+  --border: #1a2535;
+  --border-subtle: #0f1620;
+  --text-dim: #1e2c3a;
+  --text-muted: #3a4f65;
+  --text-main: #c0cbd8;
+}
+@media(prefers-color-scheme:light){
+  :root {
+    --bg-primary: #f5f0e8;
+    --bg-secondary: #ede8de;
+    --bg-input: #e8e2d6;
+    --bg-panel: rgba(245,240,232,0.96);
+    --border: #c8b89a;
+    --border-subtle: #ddd5c2;
+    --text-dim: #9a8a70;
+    --text-muted: #6a5a40;
+    --text-main: #1a1a2e;
+  }
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#07090e;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#1e2c3a}
-.btn{background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;transition:all .2s}
+body{background:var(--bg-primary);color:var(--text-main);font-family:'IBM Plex Mono','Courier New',monospace;font-size:11px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--text-dim)}
+.btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;transition:all .2s}
 .btn:hover{border-color:#c89040;color:#c89040}
 .btn:disabled{opacity:.4;cursor:default}
 .btn-gold{background:#c89040;border:none;color:#000;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;cursor:pointer;transition:all .2s}
 .btn-gold:hover{background:#d4a050}
 .btn-gold:disabled{opacity:.4;cursor:default}
-input,select,textarea{background:#121824;border:1px solid #1a2535;color:#c0cbd8;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:6px 9px;outline:none;transition:border-color .2s;width:100%}
+input,select,textarea{background:var(--bg-input);border:1px solid var(--border);color:var(--text-main);font-family:'IBM Plex Mono',monospace;font-size:10px;padding:6px 9px;outline:none;transition:border-color .2s;width:100%}
 input:focus,select:focus,textarea:focus{border-color:#c89040}
-select option{background:#121824}
-label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px}
-.card{background:#0c101a;border:1px solid #1a2535;padding:12px}
+select option{background:var(--bg-input)}
+label{font-size:8px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:4px}
+.card{background:var(--bg-secondary);border:1px solid var(--border);padding:12px}
 .tag{font-size:8px;padding:1px 6px;letter-spacing:.5px;font-weight:600}
 .tag-pos{background:rgba(0,200,150,.12);color:#00c896}
 .tag-neg{background:rgba(232,64,64,.12);color:#e84040}
@@ -28,8 +53,6 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 @keyframes fdi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .ani{animation:fdi .25s ease}
 
-@media(prefers-color-scheme:light){
-  ::-webkit-scrollbar-thumb{background:#c8b89a}
   body{background:#f5f0e8;color:#1a1a2e}
   .btn{border-color:#c8b89a;color:#7a6a50}
   .btn:hover{border-color:#c89040;color:#c89040}
@@ -43,14 +66,14 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 <body>
 
 <!-- HEADER -->
-<div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:50px;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:50px;background:var(--bg-secondary);border-bottom:1px solid var(--border);flex-shrink:0">
   <div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;letter-spacing:4px;color:#c89040">ZAR CAPITAL PARTNERS</div>
-    <div style="font-size:9px;letter-spacing:2px;color:#3a4f65;text-transform:uppercase">Command Center — Gestión Institucional</div>
+    <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase">Command Center — Gestión Institucional</div>
   </div>
   <div style="display:flex;align-items:center;gap:12px">
-    <div id="fund-aum" style="text-align:right"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px">AUM Total</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#c89040">—</div></div>
-    <div id="fund-turn" style="text-align:right"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px">Turno</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">—</div></div>
+    <div id="fund-aum" style="text-align:right"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px">AUM Total</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#c89040">—</div></div>
+    <div id="fund-turn" style="text-align:right"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px">Turno</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700">—</div></div>
     <div style="display:flex;gap:6px">
       <a href="zar_capital_simulator.html" style="text-decoration:none"><button class="btn" style="border-color:#c89040;color:#c89040">← Simulador</button></a>
       <a href="worldmonitor.html" target="_blank"><button class="btn">WorldMonitor</button></a>
@@ -59,15 +82,15 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 </div>
 
 <!-- TABS -->
-<div style="display:flex;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0;overflow-x:auto">
+<div style="display:flex;background:var(--bg-secondary);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto">
   <button class="tab-btn" onclick="showTab('mesa')" id="tab-mesa" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid #c89040;color:#c89040;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Mesa de Operaciones</button>
-  <button class="tab-btn" onclick="showTab('lps')" id="tab-lps" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Pipeline Inversores</button>
-  <button class="tab-btn" onclick="showTab('mundo')" id="tab-mundo" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Motor Global</button>
-  <button class="tab-btn" onclick="showTab('org')" id="tab-org" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Organización</button>
-  <button class="tab-btn" onclick="showTab('cal')" id="tab-cal" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Calendario</button>
-  <button class="tab-btn" onclick="showTab('rep')" id="tab-rep" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Reportes</button>
-  <button class="tab-btn" onclick="showTab('lin')" id="tab-lin" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Linaje</button>
-  <button class="tab-btn" onclick="showTab('ctas')" id="tab-ctas" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Cuentas y Brokers</button>
+  <button class="tab-btn" onclick="showTab('lps')" id="tab-lps" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Pipeline Inversores</button>
+  <button class="tab-btn" onclick="showTab('mundo')" id="tab-mundo" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Motor Global</button>
+  <button class="tab-btn" onclick="showTab('org')" id="tab-org" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Organización</button>
+  <button class="tab-btn" onclick="showTab('cal')" id="tab-cal" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Calendario</button>
+  <button class="tab-btn" onclick="showTab('rep')" id="tab-rep" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Reportes</button>
+  <button class="tab-btn" onclick="showTab('lin')" id="tab-lin" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Linaje</button>
+  <button class="tab-btn" onclick="showTab('ctas')" id="tab-ctas" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Cuentas y Brokers</button>
 </div>
 
 <!-- CONTENT AREA -->
@@ -77,9 +100,9 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 <div id="tab-mesa-content" style="flex:1;overflow:hidden;display:flex">
 
   <!-- LEFT: FORM -->
-  <div style="width:320px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
+  <div style="width:320px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid var(--border)">
 
-    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Registrar Operación</div>
+    <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">Registrar Operación</div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
       <div>
@@ -129,12 +152,12 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
       </div>
     </div>
 
-    <div id="rr-preview" style="background:#121824;border:1px solid #1a2535;padding:7px;margin-bottom:8px;display:none">
+    <div id="rr-preview" style="background:var(--bg-input);border:1px solid var(--border);padding:7px;margin-bottom:8px;display:none">
       <div style="display:flex;justify-content:space-between">
-        <span style="font-size:9px;color:#3a4f65">R/R Teórico</span><span id="rr-val" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#c89040">—</span>
+        <span style="font-size:9px;color:var(--text-muted)">R/R Teórico</span><span id="rr-val" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#c89040">—</span>
       </div>
       <div style="display:flex;justify-content:space-between">
-        <span style="font-size:9px;color:#3a4f65">Monto en riesgo</span><span id="rr-monto" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#e84040">—</span>
+        <span style="font-size:9px;color:var(--text-muted)">Monto en riesgo</span><span id="rr-monto" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:#e84040">—</span>
       </div>
     </div>
 
@@ -166,9 +189,9 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
     <button class="btn-gold" onclick="registrarTrade()" style="width:100%;margin-bottom:8px">Registrar Operación</button>
     <button class="btn" onclick="verificarConAPI()" id="btn-verify" style="width:100%;margin-bottom:12px">Verificar con API (Alpha Vantage)</button>
 
-    <div style="border-top:1px solid #1a2535;padding-top:12px;margin-bottom:10px">
+    <div style="border-top:1px solid var(--border);padding-top:12px;margin-bottom:10px">
       <div style="font-size:8px;color:#4a9eff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Equipo de Analistas</div>
-      <div style="font-size:9px;color:#3a4f65;line-height:1.6;margin-bottom:8px">Convocá al equipo de research para generar ideas de inversión. Mezclan datos macro reales con el universo del fondo.</div>
+      <div style="font-size:9px;color:var(--text-muted);line-height:1.6;margin-bottom:8px">Convocá al equipo de research para generar ideas de inversión. Mezclan datos macro reales con el universo del fondo.</div>
       <div style="margin-bottom:8px">
         <label>Enfoque del research</label>
         <select id="research-focus">
@@ -194,10 +217,10 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 
     <div id="research-output" style="display:none;margin-bottom:10px"></div>
 
-    <div style="border-top:1px solid #1a2535;padding-top:10px">
+    <div style="border-top:1px solid var(--border);padding-top:10px">
       <label>Alpha Vantage API Key</label>
       <input type="password" id="av-key" placeholder="Tu key de alphavantage.co">
-      <div style="font-size:8px;color:#1e2c3a;margin-top:3px;line-height:1.5">Gratis en alphavantage.co — detecta automáticamente si tocó TP o SL</div>
+      <div style="font-size:8px;color:var(--text-dim);margin-top:3px;line-height:1.5">Gratis en alphavantage.co — detecta automáticamente si tocó TP o SL</div>
       <button class="btn" onclick="saveAVKey()" style="width:100%;margin-top:5px">Guardar Key</button>
     </div>
   </div>
@@ -206,29 +229,29 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
   <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
 
     <!-- KPIs -->
-    <div style="display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid #1a2535;flex-shrink:0">
-      <div style="padding:10px 12px;border-right:1px solid #1a2535">
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Trades</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--border);flex-shrink:0">
+      <div style="padding:10px 12px;border-right:1px solid var(--border)">
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Trades</div>
         <div id="k-total" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">0</div>
       </div>
-      <div style="padding:10px 12px;border-right:1px solid #1a2535">
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Win Rate</div>
+      <div style="padding:10px 12px;border-right:1px solid var(--border)">
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Win Rate</div>
         <div id="k-wr" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#00c896">—</div>
       </div>
-      <div style="padding:10px 12px;border-right:1px solid #1a2535">
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">P&L Neto</div>
+      <div style="padding:10px 12px;border-right:1px solid var(--border)">
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">P&L Neto</div>
         <div id="k-pnl" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">0R</div>
       </div>
-      <div style="padding:10px 12px;border-right:1px solid #1a2535">
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">R/R Prom.</div>
+      <div style="padding:10px 12px;border-right:1px solid var(--border)">
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">R/R Prom.</div>
         <div id="k-rr" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">—</div>
       </div>
-      <div style="padding:10px 12px;border-right:1px solid #1a2535">
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Expectancy</div>
+      <div style="padding:10px 12px;border-right:1px solid var(--border)">
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Expectancy</div>
         <div id="k-exp" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#4a9eff">—</div>
       </div>
       <div style="padding:10px 12px">
-        <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">En Curso</div>
+        <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">En Curso</div>
         <div id="k-open" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">0</div>
       </div>
     </div>
@@ -236,7 +259,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
     <!-- TRADE LOG -->
     <div style="flex:1;overflow-y:auto;padding:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Bitácora del Fondo — Meridian Strategy</div>
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase">Bitácora del Fondo — Meridian Strategy</div>
         <div style="display:flex;gap:6px">
           <select id="filter-sistema" onchange="renderLog()" style="width:auto;font-size:9px;padding:3px 7px">
             <option value="">Todos los sistemas</option>
@@ -259,16 +282,16 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 <!-- ═══ PIPELINE INVERSORES ═══ -->
 <div id="tab-lps-content" style="flex:1;overflow-y:auto;display:none;flex-direction:column;padding:14px">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">CRM de Inversores — ZAR Capital Partners</div>
+    <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase">CRM de Inversores — ZAR Capital Partners</div>
     <button class="btn" onclick="addLP()" style="border-color:#c89040;color:#c89040">+ Agregar Inversor</button>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px;background:#0c101a;border:1px solid #1a2535;padding:10px">
-    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">LPs Activos</div><div id="lp-activos" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#00c896">0</div></div>
-    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">En Pipeline</div><div id="lp-pipeline" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">0</div></div>
-    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Capital Activo</div><div id="lp-cap-activo" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">$0</div></div>
-    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Capital Pipeline</div><div id="lp-cap-pipe" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#3a4f65">$0</div></div>
-    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Satisfacción Prom.</div><div id="lp-sat" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#4a9eff">—</div></div>
-    <div style="text-align:center"><div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">En Riesgo</div><div id="lp-riesgo" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#e84040">0</div></div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px;background:var(--bg-secondary);border:1px solid var(--border);padding:10px">
+    <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">LPs Activos</div><div id="lp-activos" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#00c896">0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">En Pipeline</div><div id="lp-pipeline" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Capital Activo</div><div id="lp-cap-activo" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">$0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Capital Pipeline</div><div id="lp-cap-pipe" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--text-muted)">$0</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Satisfacción Prom.</div><div id="lp-sat" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#4a9eff">—</div></div>
+    <div style="text-align:center"><div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">En Riesgo</div><div id="lp-riesgo" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#e84040">0</div></div>
   </div>
   <div id="lp-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div>
 </div>
@@ -278,8 +301,8 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
   <div style="display:flex;flex:1;overflow:hidden">
 
     <!-- LEFT: CONTROLS -->
-    <div style="width:280px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Motor Político-Económico Global</div>
+    <div style="width:280px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid var(--border)">
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">Motor Político-Económico Global</div>
 
       <div style="margin-bottom:10px">
         <label>Región del mundo</label>
@@ -344,30 +367,30 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
       <button class="btn" onclick="crearEntidadManual()" style="width:100%;margin-bottom:8px;border-color:#8860ff;color:#8860ff">+ Crear Entidad Manual</button>
       <button class="btn" onclick="inyectarAlSimulador()" id="btn-inj" style="width:100%;border-color:#e84040;color:#e84040" disabled>→ Inyectar al Simulador</button>
 
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid #1a2535">
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:5px">Última actualización</div>
-        <div id="mundo-ts" style="font-size:9px;color:#1e2c3a">—</div>
-        <div id="mundo-prox" style="font-size:8px;color:#1e2c3a;margin-top:3px">Próx: —</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:5px">Última actualización</div>
+        <div id="mundo-ts" style="font-size:9px;color:var(--text-dim)">—</div>
+        <div id="mundo-prox" style="font-size:8px;color:var(--text-dim);margin-top:3px">Próx: —</div>
         <div id="mundo-auto-badge" style="display:none;margin-top:8px;background:rgba(200,144,64,.12);border:1px solid #c89040;color:#c89040;font-size:8px;padding:5px 8px;line-height:1.5"></div>
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-top:8px;margin-bottom:5px">Entidades en el universo</div>
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-top:8px;margin-bottom:5px">Entidades en el universo</div>
         <div id="mundo-count" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#c89040">0</div>
       </div>
     </div>
 
     <!-- RIGHT: WORLD FEED -->
     <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
-      <div style="display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid #1a2535;flex-shrink:0">
+      <div style="display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0">
         <button onclick="filterMundo('todo')" id="mf-todo" class="btn" style="border-color:#c89040;color:#c89040">Todo</button>
         <button onclick="filterMundo('empresa')" id="mf-empresa" class="btn">Empresas</button>
         <button onclick="filterMundo('politico')" id="mf-politico" class="btn">Político</button>
         <button onclick="filterMundo('geo')" id="mf-geo" class="btn">Geopolítico</button>
         <button onclick="filterMundo('financiero')" id="mf-financiero" class="btn">Financiero</button>
-        <div style="margin-left:auto;font-size:8px;color:#3a4f65;display:flex;align-items:center;gap:6px">
+        <div style="margin-left:auto;font-size:8px;color:var(--text-muted);display:flex;align-items:center;gap:6px">
           <span id="mundo-impacto-badge" style="display:none" class="tag tag-neg">IMPACTA AL FONDO</span>
         </div>
       </div>
       <div id="mundo-feed" style="flex:1;overflow-y:auto;padding:12px">
-        <div style="display:flex;align-items:center;justify-content:center;height:200px;font-size:10px;color:#1e2c3a;letter-spacing:2px;text-transform:uppercase">El motor global está en silencio — activalo para ver el mundo moverse</div>
+        <div style="display:flex;align-items:center;justify-content:center;height:200px;font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase">El motor global está en silencio — activalo para ver el mundo moverse</div>
       </div>
     </div>
   </div>
@@ -378,8 +401,8 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
   <div style="display:flex;flex:1;overflow:hidden">
 
     <!-- LEFT: CONTROLES -->
-    <div style="width:300px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Gestión Organizacional — ZAR Capital</div>
+    <div style="width:300px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid var(--border)">
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">Gestión Organizacional — ZAR Capital</div>
 
       <!-- OFICINA -->
       <div style="margin-bottom:12px">
@@ -389,19 +412,19 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
             <span id="oficina-nivel-label" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#c89040">Monoambiente</span>
             <span id="oficina-costo" style="font-size:9px;color:#e84040">$0/mes</span>
           </div>
-          <div id="oficina-desc" style="font-size:8px;color:#3a4f65;line-height:1.5;margin-bottom:6px">Operación desde casa. Sin costo de alquiler. Capacidad: 1 persona.</div>
+          <div id="oficina-desc" style="font-size:8px;color:var(--text-muted);line-height:1.5;margin-bottom:6px">Operación desde casa. Sin costo de alquiler. Capacidad: 1 persona.</div>
           <button class="btn" onclick="expandirOficina()" id="btn-oficina" style="width:100%;border-color:#c89040;color:#c89040">Expandir Oficina</button>
         </div>
         <div style="margin-bottom:6px">
           <label>Ciudad principal</label>
           <input type="text" id="org-ciudad" placeholder="Buenos Aires" onchange="saveOrgVal('ciudad',this.value)">
         </div>
-        <div id="sedes-extra" style="font-size:8px;color:#1e2c3a;margin-bottom:6px"></div>
+        <div id="sedes-extra" style="font-size:8px;color:var(--text-dim);margin-bottom:6px"></div>
         <button class="btn" onclick="addSede()" style="width:100%;font-size:8px">+ Agregar Sede / Sucursal</button>
       </div>
 
       <!-- ESTRUCTURA JURÍDICA -->
-      <div style="margin-bottom:12px;padding-top:10px;border-top:1px solid #1a2535">
+      <div style="margin-bottom:12px;padding-top:10px;border-top:1px solid var(--border)">
         <div style="font-size:8px;color:#4a9eff;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px">Estructura del Fondo</div>
         <div style="margin-bottom:6px">
           <label>Tipo de vehículo</label>
@@ -425,7 +448,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
       </div>
 
       <!-- RECLUTAMIENTO -->
-      <div style="padding-top:10px;border-top:1px solid #1a2535">
+      <div style="padding-top:10px;border-top:1px solid var(--border)">
         <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px">Reclutamiento</div>
         <div style="margin-bottom:6px">
           <label>Rol a cubrir</label>
@@ -458,33 +481,33 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
     <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
 
       <!-- KPIs del equipo -->
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid #1a2535;flex-shrink:0">
-        <div style="padding:10px 12px;border-right:1px solid #1a2535">
-          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Equipo</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border);flex-shrink:0">
+        <div style="padding:10px 12px;border-right:1px solid var(--border)">
+          <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Equipo</div>
           <div id="eq-total" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">1</div>
-          <div style="font-size:8px;color:#1e2c3a">personas</div>
+          <div style="font-size:8px;color:var(--text-dim)">personas</div>
         </div>
-        <div style="padding:10px 12px;border-right:1px solid #1a2535">
-          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Moral</div>
+        <div style="padding:10px 12px;border-right:1px solid var(--border)">
+          <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Moral</div>
           <div id="eq-moral" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#00c896">—</div>
         </div>
-        <div style="padding:10px 12px;border-right:1px solid #1a2535">
-          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Costo/mes</div>
+        <div style="padding:10px 12px;border-right:1px solid var(--border)">
+          <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Costo/mes</div>
           <div id="eq-costo" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#e84040">$0</div>
         </div>
-        <div style="padding:10px 12px;border-right:1px solid #1a2535">
-          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">En Riesgo</div>
+        <div style="padding:10px 12px;border-right:1px solid var(--border)">
+          <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">En Riesgo</div>
           <div id="eq-riesgo" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#e84040">0</div>
         </div>
         <div style="padding:10px 12px">
-          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Ofertas Activas</div>
+          <div style="font-size:8px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Ofertas Activas</div>
           <div id="eq-ofertas" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">0</div>
         </div>
       </div>
 
       <!-- EQUIPO ACTUAL -->
       <div style="flex:1;overflow-y:auto;padding:12px">
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Equipo Actual — ZAR Capital Partners</div>
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Equipo Actual — ZAR Capital Partners</div>
 
         <!-- Founder siempre visible -->
         <div class="card ani" style="margin-bottom:8px;border-left:3px solid #c89040">
@@ -495,12 +518,12 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
             </div>
             <span class="tag tag-pos">ACTIVO</span>
           </div>
-          <div style="display:flex;gap:16px;font-size:8px;color:#3a4f65">
+          <div style="display:flex;gap:16px;font-size:8px;color:var(--text-muted)">
             <span>Rol: Founder, CIO, Trader, Analista</span>
             <span>Modalidad: Full time</span>
             <span>Salario: Equity</span>
           </div>
-          <div style="margin-top:5px;font-size:8px;color:#3a4f65">Habilidades: Análisis técnico (TESLA/MALETA) · Macro · Gestión de riesgo · Relación con LPs</div>
+          <div style="margin-top:5px;font-size:8px;color:var(--text-muted)">Habilidades: Análisis técnico (TESLA/MALETA) · Macro · Gestión de riesgo · Relación con LPs</div>
         </div>
 
         <div id="equipo-grid"></div>
@@ -519,9 +542,9 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 <!-- ═══ CALENDARIO ═══ -->
 <div id="tab-cal-content" style="flex:1;overflow-y:auto;display:none;align-items:center;justify-content:center">
   <div style="text-align:center;padding:60px">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:4px;color:#1e2c3a;text-transform:uppercase;margin-bottom:8px">Calendario del Fondo</div>
-    <div style="font-size:10px;color:#1e2c3a;letter-spacing:1px">Lock-ups · Management fees · Reportes · Reuniones · Vencimientos</div>
-    <div style="margin-top:20px;font-size:9px;color:#1a2535;border:1px solid #1a2535;display:inline-block;padding:6px 16px;letter-spacing:1px">PRÓXIMA SESIÓN</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px">Calendario del Fondo</div>
+    <div style="font-size:10px;color:var(--text-dim);letter-spacing:1px">Lock-ups · Management fees · Reportes · Reuniones · Vencimientos</div>
+    <div style="margin-top:20px;font-size:9px;color:var(--border);border:1px solid var(--border);display:inline-block;padding:6px 16px;letter-spacing:1px">PRÓXIMA SESIÓN</div>
   </div>
 </div>
 
@@ -529,7 +552,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 <div id="tab-rep-content" style="flex:1;overflow-y:auto;display:none;flex-direction:column;padding:14px">
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Reportes & Track Record — ZAR Capital Partners</div>
+    <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase">Reportes & Track Record — ZAR Capital Partners</div>
     <div style="display:flex;gap:6px">
       <button class="btn" onclick="generarReporte()" id="btn-reporte" style="border-color:#4a9eff;color:#4a9eff">Generar Reporte LP</button>
       <button class="btn" onclick="addPeriodo()" style="border-color:#c89040;color:#c89040">+ Cargar Período</button>
@@ -539,27 +562,27 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
   <!-- KPIs de performance -->
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px">
     <div class="card" style="text-align:center">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Retorno Total</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Retorno Total</div>
       <div id="tr-retorno" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#00c896">—</div>
     </div>
     <div class="card" style="text-align:center">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Sharpe Ratio</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Sharpe Ratio</div>
       <div id="tr-sharpe" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#4a9eff">—</div>
     </div>
     <div class="card" style="text-align:center">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Max Drawdown</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Max Drawdown</div>
       <div id="tr-maxdd" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#e84040">—</div>
     </div>
     <div class="card" style="text-align:center">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Win Rate</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Win Rate</div>
       <div id="tr-wr" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">—</div>
     </div>
     <div class="card" style="text-align:center">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Períodos</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Períodos</div>
       <div id="tr-periodos" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">0</div>
     </div>
     <div class="card" style="text-align:center">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">AUM Actual</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">AUM Actual</div>
       <div id="tr-aum" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">—</div>
     </div>
   </div>
@@ -568,14 +591,14 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 
     <!-- Track Record Table -->
     <div style="flex:1;overflow-y:auto">
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Historial de Performance — Meridian Strategy</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Historial de Performance — Meridian Strategy</div>
       <div id="tr-tabla"></div>
     </div>
 
     <!-- Reporte generado -->
-    <div style="width:280px;flex-shrink:0;overflow-y:auto;border-left:1px solid #1a2535;padding-left:12px">
+    <div style="width:280px;flex-shrink:0;overflow-y:auto;border-left:1px solid var(--border);padding-left:12px">
       <div style="font-size:8px;color:#4a9eff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Último Reporte LP</div>
-      <div id="tr-reporte" style="font-size:9px;color:#3a4f65;line-height:1.7">Cargá períodos y generá el reporte para tus LPs.</div>
+      <div id="tr-reporte" style="font-size:9px;color:var(--text-muted);line-height:1.7">Cargá períodos y generá el reporte para tus LPs.</div>
     </div>
   </div>
 </div>
@@ -585,15 +608,15 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
   <div style="display:flex;flex:1;overflow:hidden">
 
     <!-- LEFT: ÁRBOL GENEALÓGICO -->
-    <div style="width:300px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
-      <div style="font-size:8px;color:#c89040;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Árbol Genealógico — Dinastía ZAR</div>
+    <div style="width:300px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid var(--border)">
+      <div style="font-size:8px;color:#c89040;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">Árbol Genealógico — Dinastía ZAR</div>
 
       <!-- Generación 1 — Fundador -->
       <div class="card" style="border-left:3px solid #c89040;margin-bottom:8px">
         <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px">Generación I — Fundador</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;margin-bottom:3px">Pedro Zacarias</div>
-        <div style="font-size:8px;color:#3a4f65;margin-bottom:5px">Founder & CIO · ZAR Capital Partners</div>
-        <div style="font-size:8px;color:#3a4f65;line-height:1.5">
+        <div style="font-size:8px;color:var(--text-muted);margin-bottom:5px">Founder & CIO · ZAR Capital Partners</div>
+        <div style="font-size:8px;color:var(--text-muted);line-height:1.5">
           Capital propio: <span style="color:#c89040">USD 50.000</span><br>
           Estrategia: Meridian Barbell<br>
           Vehículo: Meridian Fund I (Uruguay)
@@ -601,13 +624,13 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
       </div>
 
       <!-- Herederos -->
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px">Generación II — Herederos</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px">Generación II — Herederos</div>
       <div id="linaje-herederos"></div>
       <button class="btn" onclick="addHeredero()" style="width:100%;margin-bottom:10px;border-color:#c89040;color:#c89040">+ Agregar Heredero</button>
 
       <!-- Activos del linaje -->
-      <div style="padding-top:10px;border-top:1px solid #1a2535">
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Activos del Linaje</div>
+      <div style="padding-top:10px;border-top:1px solid var(--border)">
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Activos del Linaje</div>
         <div class="card" style="margin-bottom:6px">
           <label>Capital Familiar Total (USD)</label>
           <input type="number" id="lin-capital" placeholder="0" onchange="saveLinVal('capital',this.value)">
@@ -626,7 +649,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
     <!-- RIGHT: LEGADO + IA -->
     <div style="flex:1;overflow-y:auto;padding:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Gestión del Legado</div>
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase">Gestión del Legado</div>
         <div style="display:flex;gap:6px">
           <button class="btn" onclick="generarTestamento()" style="border-color:#c89040;color:#c89040">Redactar Legado</button>
           <button class="btn" onclick="generarEstrategiaLinaje()" style="border-color:#8860ff;color:#8860ff">Estrategia Dinástica</button>
@@ -636,32 +659,32 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
       <!-- Métricas dinásticas -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
         <div class="card" style="text-align:center">
-          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Generaciones</div>
+          <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Generaciones</div>
           <div id="lin-gen" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">1</div>
         </div>
         <div class="card" style="text-align:center">
-          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Herederos</div>
+          <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Herederos</div>
           <div id="lin-count" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700">0</div>
         </div>
         <div class="card" style="text-align:center">
-          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Capital Linaje</div>
+          <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Capital Linaje</div>
           <div id="lin-cap" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">$0</div>
         </div>
         <div class="card" style="text-align:center">
-          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Fase Dinástica</div>
+          <div style="font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-bottom:3px">Fase Dinástica</div>
           <div id="lin-fase" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#8860ff">Fundación</div>
         </div>
       </div>
 
       <!-- Legado y documentos -->
-      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Documentos del Linaje</div>
+      <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Documentos del Linaje</div>
       <div id="lin-docs"></div>
 
       <!-- Misión dinástica -->
       <div style="margin-top:12px">
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Misión del Linaje</div>
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Misión del Linaje</div>
         <div class="card" style="border-left:3px solid #8860ff">
-          <div style="font-size:9px;color:#c0cbd8;line-height:1.7" id="lin-mision">
+          <div style="font-size:9px;color:var(--text-main);line-height:1.7" id="lin-mision">
             ZAR Capital Partners fue fundado con una visión de largo plazo. El capital no es el fin — es el instrumento. El legado que construimos hoy determinará las decisiones que tomarán las generaciones que vienen.
           </div>
         </div>
@@ -669,19 +692,19 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 
       <!-- Horizonte temporal -->
       <div style="margin-top:12px">
-        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Horizonte Temporal del Linaje</div>
+        <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Horizonte Temporal del Linaje</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
           <div class="card" style="border-top:2px solid #c89040">
             <div style="font-size:8px;color:#c89040;letter-spacing:1px;margin-bottom:4px">2025-2030 · FUNDACIÓN</div>
-            <div style="font-size:8px;color:#3a4f65;line-height:1.5">Construir track record. Primer capital institucional. Estructura legal sólida.</div>
+            <div style="font-size:8px;color:var(--text-muted);line-height:1.5">Construir track record. Primer capital institucional. Estructura legal sólida.</div>
           </div>
           <div class="card" style="border-top:2px solid #4a9eff">
             <div style="font-size:8px;color:#4a9eff;letter-spacing:1px;margin-bottom:4px">2030-2040 · EXPANSIÓN</div>
-            <div style="font-size:8px;color:#3a4f65;line-height:1.5">Escala institucional. Presencia global. Incorporación de herederos al fondo.</div>
+            <div style="font-size:8px;color:var(--text-muted);line-height:1.5">Escala institucional. Presencia global. Incorporación de herederos al fondo.</div>
           </div>
           <div class="card" style="border-top:2px solid #8860ff">
             <div style="font-size:8px;color:#8860ff;letter-spacing:1px;margin-bottom:4px">2040+ · DINASTÍA</div>
-            <div style="font-size:8px;color:#3a4f65;line-height:1.5">Capital intergeneracional. Legado institucional. Presencia en mercados globales.</div>
+            <div style="font-size:8px;color:var(--text-muted);line-height:1.5">Capital intergeneracional. Legado institucional. Presencia en mercados globales.</div>
           </div>
         </div>
       </div>
@@ -693,14 +716,14 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 <div id="tab-ctas-content" style="flex:1;overflow-y:auto;display:none;padding:14px">
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Infraestructura Financiera — ZAR Capital Partners</div>
+    <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase">Infraestructura Financiera — ZAR Capital Partners</div>
     <button class="btn" onclick="addBroker()" style="border-color:#c89040;color:#c89040">+ Agregar Corredor</button>
   </div>
 
-  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Corredores & Bolsas de Ejecución</div>
+  <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Corredores & Bolsas de Ejecución</div>
   <div id="brokers-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px"></div>
 
-  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Vehículo Legal & Custodia</div>
+  <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Vehículo Legal & Custodia</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
     <div class="card">
       <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Meridian Fund I — Uruguay</div>
@@ -713,7 +736,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
       <div style="font-size:8px;color:#4a9eff;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Capital No Asignado</div>
       <label>Efectivo disponible (USD)</label>
       <input type="number" placeholder="0" id="cta-cash" onchange="saveCtaVal('cash',this.value)" style="margin-bottom:6px">
-      <div style="font-size:8px;color:#1e2c3a;line-height:1.5">Capital listo para desplegar en próximas oportunidades</div>
+      <div style="font-size:8px;color:var(--text-dim);line-height:1.5">Capital listo para desplegar en próximas oportunidades</div>
     </div>
     <div class="card">
       <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">ZAR Capital — Buenos Aires</div>
@@ -729,7 +752,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
     </div>
   </div>
 
-  <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Gastos Operativos Mensuales</div>
+  <div style="font-size:8px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Gastos Operativos Mensuales</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
     <div class="card">
       <label>Equipo (salarios)</label>
@@ -754,11 +777,11 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 
 <!-- MODAL -->
 <div id="zmod" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:100;align-items:center;justify-content:center">
-  <div style="background:#0c101a;border:1px solid #1a2535;max-width:440px;width:92%;padding:20px;max-height:85vh;overflow-y:auto">
+  <div style="background:var(--bg-secondary);border:1px solid var(--border);max-width:440px;width:92%;padding:20px;max-height:85vh;overflow-y:auto">
     <div id="macc" style="height:3px;margin:-20px -20px 14px;background:#00c896"></div>
     <div id="mtit" style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;color:#00c896"></div>
-    <div id="msub" style="font-size:9px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1a2535"></div>
-    <div id="mbod" style="font-size:11px;color:#c0cbd8;line-height:1.9"></div>
+    <div id="msub" style="font-size:9px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)"></div>
+    <div id="mbod" style="font-size:11px;color:var(--text-main);line-height:1.9"></div>
     <button class="btn" onclick="closeM()" style="margin-top:14px">Cerrar</button>
   </div>
 </div>
@@ -781,7 +804,7 @@ function showTab(id){
     const c=document.getElementById('tab-'+t+'-content');
     const b=document.getElementById('tab-'+t);
     if(c){c.style.display='none';}
-    if(b){b.style.borderBottomColor='transparent';b.style.color='#3a4f65';}
+    if(b){b.style.borderBottomColor='transparent';b.style.color='var(--text-muted)';}
   });
   const el=document.getElementById('tab-'+id+'-content');
   const btn=document.getElementById('tab-'+id);
@@ -1008,31 +1031,31 @@ function renderLog(){
     return true;
   });
   const log=document.getElementById('trade-log');
-  if(!trades.length){log.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:120px;font-size:10px;color:#1e2c3a;letter-spacing:2px;text-transform:uppercase">Sin operaciones registradas</div>';return;}
-  const stCol={GANADA:'#00c896',STOP:'#e84040','EN CURSO':'#c89040',CANCELADA:'#3a4f65'};
+  if(!trades.length){log.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:120px;font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase">Sin operaciones registradas</div>';return;}
+  const stCol={GANADA:'#00c896',STOP:'#e84040','EN CURSO':'#c89040',CANCELADA:'var(--text-muted)'};
   log.innerHTML=trades.map(t=>`
-    <div class="ani" style="background:#0c101a;border:1px solid #1a2535;border-left:3px solid ${stCol[t.estado]||'#1a2535'};padding:10px 12px;margin-bottom:7px">
+    <div class="ani" style="background:var(--bg-secondary);border:1px solid var(--border);border-left:3px solid ${stCol[t.estado]||'var(--border)'};padding:10px 12px;margin-bottom:7px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
         <div style="display:flex;align-items:center;gap:7px">
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#c0cbd8">${t.par}</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--text-main)">${t.par}</span>
           <span class="tag ${t.dir==='LONG'?'tag-pos':'tag-neg'}">${t.dir}</span>
           <span class="tag tag-warn">${t.sistema}</span>
-          <span class="tag" style="background:rgba(255,255,255,.04);color:${stCol[t.estado]||'#3a4f65'}">${t.estado}</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${stCol[t.estado]||'var(--text-muted)'}">${t.estado}</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           ${t.resultado!=null?`<span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:${parseFloat(t.resultado)>=0?'#00c896':'#e84040'}">${parseFloat(t.resultado)>=0?'+':''}${t.resultado}%</span>`:''}
-          <span style="font-size:9px;color:#3a4f65">${t.fecha}</span>
-          <button onclick="eliminarTrade('${t.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:9px;padding:1px 4px">×</button>
+          <span style="font-size:9px;color:var(--text-muted)">${t.fecha}</span>
+          <button onclick="eliminarTrade('${t.id}')" style="background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:9px;padding:1px 4px">×</button>
         </div>
       </div>
       <div style="display:flex;gap:16px;margin-bottom:${t.nota||t.tv?'5px':'0'}">
-        <span style="font-size:9px;color:#3a4f65">Entrada: <span style="color:#c0cbd8">${t.entrada}</span></span>
-        <span style="font-size:9px;color:#3a4f65">SL: <span style="color:#e84040">${t.sl}</span></span>
-        <span style="font-size:9px;color:#3a4f65">TP: <span style="color:#00c896">${t.tp}</span></span>
-        <span style="font-size:9px;color:#3a4f65">R/R: <span style="color:#c89040">1:${t.rrTeo}</span></span>
-        <span style="font-size:9px;color:#3a4f65">Riesgo: <span style="color:#c0cbd8">${t.riesgo}%</span></span>
+        <span style="font-size:9px;color:var(--text-muted)">Entrada: <span style="color:var(--text-main)">${t.entrada}</span></span>
+        <span style="font-size:9px;color:var(--text-muted)">SL: <span style="color:#e84040">${t.sl}</span></span>
+        <span style="font-size:9px;color:var(--text-muted)">TP: <span style="color:#00c896">${t.tp}</span></span>
+        <span style="font-size:9px;color:var(--text-muted)">R/R: <span style="color:#c89040">1:${t.rrTeo}</span></span>
+        <span style="font-size:9px;color:var(--text-muted)">Riesgo: <span style="color:var(--text-main)">${t.riesgo}%</span></span>
       </div>
-      ${t.nota?`<div style="font-size:9px;color:#3a4f65;line-height:1.5;margin-bottom:3px">"${t.nota}"</div>`:''}
+      ${t.nota?`<div style="font-size:9px;color:var(--text-muted);line-height:1.5;margin-bottom:3px">"${t.nota}"</div>`:''}
       ${t.tv?`<a href="${t.tv}" target="_blank" style="font-size:8px;color:#4a9eff;letter-spacing:.5px;text-decoration:none">Ver análisis en TradingView →</a>`:''}
     </div>
   `).join('');
@@ -1073,13 +1096,13 @@ function renderBrokers(){
   if(!CC.brokers)CC.brokers=[];
   const grid=document.getElementById('brokers-grid');if(!grid)return;
   if(!CC.brokers.length){
-    grid.innerHTML=`<div class="card" style="grid-column:span 3;text-align:center;padding:20px"><div style="font-size:9px;color:#1e2c3a;letter-spacing:1px">Sin corredores — hacé clic en "+ Agregar Corredor"</div></div>`;return;
+    grid.innerHTML=`<div class="card" style="grid-column:span 3;text-align:center;padding:20px"><div style="font-size:9px;color:var(--text-dim);letter-spacing:1px">Sin corredores — hacé clic en "+ Agregar Corredor"</div></div>`;return;
   }
   grid.innerHTML=CC.brokers.map(b=>`
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span class="tag ${b.tipo==='real'?'tag-pos':'tag-neu'}">${b.tipo==='real'?'REAL':'FICTICIO'}</span>
-        <button onclick="deleteBroker('${b.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:11px">×</button>
+        <button onclick="deleteBroker('${b.id}')" style="background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:11px">×</button>
       </div>
       <label>Nombre del corredor</label>
       <input type="text" value="${b.nombre||''}" placeholder="IB, Saxo, ZAR Prime..." onchange="updateBroker('${b.id}','nombre',this.value)" style="margin-bottom:5px">
@@ -1134,15 +1157,15 @@ Generá exactamente 3 ideas de inversión concretas para el fondo. Respondé SOL
             <span class="tag" style="background:rgba(255,255,255,.04);color:${idea.modo==='real'?'#00c896':'#8860ff'}">${(idea.modo||'').toUpperCase()}</span>
           </div>
         </div>
-        <div style="font-size:9px;color:#c0cbd8;line-height:1.5;margin-bottom:5px">${idea.tesis}</div>
+        <div style="font-size:9px;color:var(--text-main);line-height:1.5;margin-bottom:5px">${idea.tesis}</div>
         <div style="display:flex;gap:10px;margin-bottom:4px">
-          <span style="font-size:8px;color:#3a4f65">Retorno: <span style="color:#00c896">${idea.retorno}</span></span>
-          <span style="font-size:8px;color:#3a4f65">Plazo: <span style="color:#c0cbd8">${idea.plazo}</span></span>
+          <span style="font-size:8px;color:var(--text-muted)">Retorno: <span style="color:#00c896">${idea.retorno}</span></span>
+          <span style="font-size:8px;color:var(--text-muted)">Plazo: <span style="color:var(--text-main)">${idea.plazo}</span></span>
         </div>
         <div style="font-size:8px;color:#e84040;margin-bottom:6px">Riesgo: ${idea.riesgo}</div>
         <div style="display:flex;gap:4px">
           <button onclick="aprobarIdea(${i})" style="flex:1;padding:4px;background:rgba(0,200,150,.1);border:1px solid #00c896;color:#00c896;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px">Aprobar →</button>
-          <button onclick="rechazarIdea(${i})" style="flex:1;padding:4px;background:transparent;border:1px solid #1a2535;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px">Rechazar</button>
+          <button onclick="rechazarIdea(${i})" style="flex:1;padding:4px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer;letter-spacing:1px">Rechazar</button>
         </div>
       </div>`).join('');
     window._lastResearchIdeas=ideas;
@@ -1161,7 +1184,7 @@ function aprobarIdea(i){
 }
 function rechazarIdea(i){
   const card=document.getElementById('idea-'+i);
-  if(card){card.style.opacity='.3';card.style.borderLeftColor='#1a2535';}
+  if(card){card.style.opacity='.3';card.style.borderLeftColor='var(--border)';}
 }
 
 // ── PIPELINE INVERSORES ──────────────────────────────────────
@@ -1213,18 +1236,18 @@ function renderLPs(){
   renderLPKPIs();
   const grid=document.getElementById('lp-grid');if(!grid)return;
   if(!CC.lps.length){
-    grid.innerHTML='<div class="card" style="grid-column:span 2;text-align:center;padding:20px"><div style="font-size:9px;color:#1e2c3a">Sin inversores en el CRM — hacé clic en "+ Agregar Inversor"</div></div>';return;
+    grid.innerHTML='<div class="card" style="grid-column:span 2;text-align:center;padding:20px"><div style="font-size:9px;color:var(--text-dim)">Sin inversores en el CRM — hacé clic en "+ Agregar Inversor"</div></div>';return;
   }
-  const etapaCol={LEAD:'#3a4f65',INTERESADO:'#c89040',DDQ:'#4a9eff',NEGOCIANDO:'#8860ff',FIRMADO:'#00c896',ACTIVO:'#00c896'};
+  const etapaCol={LEAD:'var(--text-muted)',INTERESADO:'#c89040',DDQ:'#4a9eff',NEGOCIANDO:'#8860ff',FIRMADO:'#00c896',ACTIVO:'#00c896'};
   const riesgoCol={BAJO:'#00c896',MEDIO:'#c89040',ALTO:'#e84040','CRÍTICO':'#e84040'};
   grid.innerHTML=CC.lps.map(l=>`
-    <div class="card ani" style="border-left:3px solid ${etapaCol[l.etapa]||'#1a2535'}">
+    <div class="card ani" style="border-left:3px solid ${etapaCol[l.etapa]||'var(--border)'}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div style="display:flex;gap:5px;align-items:center">
-          <span class="tag" style="background:rgba(255,255,255,.04);color:${etapaCol[l.etapa]||'#3a4f65'}">${l.etapa}</span>
-          <span class="tag" style="background:rgba(255,255,255,.04);color:${riesgoCol[l.riesgo]||'#3a4f65'}">RIESGO ${l.riesgo}</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${etapaCol[l.etapa]||'var(--text-muted)'}">${l.etapa}</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${riesgoCol[l.riesgo]||'var(--text-muted)'}">RIESGO ${l.riesgo}</span>
         </div>
-        <button onclick="deleteLP('${l.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:11px">×</button>
+        <button onclick="deleteLP('${l.id}')" style="background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:11px">×</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
         <div><label>Nombre / Entidad</label><input type="text" value="${l.nombre||''}" placeholder="Rodrigo F. — Family Office" onchange="updateLP('${l.id}','nombre',this.value)"></div>
@@ -1236,15 +1259,15 @@ function renderLPs(){
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
         <div><label>Etapa del pipeline</label><select onchange="updateLP('${l.id}','etapa',this.value)"><option ${l.etapa==='LEAD'?'selected':''}>LEAD</option><option ${l.etapa==='INTERESADO'?'selected':''}>INTERESADO</option><option ${l.etapa==='DDQ'?'selected':''}>DDQ</option><option ${l.etapa==='NEGOCIANDO'?'selected':''}>NEGOCIANDO</option><option ${l.etapa==='FIRMADO'?'selected':''}>FIRMADO</option><option ${l.etapa==='ACTIVO'?'selected':''}>ACTIVO</option></select></div>
-        <div><label>Satisfacción (0-100)</label><input type="number" value="${l.satisfaccion||80}" min="0" max="100" onchange="updateLP('${l.id}','satisfaccion',this.value)"><div style="height:3px;background:#1a2535;margin-top:3px;border-radius:2px;overflow:hidden"><div style="height:100%;background:${riesgoCol[l.riesgo]||'#3a4f65'};width:${l.satisfaccion||80}%;transition:width .4s"></div></div></div>
+        <div><label>Satisfacción (0-100)</label><input type="number" value="${l.satisfaccion||80}" min="0" max="100" onchange="updateLP('${l.id}','satisfaccion',this.value)"><div style="height:3px;background:var(--border);margin-top:3px;border-radius:2px;overflow:hidden"><div style="height:100%;background:${riesgoCol[l.riesgo]||'var(--text-muted)'};width:${l.satisfaccion||80}%;transition:width .4s"></div></div></div>
       </div>
       <div style="margin-bottom:6px"><label>Próxima acción / Contacto</label><input type="text" value="${l.contacto||''}" placeholder="Reunión 15 abril — DDQ pendiente" onchange="updateLP('${l.id}','contacto',this.value)"></div>
       <div style="margin-bottom:6px"><label>Notas</label><input type="text" value="${l.notas||''}" placeholder="Contexto, preferencias, restricciones..." onchange="updateLP('${l.id}','notas',this.value)"></div>
       <div style="display:flex;gap:5px">
         <button onclick="addContacto('${l.id}')" class="btn" style="flex:1;font-size:8px">+ Contacto</button>
-        ${l.historial&&l.historial.length?`<span style="font-size:8px;color:#3a4f65;display:flex;align-items:center">${l.historial.length} contacto${l.historial.length>1?'s':''}</span>`:''}
+        ${l.historial&&l.historial.length?`<span style="font-size:8px;color:var(--text-muted);display:flex;align-items:center">${l.historial.length} contacto${l.historial.length>1?'s':''}</span>`:''}
       </div>
-      ${l.historial&&l.historial.length?`<div style="margin-top:6px;padding-top:6px;border-top:1px solid #1a2535">${l.historial.slice(0,2).map(h=>`<div style="font-size:8px;color:#3a4f65;margin-bottom:2px"><span style="color:#1e2c3a">${h.fecha}</span> — ${h.nota}</div>`).join('')}</div>`:''}
+      ${l.historial&&l.historial.length?`<div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">${l.historial.slice(0,2).map(h=>`<div style="font-size:8px;color:var(--text-muted);margin-bottom:2px"><span style="color:var(--text-dim)">${h.fecha}</span> — ${h.nota}</div>`).join('')}</div>`:''}
     </div>
   `).join('');
 }
@@ -1313,7 +1336,7 @@ function filterMundo(tipo){
   _mundoFilter=tipo;
   ['todo','empresa','politico','geo','financiero'].forEach(t=>{
     const b=document.getElementById('mf-'+t);
-    if(b){b.style.borderColor=t===tipo?'#c89040':'#1a2535';b.style.color=t===tipo?'#c89040':'#3a4f65';}
+    if(b){b.style.borderColor=t===tipo?'#c89040':'var(--border)';b.style.color=t===tipo?'#c89040':'var(--text-muted)';}
   });
   renderMundo();
 }
@@ -1321,21 +1344,21 @@ function filterMundo(tipo){
 function renderMundo(){
   const feed=document.getElementById('mundo-feed');if(!feed)return;
   const eventos=_mundoFilter==='todo'?_mundoEventos:_mundoEventos.filter(e=>e.tipo===_mundoFilter);
-  if(!eventos.length){feed.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:200px;font-size:10px;color:#1e2c3a;letter-spacing:2px;text-transform:uppercase">Sin eventos para este filtro</div>';return;}
+  if(!eventos.length){feed.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:200px;font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase">Sin eventos para este filtro</div>';return;}
   const tipoCol={empresa:'#c89040',politico:'#4a9eff',geo:'#e84040',financiero:'#00c896',comercio:'#8860ff'};
-  const impCol={ALTO:'#e84040',MEDIO:'#c89040',BAJO:'#4a9eff',NINGUNO:'#1e2c3a'};
+  const impCol={ALTO:'#e84040',MEDIO:'#c89040',BAJO:'#4a9eff',NINGUNO:'var(--text-dim)'};
   feed.innerHTML=eventos.map((e,i)=>`
-    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${tipoCol[e.tipo]||'#1a2535'}">
+    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${tipoCol[e.tipo]||'var(--border)'}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
         <div style="display:flex;gap:5px;align-items:center">
-          <span class="tag" style="background:rgba(255,255,255,.04);color:${tipoCol[e.tipo]||'#3a4f65'}">${e.tipo?.toUpperCase()}</span>
-          <span style="font-size:8px;color:#3a4f65">${e.region}</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:${tipoCol[e.tipo]||'var(--text-muted)'}">${e.tipo?.toUpperCase()}</span>
+          <span style="font-size:8px;color:var(--text-muted)">${e.region}</span>
           <span class="tag" style="background:rgba(255,255,255,.04);color:${e.modo==='real'?'#00c896':'#8860ff'}">${e.modo?.toUpperCase()}</span>
         </div>
-        <span class="tag" style="background:rgba(255,255,255,.04);color:${impCol[e.impacto_fondo]||'#1e2c3a'}">IMPACTO ${e.impacto_fondo}</span>
+        <span class="tag" style="background:rgba(255,255,255,.04);color:${impCol[e.impacto_fondo]||'var(--text-dim)'}">IMPACTO ${e.impacto_fondo}</span>
       </div>
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px">${e.titulo}</div>
-      <div style="font-size:9px;color:#c0cbd8;line-height:1.5;margin-bottom:5px">${e.descripcion}</div>
+      <div style="font-size:9px;color:var(--text-main);line-height:1.5;margin-bottom:5px">${e.descripcion}</div>
       ${e.oportunidad?`<div style="font-size:8px;color:#00c896;margin-bottom:3px">↑ ${e.oportunidad}</div>`:''}
       ${e.riesgo?`<div style="font-size:8px;color:#e84040;margin-bottom:5px">↓ ${e.riesgo}</div>`:''}
       ${e.inyectable&&e.impacto_fondo!=='NINGUNO'?`<button onclick="inyectarEvento(${i})" class="btn" style="font-size:8px;border-color:#e84040;color:#e84040">→ Inyectar al Simulador</button>`:''}
@@ -1425,7 +1448,7 @@ function addSede(){
 function renderSedes(){
   const el=document.getElementById('sedes-extra');if(!el)return;
   const sedes=CC.org?.sedes||[];
-  el.innerHTML=sedes.map(s=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span class="tag ${s.tipo==='real'?'tag-pos':'tag-neu'}">${s.tipo.toUpperCase()}</span><span style="font-size:9px;color:#c0cbd8">${s.ciudad}</span></div>`).join('');
+  el.innerHTML=sedes.map(s=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span class="tag ${s.tipo==='real'?'tag-pos':'tag-neu'}">${s.tipo.toUpperCase()}</span><span style="font-size:9px;color:var(--text-main)">${s.ciudad}</span></div>`).join('');
 }
 async function publicarOferta(){
   const rol=document.getElementById('rec-rol').value;
@@ -1466,17 +1489,17 @@ function renderCandidatos(){
   const list=document.getElementById('candidatos-list');if(!list)return;
   const fitCol={ALTO:'#00c896',MEDIO:'#c89040',RIESGO:'#e84040'};
   list.innerHTML=(window._candidatos||[]).map((c,i)=>`
-    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${fitCol[c.fit]||'#1a2535'}">
+    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${fitCol[c.fit]||'var(--border)'}">
       <div style="display:flex;justify-content:space-between;margin-bottom:4px">
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700">${c.nombre}</span>
         <span class="tag" style="background:rgba(255,255,255,.04);color:${fitCol[c.fit]}">${c.fit}</span>
       </div>
-      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">${c.edad} años · ${c.universidad}</div>
-      <div style="font-size:9px;color:#c0cbd8;margin-bottom:4px">${c.experiencia}</div>
+      <div style="font-size:8px;color:var(--text-muted);margin-bottom:3px">${c.edad} años · ${c.universidad}</div>
+      <div style="font-size:9px;color:var(--text-main);margin-bottom:4px">${c.experiencia}</div>
       <div style="display:flex;gap:10px;margin-bottom:4px"><span style="font-size:8px;color:#00c896">↑ ${c.fortaleza}</span><span style="font-size:8px;color:#e84040">↓ ${c.debilidad}</span></div>
       <div style="font-size:8px;color:#c89040;margin-bottom:6px">"${c.nota}"</div>
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:9px;color:#3a4f65">Salario: <b style="color:#c0cbd8">${c.salario_pedido>0?'USD $'+c.salario_pedido+'/mes':'Sin costo'}</b></span>
+        <span style="font-size:9px;color:var(--text-muted)">Salario: <b style="color:var(--text-main)">${c.salario_pedido>0?'USD $'+c.salario_pedido+'/mes':'Sin costo'}</b></span>
         <button onclick="contratarCandidato(${i})" style="padding:4px 10px;background:rgba(0,200,150,.1);border:1px solid #00c896;color:#00c896;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer">Contratar</button>
       </div>
     </div>`).join('');
@@ -1506,18 +1529,18 @@ function renderEquipoKPIs(){
 function renderEquipo(){
   const grid=document.getElementById('equipo-grid');if(!grid)return;
   const equipo=CC.org?.equipo||[];
-  if(!equipo.length){grid.innerHTML='<div style="font-size:9px;color:#1e2c3a;text-align:center;padding:16px 0">Sin equipo contratado todavía — publicá una oferta</div>';return;}
+  if(!equipo.length){grid.innerHTML='<div style="font-size:9px;color:var(--text-dim);text-align:center;padding:16px 0">Sin equipo contratado todavía — publicá una oferta</div>';return;}
   const riesgoCol={BAJO:'#00c896',MEDIO:'#c89040',ALTO:'#e84040','CRÍTICO':'#e84040'};
   grid.innerHTML=equipo.map(e=>`
-    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${riesgoCol[e.riesgoRenuncia]||'#1a2535'}">
+    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${riesgoCol[e.riesgoRenuncia]||'var(--border)'}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
         <div><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${e.nombre}</span><span class="tag tag-neu" style="margin-left:6px">${e.rol}</span></div>
         <span class="tag" style="background:rgba(255,255,255,.04);color:${riesgoCol[e.riesgoRenuncia]}">RENUNCIA ${e.riesgoRenuncia}</span>
       </div>
-      <div style="display:flex;gap:12px;font-size:8px;color:#3a4f65;margin-bottom:5px">
+      <div style="display:flex;gap:12px;font-size:8px;color:var(--text-muted);margin-bottom:5px">
         <span>Moral: <b style="color:${e.moral>=70?'#00c896':'#e84040'}">${e.moral}/100</b></span>
         <span>Performance: <b style="color:#c89040">${e.performance}/100</b></span>
-        <span>Salario: <b style="color:#c0cbd8">${e.salario>0?'$'+e.salario+'/mes':'Pasante'}</b></span>
+        <span>Salario: <b style="color:var(--text-main)">${e.salario>0?'$'+e.salario+'/mes':'Pasante'}</b></span>
       </div>
       <div style="display:flex;gap:6px">
         <button onclick="ajustarMoral('${e.id}',10)" class="btn" style="font-size:8px">Moral +10</button>
@@ -1545,7 +1568,7 @@ function renderOfertas(){
   const grid=document.getElementById('ofertas-grid');if(!grid)return;
   const ofertas=(CC.org?.ofertas||[]).filter(o=>o.estado==='ACTIVA');
   if(!ofertas.length){grid.innerHTML='';return;}
-  grid.innerHTML=`<div style="font-size:8px;color:#c89040;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Ofertas Activas</div>`+ofertas.map(o=>`<div class="card" style="margin-bottom:6px;border-left:3px solid #c89040"><div style="display:flex;justify-content:space-between"><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${o.rol}</span><span style="font-size:8px;color:#3a4f65">${o.fecha}</span></div><div style="font-size:8px;color:#3a4f65">${o.modalidad} · ${o.salario>0?'USD $'+o.salario+'/mes':'Sin costo'}</div></div>`).join('');
+  grid.innerHTML=`<div style="font-size:8px;color:#c89040;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Ofertas Activas</div>`+ofertas.map(o=>`<div class="card" style="margin-bottom:6px;border-left:3px solid #c89040"><div style="display:flex;justify-content:space-between"><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${o.rol}</span><span style="font-size:8px;color:var(--text-muted)">${o.fecha}</span></div><div style="font-size:8px;color:var(--text-muted)">${o.modalidad} · ${o.salario>0?'USD $'+o.salario+'/mes':'Sin costo'}</div></div>`).join('');
 }
 async function convocarEquipoDecision(){
   const simKey=localStorage.getItem('zcp_apikey');
@@ -1581,22 +1604,22 @@ function renderTrackRecord(){
   renderTRKPIs();
   const tabla=document.getElementById('tr-tabla');if(!tabla)return;
   if(!CC.trackRecord.length){
-    tabla.innerHTML='<div style="font-size:9px;color:#1e2c3a;text-align:center;padding:20px">Sin períodos cargados — hacé clic en "+ Cargar Período"</div>';
+    tabla.innerHTML='<div style="font-size:9px;color:var(--text-dim);text-align:center;padding:20px">Sin períodos cargados — hacé clic en "+ Cargar Período"</div>';
     return;
   }
   tabla.innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 80px 100px 80px;gap:4px;margin-bottom:6px;padding:0 8px">
-      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px">PERÍODO</span>
-      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px">RETORNO</span>
-      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px">AUM CIERRE</span>
-      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px"></span>
+      <span style="font-size:8px;color:var(--text-muted);letter-spacing:1px">PERÍODO</span>
+      <span style="font-size:8px;color:var(--text-muted);letter-spacing:1px">RETORNO</span>
+      <span style="font-size:8px;color:var(--text-muted);letter-spacing:1px">AUM CIERRE</span>
+      <span style="font-size:8px;color:var(--text-muted);letter-spacing:1px"></span>
     </div>`+
   CC.trackRecord.map((p,i)=>`
     <div class="card ani" style="display:grid;grid-template-columns:1fr 80px 100px 80px;gap:4px;align-items:center;margin-bottom:5px;border-left:3px solid ${p.retorno>=0?'#00c896':'#e84040'}">
       <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${p.periodo}</span>
       <span style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:${p.retorno>=0?'#00c896':'#e84040'}">${p.retorno>=0?'+':''}${p.retorno.toFixed(1)}%</span>
-      <span style="font-size:9px;color:#c0cbd8">$${p.aum.toLocaleString()}</span>
-      <button onclick="eliminarPeriodo(${i})" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:10px">×</button>
+      <span style="font-size:9px;color:var(--text-main)">$${p.aum.toLocaleString()}</span>
+      <button onclick="eliminarPeriodo(${i})" style="background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:10px">×</button>
     </div>`).join('');
 }
 
@@ -1681,13 +1704,13 @@ function renderLinaje(){
   renderLinajeKPIs();
   const grid=document.getElementById('linaje-herederos');if(!grid)return;
   const herederos=CC.linaje?.herederos||[];
-  if(!herederos.length){grid.innerHTML='<div style="font-size:9px;color:#1e2c3a;text-align:center;padding:10px 0;margin-bottom:6px">Sin herederos registrados</div>';return;}
-  const estadoCol={Formación:'#c89040',Activo:'#00c896',Retirado:'#3a4f65','En transición':'#4a9eff'};
+  if(!herederos.length){grid.innerHTML='<div style="font-size:9px;color:var(--text-dim);text-align:center;padding:10px 0;margin-bottom:6px">Sin herederos registrados</div>';return;}
+  const estadoCol={Formación:'#c89040',Activo:'#00c896',Retirado:'var(--text-muted)','En transición':'#4a9eff'};
   grid.innerHTML=herederos.map(h=>`
-    <div class="card ani" style="margin-bottom:6px;border-left:3px solid ${estadoCol[h.estado]||'#1a2535'}">
+    <div class="card ani" style="margin-bottom:6px;border-left:3px solid ${estadoCol[h.estado]||'var(--border)'}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-        <span class="tag" style="background:rgba(255,255,255,.04);color:${estadoCol[h.estado]||'#3a4f65'}">${h.estado||'Formación'}</span>
-        <button onclick="deleteHeredero('${h.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:10px">×</button>
+        <span class="tag" style="background:rgba(255,255,255,.04);color:${estadoCol[h.estado]||'var(--text-muted)'}">${h.estado||'Formación'}</span>
+        <button onclick="deleteHeredero('${h.id}')" style="background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:10px">×</button>
       </div>
       <label>Nombre</label>
       <input type="text" value="${h.nombre||''}" placeholder="Nombre del heredero" onchange="updateHeredero('${h.id}','nombre',this.value)" style="margin-bottom:4px">
@@ -1760,14 +1783,14 @@ Generá una estrategia dinástica a 20 años para ZAR Capital. Incluir: formaci�
 function renderDocs(){
   const el=document.getElementById('lin-docs');if(!el)return;
   const docs=CC.linaje?.docs||[];
-  if(!docs.length){el.innerHTML='<div style="font-size:9px;color:#1e2c3a;padding:8px 0">Sin documentos generados aún</div>';return;}
+  if(!docs.length){el.innerHTML='<div style="font-size:9px;color:var(--text-dim);padding:8px 0">Sin documentos generados aún</div>';return;}
   el.innerHTML=docs.slice(0,5).map(d=>`
     <div class="card ani" style="margin-bottom:6px;border-left:3px solid #8860ff;cursor:pointer" onclick="showM({t:'neu',ti:'${d.tipo}',sub:'${d.fecha}',bo:\`${d.texto.replace(/`/g,"'").replace(/\n/g,'<br>')}\`})">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:9px;color:#c0cbd8">${d.tipo}</span>
-        <span style="font-size:8px;color:#3a4f65">${d.fecha}</span>
+        <span style="font-size:9px;color:var(--text-main)">${d.tipo}</span>
+        <span style="font-size:8px;color:var(--text-muted)">${d.fecha}</span>
       </div>
-      <div style="font-size:8px;color:#3a4f65;margin-top:2px">${d.texto.slice(0,80)}...</div>
+      <div style="font-size:8px;color:var(--text-muted);margin-top:2px">${d.texto.slice(0,80)}...</div>
     </div>`).join('');
 }
 
