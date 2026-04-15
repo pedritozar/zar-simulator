@@ -22,6 +22,18 @@ body{background:#000;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',mon
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .loading-spin{animation:spin 1s linear infinite;display:inline-block}
+
+@media(prefers-color-scheme:light){
+  /* El globo (body/globe-wrap) siempre oscuro — el espacio no cambia */
+  ::-webkit-scrollbar-thumb{background:#c8b89a}
+  .panel{background:rgba(245,240,232,0.96);border-color:#c8b89a;color:#1a1a2e}
+  .btn{border-color:#c8b89a;color:#7a6a50}
+  .btn:hover{border-color:#c89040;color:#c89040}
+  .layer-row{border-bottom-color:#e0d8c8;color:#1a1a2e}
+  .layer-row:hover{background:#ede8de}
+  .ev-row{border-bottom-color:#e0d8c8}
+  .ev-row:hover{background:#ede8de}
+}
 </style>
 </head>
 <body>

@@ -27,6 +27,17 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 .tag-warn{background:rgba(200,144,64,.12);color:#c89040}
 @keyframes fdi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .ani{animation:fdi .25s ease}
+
+@media(prefers-color-scheme:light){
+  ::-webkit-scrollbar-thumb{background:#c8b89a}
+  body{background:#f5f0e8;color:#1a1a2e}
+  .btn{border-color:#c8b89a;color:#7a6a50}
+  .btn:hover{border-color:#c89040;color:#c89040}
+  .card{background:#ede8de;border-color:#c8b89a}
+  input,select,textarea{background:#ede8de;border-color:#c8b89a;color:#1a1a2e}
+  select option{background:#ede8de;color:#1a1a2e}
+  label{color:#7a6a50}
+}
 </style>
 </head>
 <body>
@@ -55,6 +66,7 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
   <button class="tab-btn" onclick="showTab('org')" id="tab-org" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Organización</button>
   <button class="tab-btn" onclick="showTab('cal')" id="tab-cal" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Calendario</button>
   <button class="tab-btn" onclick="showTab('rep')" id="tab-rep" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Reportes</button>
+  <button class="tab-btn" onclick="showTab('lin')" id="tab-lin" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Linaje</button>
   <button class="tab-btn" onclick="showTab('ctas')" id="tab-ctas" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Cuentas y Brokers</button>
 </div>
 
@@ -514,11 +526,166 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 </div>
 
 <!-- ═══ REPORTES ═══ -->
-<div id="tab-rep-content" style="flex:1;overflow-y:auto;display:none;align-items:center;justify-content:center">
-  <div style="text-align:center;padding:60px">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;letter-spacing:4px;color:#1e2c3a;text-transform:uppercase;margin-bottom:8px">Reportes & Track Record</div>
-    <div style="font-size:10px;color:#1e2c3a;letter-spacing:1px">Performance mensual · Sharpe ratio · MaxDD · Comparación benchmark</div>
-    <div style="margin-top:20px;font-size:9px;color:#1a2535;border:1px solid #1a2535;display:inline-block;padding:6px 16px;letter-spacing:1px">PRÓXIMA SESIÓN</div>
+<div id="tab-rep-content" style="flex:1;overflow-y:auto;display:none;flex-direction:column;padding:14px">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Reportes & Track Record — ZAR Capital Partners</div>
+    <div style="display:flex;gap:6px">
+      <button class="btn" onclick="generarReporte()" id="btn-reporte" style="border-color:#4a9eff;color:#4a9eff">Generar Reporte LP</button>
+      <button class="btn" onclick="addPeriodo()" style="border-color:#c89040;color:#c89040">+ Cargar Período</button>
+    </div>
+  </div>
+
+  <!-- KPIs de performance -->
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px">
+    <div class="card" style="text-align:center">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Retorno Total</div>
+      <div id="tr-retorno" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#00c896">—</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Sharpe Ratio</div>
+      <div id="tr-sharpe" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#4a9eff">—</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Max Drawdown</div>
+      <div id="tr-maxdd" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#e84040">—</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Win Rate</div>
+      <div id="tr-wr" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">—</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Períodos</div>
+      <div id="tr-periodos" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">0</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">AUM Actual</div>
+      <div id="tr-aum" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">—</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;flex:1;overflow:hidden;min-height:0">
+
+    <!-- Track Record Table -->
+    <div style="flex:1;overflow-y:auto">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Historial de Performance — Meridian Strategy</div>
+      <div id="tr-tabla"></div>
+    </div>
+
+    <!-- Reporte generado -->
+    <div style="width:280px;flex-shrink:0;overflow-y:auto;border-left:1px solid #1a2535;padding-left:12px">
+      <div style="font-size:8px;color:#4a9eff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Último Reporte LP</div>
+      <div id="tr-reporte" style="font-size:9px;color:#3a4f65;line-height:1.7">Cargá períodos y generá el reporte para tus LPs.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LINAJE / DINASTÍA ═══ -->
+<div id="tab-lin-content" style="flex:1;overflow:hidden;display:none;flex-direction:column">
+  <div style="display:flex;flex:1;overflow:hidden">
+
+    <!-- LEFT: ÁRBOL GENEALÓGICO -->
+    <div style="width:300px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
+      <div style="font-size:8px;color:#c89040;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Árbol Genealógico — Dinastía ZAR</div>
+
+      <!-- Generación 1 — Fundador -->
+      <div class="card" style="border-left:3px solid #c89040;margin-bottom:8px">
+        <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px">Generación I — Fundador</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;margin-bottom:3px">Pedro Zacarias</div>
+        <div style="font-size:8px;color:#3a4f65;margin-bottom:5px">Founder & CIO · ZAR Capital Partners</div>
+        <div style="font-size:8px;color:#3a4f65;line-height:1.5">
+          Capital propio: <span style="color:#c89040">USD 50.000</span><br>
+          Estrategia: Meridian Barbell<br>
+          Vehículo: Meridian Fund I (Uruguay)
+        </div>
+      </div>
+
+      <!-- Herederos -->
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;margin-top:10px">Generación II — Herederos</div>
+      <div id="linaje-herederos"></div>
+      <button class="btn" onclick="addHeredero()" style="width:100%;margin-bottom:10px;border-color:#c89040;color:#c89040">+ Agregar Heredero</button>
+
+      <!-- Activos del linaje -->
+      <div style="padding-top:10px;border-top:1px solid #1a2535">
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Activos del Linaje</div>
+        <div class="card" style="margin-bottom:6px">
+          <label>Capital Familiar Total (USD)</label>
+          <input type="number" id="lin-capital" placeholder="0" onchange="saveLinVal('capital',this.value)">
+        </div>
+        <div class="card" style="margin-bottom:6px">
+          <label>Propiedades / Activos reales</label>
+          <textarea id="lin-activos" rows="2" placeholder="Inmuebles, empresas, inversiones del linaje..." onchange="saveLinVal('activos',this.value)"></textarea>
+        </div>
+        <div class="card">
+          <label>Mandato familiar</label>
+          <textarea id="lin-mandato" rows="2" placeholder="El capital familiar se preserva y se hace crecer a través de..." onchange="saveLinVal('mandato',this.value)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: LEGADO + IA -->
+    <div style="flex:1;overflow-y:auto;padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase">Gestión del Legado</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn" onclick="generarTestamento()" style="border-color:#c89040;color:#c89040">Redactar Legado</button>
+          <button class="btn" onclick="generarEstrategiaLinaje()" style="border-color:#8860ff;color:#8860ff">Estrategia Dinástica</button>
+        </div>
+      </div>
+
+      <!-- Métricas dinásticas -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        <div class="card" style="text-align:center">
+          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Generaciones</div>
+          <div id="lin-gen" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">1</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Herederos</div>
+          <div id="lin-count" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700">0</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Capital Linaje</div>
+          <div id="lin-cap" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#c89040">$0</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:3px">Fase Dinástica</div>
+          <div id="lin-fase" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:#8860ff">Fundación</div>
+        </div>
+      </div>
+
+      <!-- Legado y documentos -->
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Documentos del Linaje</div>
+      <div id="lin-docs"></div>
+
+      <!-- Misión dinástica -->
+      <div style="margin-top:12px">
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Misión del Linaje</div>
+        <div class="card" style="border-left:3px solid #8860ff">
+          <div style="font-size:9px;color:#c0cbd8;line-height:1.7" id="lin-mision">
+            ZAR Capital Partners fue fundado con una visión de largo plazo. El capital no es el fin — es el instrumento. El legado que construimos hoy determinará las decisiones que tomarán las generaciones que vienen.
+          </div>
+        </div>
+      </div>
+
+      <!-- Horizonte temporal -->
+      <div style="margin-top:12px">
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Horizonte Temporal del Linaje</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div class="card" style="border-top:2px solid #c89040">
+            <div style="font-size:8px;color:#c89040;letter-spacing:1px;margin-bottom:4px">2025-2030 · FUNDACIÓN</div>
+            <div style="font-size:8px;color:#3a4f65;line-height:1.5">Construir track record. Primer capital institucional. Estructura legal sólida.</div>
+          </div>
+          <div class="card" style="border-top:2px solid #4a9eff">
+            <div style="font-size:8px;color:#4a9eff;letter-spacing:1px;margin-bottom:4px">2030-2040 · EXPANSIÓN</div>
+            <div style="font-size:8px;color:#3a4f65;line-height:1.5">Escala institucional. Presencia global. Incorporación de herederos al fondo.</div>
+          </div>
+          <div class="card" style="border-top:2px solid #8860ff">
+            <div style="font-size:8px;color:#8860ff;letter-spacing:1px;margin-bottom:4px">2040+ · DINASTÍA</div>
+            <div style="font-size:8px;color:#3a4f65;line-height:1.5">Capital intergeneracional. Legado institucional. Presencia en mercados globales.</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -608,7 +775,7 @@ function saveCC(){try{localStorage.setItem(LSCC,JSON.stringify(CC));}catch(e){}}
 function loadCC(){try{const r=localStorage.getItem(LSCC);if(r)CC=JSON.parse(r);}catch(e){}}
 
 // ── TABS ──────────────────────────────────────────────────────
-const TABS=['mesa','lps','mundo','org','cal','rep','ctas'];
+const TABS=['mesa','lps','mundo','org','rep','lin','cal','ctas'];
 function showTab(id){
   TABS.forEach(t=>{
     const c=document.getElementById('tab-'+t+'-content');
@@ -1397,6 +1564,213 @@ Generá el debate en 3-4 párrafos. Cada miembro argumenta su posición. Con ten
   }catch(e){showM({t:'neg',ti:'Error',sub:'',bo:''+e.message});}
 }
 
+// ── REPORTES & TRACK RECORD ──────────────────────────────────
+function addPeriodo(){
+  const periodo=prompt('Período (ej: ENE-FEB 2025):');
+  if(!periodo)return;
+  const retorno=parseFloat(prompt('Retorno del período (%):'));
+  if(isNaN(retorno))return;
+  const aum=parseFloat(prompt('AUM al cierre (USD):'))||0;
+  if(!CC.trackRecord)CC.trackRecord=[];
+  CC.trackRecord.push({id:'tr_'+Date.now(),periodo,retorno,aum,fecha:new Date().toISOString().slice(0,10)});
+  saveCC();renderTrackRecord();
+}
+
+function renderTrackRecord(){
+  if(!CC.trackRecord)CC.trackRecord=[];
+  renderTRKPIs();
+  const tabla=document.getElementById('tr-tabla');if(!tabla)return;
+  if(!CC.trackRecord.length){
+    tabla.innerHTML='<div style="font-size:9px;color:#1e2c3a;text-align:center;padding:20px">Sin períodos cargados — hacé clic en "+ Cargar Período"</div>';
+    return;
+  }
+  tabla.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 80px 100px 80px;gap:4px;margin-bottom:6px;padding:0 8px">
+      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px">PERÍODO</span>
+      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px">RETORNO</span>
+      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px">AUM CIERRE</span>
+      <span style="font-size:8px;color:#3a4f65;letter-spacing:1px"></span>
+    </div>`+
+  CC.trackRecord.map((p,i)=>`
+    <div class="card ani" style="display:grid;grid-template-columns:1fr 80px 100px 80px;gap:4px;align-items:center;margin-bottom:5px;border-left:3px solid ${p.retorno>=0?'#00c896':'#e84040'}">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${p.periodo}</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:${p.retorno>=0?'#00c896':'#e84040'}">${p.retorno>=0?'+':''}${p.retorno.toFixed(1)}%</span>
+      <span style="font-size:9px;color:#c0cbd8">$${p.aum.toLocaleString()}</span>
+      <button onclick="eliminarPeriodo(${i})" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:10px">×</button>
+    </div>`).join('');
+}
+
+function eliminarPeriodo(i){CC.trackRecord.splice(i,1);saveCC();renderTrackRecord();}
+
+function renderTRKPIs(){
+  const tr=CC.trackRecord||[];
+  const fmtA=v=>v>=1000000?'$'+(v/1000000).toFixed(1)+'M':v>=1000?'$'+Math.round(v/1000)+'K':'$'+v;
+  const retTotal=tr.reduce((a,p)=>a+p.retorno,0);
+  const ganados=tr.filter(p=>p.retorno>0).length;
+  const wr=tr.length>0?Math.round((ganados/tr.length)*100):null;
+  const retornos=tr.map(p=>p.retorno);
+  const maxDD=retornos.length>0?Math.min(...retornos):null;
+  const sharpe=tr.length>1?(retTotal/tr.length)/(Math.sqrt(retornos.reduce((a,r)=>a+(r-retTotal/tr.length)**2,0)/tr.length)||1):null;
+  const lastAum=tr.length>0?tr[tr.length-1].aum:null;
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');const tot=(sim.aum||50000)+(sim.lp||0);const el=document.getElementById('tr-aum');if(el)el.textContent=fmtA(tot);}catch(e){}
+  const el=document.getElementById('tr-retorno');if(el){el.textContent=tr.length?`${retTotal>=0?'+':''}${retTotal.toFixed(1)}%`:'—';el.style.color=retTotal>=0?'#00c896':'#e84040';}
+  const es=document.getElementById('tr-sharpe');if(es)es.textContent=sharpe?sharpe.toFixed(2)+'x':'—';
+  const em=document.getElementById('tr-maxdd');if(em){em.textContent=maxDD!==null?maxDD.toFixed(1)+'%':'—';em.style.color='#e84040';}
+  const ew=document.getElementById('tr-wr');if(ew){ew.textContent=wr!==null?wr+'%':'—';ew.style.color=wr>=50?'#00c896':'#e84040';}
+  const ep=document.getElementById('tr-periodos');if(ep)ep.textContent=tr.length;
+}
+
+async function generarReporte(){
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey){showM({t:'neu',ti:'API Key requerida',sub:'',bo:'Necesitás la API key para generar el reporte.'});return;}
+  const btn=document.getElementById('btn-reporte');
+  btn.textContent='Generando...';btn.disabled=true;
+  const tr=CC.trackRecord||[];
+  const lps=CC.lps||[];
+  let simCtx='';
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12 | Reputación: ${sim.m?.rep||30}/100`;}catch(e){}
+  const prompt=`Sos el CIO de ZAR Capital Partners. Redactá un reporte mensual profesional para los LPs.
+Estado del fondo: ${simCtx}
+LPs activos: ${lps.filter(l=>l.etapa==='ACTIVO'||l.etapa==='FIRMADO').map(l=>l.nombre).join(', ')||'Rodrigo F. (Family Office, Montevideo)'}
+Track record disponible: ${tr.length>0?tr.map(p=>`${p.periodo}: ${p.retorno>=0?'+':''}${p.retorno.toFixed(1)}%`).join(', '):'Sin períodos cargados aún'}
+Redactá el reporte en español, tono institucional profesional. Incluir: saludo, resumen de performance, contexto de mercado, posicionamiento del portfolio, outlook, cierre. Máximo 250 palabras.`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const tx=d.content[0].text;
+    const el=document.getElementById('tr-reporte');
+    if(el)el.innerHTML=tx.replace(/\n/g,'<br>');
+    if(!CC.reportes)CC.reportes=[];
+    CC.reportes.unshift({fecha:new Date().toISOString().slice(0,10),texto:tx});
+    saveCC();
+  }catch(e){showM({t:'neg',ti:'Error',sub:'',bo:'No se pudo generar el reporte: '+e.message});}
+  btn.textContent='Generar Reporte LP';btn.disabled=false;
+}
+
+// ── LINAJE / DINASTÍA ────────────────────────────────────────
+function saveLinVal(k,v){if(!CC.linaje)CC.linaje={};CC.linaje[k]=v;saveCC();renderLinaje();}
+
+function addHeredero(){
+  if(!CC.linaje)CC.linaje={};if(!CC.linaje.herederos)CC.linaje.herederos=[];
+  CC.linaje.herederos.push({id:'h_'+Date.now(),nombre:'',parentesco:'',edad:0,formacion:'',rol:'Sucesor Designado',estado:'Formación',universidad:'',capital:0});
+  saveCC();renderLinaje();
+}
+
+function updateHeredero(id,field,val){
+  const h=CC.linaje?.herederos?.find(x=>x.id===id);
+  if(h){h[field]=field==='edad'||field==='capital'?parseFloat(val)||0:val;saveCC();renderLinajeKPIs();}
+}
+
+function deleteHeredero(id){
+  if(CC.linaje?.herederos)CC.linaje.herederos=CC.linaje.herederos.filter(x=>x.id!==id);
+  saveCC();renderLinaje();
+}
+
+function renderLinajeKPIs(){
+  const h=CC.linaje?.herederos||[];
+  const cap=parseFloat(CC.linaje?.capital)||0;
+  const fmtA=v=>v>=1000000?'$'+(v/1000000).toFixed(1)+'M':v>=1000?'$'+Math.round(v/1000)+'K':'$'+v;
+  const fase=h.length===0?'Fundación':h.length<=2?'Consolidación':h.length<=4?'Expansión':'Dinastía';
+  const el=document.getElementById('lin-count');if(el)el.textContent=h.length;
+  const ec=document.getElementById('lin-cap');if(ec)ec.textContent=fmtA(cap);
+  const ef=document.getElementById('lin-fase');if(ef){ef.textContent=fase;ef.style.color=fase==='Fundación'?'#c89040':fase==='Consolidación'?'#4a9eff':fase==='Expansión'?'#00c896':'#8860ff';}
+  const eg=document.getElementById('lin-gen');if(eg)eg.textContent=h.length>0?2:1;
+}
+
+function renderLinaje(){
+  renderLinajeKPIs();
+  const grid=document.getElementById('linaje-herederos');if(!grid)return;
+  const herederos=CC.linaje?.herederos||[];
+  if(!herederos.length){grid.innerHTML='<div style="font-size:9px;color:#1e2c3a;text-align:center;padding:10px 0;margin-bottom:6px">Sin herederos registrados</div>';return;}
+  const estadoCol={Formación:'#c89040',Activo:'#00c896',Retirado:'#3a4f65','En transición':'#4a9eff'};
+  grid.innerHTML=herederos.map(h=>`
+    <div class="card ani" style="margin-bottom:6px;border-left:3px solid ${estadoCol[h.estado]||'#1a2535'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span class="tag" style="background:rgba(255,255,255,.04);color:${estadoCol[h.estado]||'#3a4f65'}">${h.estado||'Formación'}</span>
+        <button onclick="deleteHeredero('${h.id}')" style="background:transparent;border:none;color:#1e2c3a;cursor:pointer;font-size:10px">×</button>
+      </div>
+      <label>Nombre</label>
+      <input type="text" value="${h.nombre||''}" placeholder="Nombre del heredero" onchange="updateHeredero('${h.id}','nombre',this.value)" style="margin-bottom:4px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px">
+        <div><label>Parentesco</label><input type="text" value="${h.parentesco||''}" placeholder="hijo/a, sobrino/a..." onchange="updateHeredero('${h.id}','parentesco',this.value)"></div>
+        <div><label>Edad</label><input type="number" value="${h.edad||''}" placeholder="0" onchange="updateHeredero('${h.id}','edad',this.value)"></div>
+      </div>
+      <label>Universidad / Formación</label>
+      <input type="text" value="${h.formacion||''}" placeholder="UBA Economía, CFA Level I..." onchange="updateHeredero('${h.id}','formacion',this.value)" style="margin-bottom:4px">
+      <label>Estado</label>
+      <select onchange="updateHeredero('${h.id}','estado',this.value);renderLinaje()" style="margin-bottom:4px">
+        <option ${h.estado==='Formación'?'selected':''}>Formación</option>
+        <option ${h.estado==='Activo'?'selected':''}>Activo</option>
+        <option ${h.estado==='En transición'?'selected':''}>En transición</option>
+        <option ${h.estado==='Retirado'?'selected':''}>Retirado</option>
+      </select>
+    </div>`).join('');
+}
+
+async function generarTestamento(){
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey){showM({t:'neu',ti:'API Key requerida',sub:'',bo:'Necesitás la API key.'});return;}
+  let simCtx='';
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12`;}catch(e){}
+  const herederos=CC.linaje?.herederos||[];
+  const prompt=`Sos Pedro Zacarias, Founder & CIO de ZAR Capital Partners (hedge fund barbell Argentina/Uruguay).
+Estado del fondo: ${simCtx}
+Herederos: ${herederos.map(h=>`${h.nombre||'Sin nombre'} (${h.parentesco||'heredero'}, ${h.estado})`).join(', ')||'Sin herederos registrados aún'}
+Mandato familiar: ${CC.linaje?.mandato||'Preservar y hacer crecer el capital para las generaciones futuras'}
+
+Redactá una carta de legado institucional — no un testamento legal sino una carta del fundador a las generaciones futuras sobre la visión, los valores, y la filosofía de inversión de ZAR Capital. Máximo 250 palabras. Tono: solemne, visionario, personal.`;
+  showM({t:'neu',ti:'Generando Carta de Legado...',sub:'LINAJE ZAR CAPITAL',bo:'Redactando la carta del fundador...'});
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const tx=d.content[0].text;
+    if(!CC.linaje)CC.linaje={};
+    if(!CC.linaje.docs)CC.linaje.docs=[];
+    CC.linaje.docs.unshift({tipo:'Carta de Legado',fecha:new Date().toISOString().slice(0,10),texto:tx});
+    saveCC();renderDocs();
+    showM({t:'pos',ti:'Carta de Legado — ZAR Capital',sub:'FUNDADOR: PEDRO ZACARIAS',bo:tx.replace(/\n/g,'<br>')});
+  }catch(e){showM({t:'neg',ti:'Error',sub:'',bo:''+e.message});}
+}
+
+async function generarEstrategiaLinaje(){
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey){showM({t:'neu',ti:'API Key requerida',sub:'',bo:'Necesitás la API key.'});return;}
+  let simCtx='';
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12 | Nivel: NV.${sim.lvId||1}`;}catch(e){}
+  const herederos=CC.linaje?.herederos||[];
+  const prompt=`Sos el estratega dinástico de ZAR Capital Partners.
+Estado actual: ${simCtx}
+Herederos: ${herederos.length} registrados
+Capital del linaje: USD ${CC.linaje?.capital||0}
+
+Generá una estrategia dinástica a 20 años para ZAR Capital. Incluir: formación de los herederos, estructura de transición del poder, vehículos de preservación de capital intergeneracional, y la visión del fondo en 2045. Máximo 300 palabras. Tono: estratégico, visionario.`;
+  showM({t:'neu',ti:'Generando Estrategia Dinástica...',sub:'LINAJE ZAR CAPITAL',bo:'Procesando...'});
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const tx=d.content[0].text;
+    if(!CC.linaje)CC.linaje={};
+    if(!CC.linaje.docs)CC.linaje.docs=[];
+    CC.linaje.docs.unshift({tipo:'Estrategia Dinástica 2045',fecha:new Date().toISOString().slice(0,10),texto:tx});
+    saveCC();renderDocs();
+    showM({t:'pos',ti:'Estrategia Dinástica — ZAR Capital 2045',sub:'HORIZONTE INTERGENERACIONAL',bo:tx.replace(/\n/g,'<br>')});
+  }catch(e){showM({t:'neg',ti:'Error',sub:'',bo:''+e.message});}
+}
+
+function renderDocs(){
+  const el=document.getElementById('lin-docs');if(!el)return;
+  const docs=CC.linaje?.docs||[];
+  if(!docs.length){el.innerHTML='<div style="font-size:9px;color:#1e2c3a;padding:8px 0">Sin documentos generados aún</div>';return;}
+  el.innerHTML=docs.slice(0,5).map(d=>`
+    <div class="card ani" style="margin-bottom:6px;border-left:3px solid #8860ff;cursor:pointer" onclick="showM({t:'neu',ti:'${d.tipo}',sub:'${d.fecha}',bo:\`${d.texto.replace(/`/g,"'").replace(/\n/g,'<br>')}\`})">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:9px;color:#c0cbd8">${d.tipo}</span>
+        <span style="font-size:8px;color:#3a4f65">${d.fecha}</span>
+      </div>
+      <div style="font-size:8px;color:#3a4f65;margin-top:2px">${d.texto.slice(0,80)}...</div>
+    </div>`).join('');
+}
+
 function showM(con){
   const col={pos:'#00c896',neg:'#e84040',neu:'#c89040'};
   const c=col[con.t]||'#c89040';
@@ -1502,6 +1876,9 @@ function tiempoHastaProxUpdate(){
   renderEquipo();
   renderEquipoKPIs();
   renderOfertas();
+  renderTrackRecord();
+  renderLinaje();
+  renderDocs();
   cargarEventosAuto();
   mundoAutoUpdate();
   setInterval(mundoAutoUpdate, 5*60*1000);
