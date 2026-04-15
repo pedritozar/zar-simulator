@@ -279,16 +279,112 @@ const EV={
   {id:'hire6',cat:'INTERNO',urg:'med',edu:'team',title:'Primer Hire: Analista Junior',
    desc:'Estudiante de CFA Level II con Python y análisis fundamental te contacta. Propone equity 0.5% o salario USD 800/mes. El AUM puede absorberlo.',
    opts:[
-    {k:'A',lbl:'Contratar con salario (USD 800/mes)',dsc:'Relación profesional clara. Sin equity comprometido.',fx:{aum:-1600,mor:12,rep:8,cmp:5},con:{t:'pos',ti:'Primer Integrante del Equipo',bo:'<b style="color:#00c896">Moral arriba.</b> Informes más profesionales. Los LPs ven esto como señal de madurez institucional.'}},
-    {k:'B',lbl:'Equity deal (0.5% del fondo)',dsc:'Sin costo mensual. Alineación de largo plazo.',fx:{mor:8,rep:5},con:{t:'neu',ti:'Equity Alignment',bo:'El analista está motivado. 0.5% puede complicar rondas futuras de LP — revisá con el asesor legal.'}},
-    {k:'C',lbl:'Rechazar — operar solo por ahora',dsc:'El AUM todavía no justifica el overhead.',fx:{mor:-5,cmp:-3},con:{t:'neu',ti:'Operación Lean',bo:'En turno 7 aparece una oportunidad que no podés aprovechar por capacidad limitada.'}},
+    {k:'A',lbl:'Contratar con salario (USD 800/mes)',dsc:'Relación profesional clara. Sin equity comprometido.',fx:{aum:-1600,mor:12,rep:8,cmp:5},mem:'contrato_analista',con:{t:'pos',ti:'Primer Integrante del Equipo',bo:'<b style="color:#00c896">Moral arriba.</b> Informes más profesionales. Los LPs ven esto como señal de madurez institucional.'}},
+    {k:'B',lbl:'Equity deal (0.5% del fondo)',dsc:'Sin costo mensual. Alineación de largo plazo.',fx:{mor:8,rep:5},mem:'equity_analista',con:{t:'neu',ti:'Equity Alignment',bo:'El analista está motivado. 0.5% puede complicar rondas futuras de LP — revisá con el asesor legal.'}},
+    {k:'C',lbl:'Rechazar — operar solo por ahora',dsc:'El AUM todavía no justifica el overhead.',fx:{mor:-5,cmp:-3},mem:'sin_equipo',con:{t:'neu',ti:'Operación Lean',bo:'En turno 7 aparece una oportunidad que no podés aprovechar por capacidad limitada.'}},
   ]},
   {id:'cr6',cat:'MACRO',urg:'high',edu:'ar_macro',title:'Crisis Macro Argentina',
    desc:'El BCRA anuncia restricciones cambiarias inesperadas. CEDEARs e instrumentos en pesos bajo turbulencia. El LP uruguayo llama para entender la exposición.',
    opts:[
-    {k:'A',lbl:'Rotar hacia hard assets y USD',dsc:'Liquidar pesos. Cargar USD, oro, bonos dolarizados.',fx:{risk:-10,aum:-3000,cmp:5,mor:5},roll:{p:.62,win:6000,los:-2000,rw:8,rl:-4},con:null},
-    {k:'B',lbl:'Mantener y esperar normalización',dsc:'Las restricciones son temporales.',fx:{risk:12,mor:-8},con:{t:'neu',ti:'Paciencia en Crisis',bo:'Crisis se extiende 3 semanas. CEDEARs caen -12% en pesos pero se sostienen en USD. El LP llama tranquilo.'}},
-    {k:'C',lbl:'Comunicar crisis al LP con plan',dsc:'Proactividad total. El LP sabe antes de preguntar.',fx:{rep:12,cmp:8,mor:8},con:{t:'pos',ti:'Gestión de Crisis Profesional',bo:'<b style="color:#00c896">El LP felicita la comunicación.</b> "Supe de la crisis por vos antes de leerlo en Bloomberg."'}},
+    {k:'A',lbl:'Rotar hacia hard assets y USD',dsc:'Liquidar pesos. Cargar USD, oro, bonos dolarizados.',fx:{risk:-10,aum:-3000,cmp:5,mor:5},roll:{p:.62,win:6000,los:-2000,rw:8,rl:-4},mem:'rotacion_hard_assets',con:null},
+    {k:'B',lbl:'Mantener y esperar normalización',dsc:'Las restricciones son temporales.',fx:{risk:12,mor:-8},mem:'mantener_crisis',con:{t:'neu',ti:'Paciencia en Crisis',bo:'Crisis se extiende 3 semanas. CEDEARs caen -12% en pesos pero se sostienen en USD. El LP llama tranquilo.'}},
+    {k:'C',lbl:'Comunicar crisis al LP con plan',dsc:'Proactividad total. El LP sabe antes de preguntar.',fx:{rep:12,cmp:8,mor:8},mem:'comunicacion_crisis',con:{t:'pos',ti:'Gestión de Crisis Profesional',bo:'<b style="color:#00c896">El LP felicita la comunicación.</b> "Supe de la crisis por vos antes de leerlo en Bloomberg."'}},
+  ]}
+],
+7:[
+  {id:'lp2_7',cat:'INVERSORES',urg:'high',edu:'lp_rep',title:'Segundo LP — Empresario Local',
+   desc:'Marcelo G. vuelve con decisión: está listo para invertir USD 30.000. Pero pide ver el reporte mensual del fondo antes de firmar. Es tu primer reporte formal.',
+   opts:[
+    {k:'A',lbl:'Reporte institucional completo',dsc:'P&L, posiciones, métricas de riesgo, commentary.',fx:{lp:30000,rep:15,cmp:10,mor:8},mem:'segundo_lp_firmado',con:{t:'pos',ti:'Segundo LP Confirmado',bo:'<b style="color:#00c896">AUM LP suma USD 30.000 adicionales.</b> Marcelo quedó impresionado con la calidad del reporte. "Esto parece un fondo de verdad."'}},
+    {k:'B',lbl:'Reporte básico en Excel',dsc:'Suficiente para esta etapa del fondo.',fx:{lp:30000,rep:3,cmp:5},mem:'segundo_lp_basico',con:{t:'neu',ti:'LP Confirmado — Con Reservas',bo:'Marcelo entra pero señala: "Espero que el reporte mejore cuando el fondo crezca." Capital comprometido con expectativas altas.'}},
+    {k:'C',lbl:'Pedir más tiempo para el reporte',dsc:'Mejor no apresurarse.',fx:{rep:-5,mor:-5},con:{t:'neg',ti:'Oportunidad Perdida',bo:'<b style="color:#e84040">Marcelo pierde la paciencia y evalúa otros vehículos.</b> Capital potencial en riesgo. El mercado no espera.'}},
+  ]},
+  {id:'est7',cat:'ESTRATEGIA',urg:'med',edu:'fund_str',title:'Decisión de Estructura — Family Office o Hedge Fund',
+   desc:'Con dos LPs activos y capital creciente, tu asesor legal plantea la decisión: ¿seguís como Family Office o escalás a estructura de Hedge Fund? Hay una tercera opción: estructura dual.',
+   opts:[
+    {k:'A',lbl:'Escalar a Hedge Fund completo',dsc:'Regulación completa. Más LPs posibles. Costos mayores.',fx:{rep:15,cmp:-10,aum:-8000,risk:8},mem:'decision_hedge_fund',con:{t:'pos',ti:'ZAR Capital Partners — Hedge Fund',bo:'<b style="color:#00c896">El fondo da el salto institucional.</b> Nuevas oportunidades de capital. Compliance más exigente. Los LPs actuales reciben la noticia con entusiasmo.'}},
+    {k:'B',lbl:'Mantener Family Office',dsc:'Menos regulación. Más control. Cap de crecimiento.',fx:{cmp:10,risk:-5},mem:'decision_family_office',con:{t:'neu',ti:'Family Office Consolidado',bo:'Decisión conservadora válida. Límite de LPs externos más bajo, pero operativa más simple. Rodrigo prefiere esta opción.'}},
+    {k:'C',lbl:'Estructura Dual (FO + HF)',dsc:'Rama familiar + vehículo institucional paralelo.',fx:{rep:10,cmp:-5,aum:-5000,mor:10},mem:'decision_dual',con:{t:'pos',ti:'Arquitectura Dual — ZAR Capital',bo:'<b style="color:#00c896">La estructura más sofisticada disponible.</b> Family Office para capital propio + Hedge Fund para LPs externos. Complejo de gestionar, pero el upside es máximo.'}},
+  ]}
+],
+8:[
+  {id:'reg8',cat:'REGULATORIO',urg:'high',edu:'fund_str',title:'Regulador Uruguayo — Auditoría Sorpresa',
+   desc:'El ente regulador uruguayo solicita documentación completa del fondo en 30 días. Es una auditoría de rutina pero con plazos estrictos. Tu compliance actual determina el impacto.',
+   opts:[
+    {k:'A',lbl:'Respuesta completa e inmediata',dsc:'Toda la documentación en regla. Equipo legal movilizado.',fx:{aum:-4000,cmp:20,rep:10,risk:-10},con:{t:'pos',ti:'Auditoría Superada',bo:'<b style="color:#00c896">El regulador cierra el caso sin observaciones.</b> Rodrigo F. felicita la respuesta. La estructura uruguaya queda validada formalmente.'}},
+    {k:'B',lbl:'Respuesta parcial — ganar tiempo',dsc:'Entregar lo disponible y negociar extensión.',fx:{cmp:-10,risk:15,rep:-8},con:{t:'neg',ti:'Señal de Alerta',bo:'<b style="color:#e84040">El regulador nota las carencias.</b> Extensión de 15 días concedida con observación formal. Los LPs se enteran — satisfacción baja.'}},
+    {k:'C',lbl:'Contratar consultor especializado',dsc:'USD 3.000 para blindar la respuesta.',fx:{aum:-3000,cmp:15,rep:8},con:{t:'pos',ti:'Consultoría Regulatoria',bo:'El consultor entrega documentación impecable. <b style="color:#00c896">Costo de USD 3.000 que se paga en tranquilidad y reputación.</b>'}},
+  ]},
+  {id:'geo8',cat:'GEOPOLÍTICO',urg:'high',edu:'fed_rates',title:'Shock Geopolítico — Impacto Directo al Portfolio',
+   desc:'Escalada de tensión en Medio Oriente: petróleo +18% en 48hs. Tu exposición en commodities e índices está bajo presión. El equipo de research pide reunión de emergencia.',
+   opts:[
+    {k:'A',lbl:'Cubrir exposición inmediatamente',dsc:'Reducir riesgo. Preservar capital.',fx:{risk:-15,aum:-2000,cmp:10},roll:{p:.6,win:5000,los:-2500,rw:8,rl:-4},mem:'cobertura_geo',con:null},
+    {k:'B',lbl:'Aprovechar la volatilidad',dsc:'Long petróleo. Short índices afectados.',fx:{risk:20,mor:5},roll:{p:.5,win:12000,los:-8000,rw:12,rl:-8},mem:'apuesta_geo',con:null},
+    {k:'C',lbl:'Salir de posiciones afectadas',dsc:'Preservar capital. Volver cuando aclare.',fx:{risk:-10,mor:-5,aum:-1500},mem:'salida_geo',con:{t:'neu',ti:'Capital Preservation',bo:'Pérdida controlada. El mercado cae -15% adicional la semana siguiente. <b style="color:#00c896">La decisión defensiva fue correcta.</b>'}},
+  ]}
+],
+9:[
+  {id:'cri9',cat:'MACRO',urg:'high',edu:'drawdown',title:'Crisis Sistémica Regional',
+   desc:'Contagio financiero en mercados emergentes. Flujos salen de LatAm hacia USD. Tu barbell balanceado amortigua pero el lado agresivo sufre. Los LPs exigen comunicación.',
+   opts:[
+    {k:'A',lbl:'Comunicado proactivo a todos los LPs',dsc:'Transparencia total. Estado del portfolio, plan de acción.',fx:{rep:18,cmp:12,mor:10,risk:-8},mem:'comunicado_crisis_sistemica',con:{t:'pos',ti:'Liderazgo en Crisis',bo:'<b style="color:#00c896">Ambos LPs responden con calma.</b> "Gracias por informarnos antes de que saliéramos a buscar noticias." Reputación institucional en máximos.'}},
+    {k:'B',lbl:'Esperar que pase — no alarmar',dsc:'Si comunicás pánico, creás pánico.',fx:{risk:10,mor:-8,rep:-5},con:{t:'neg',ti:'Error de Comunicación',bo:'<b style="color:#e84040">Rodrigo llama molesto.</b> "¿Por qué me entero por Reuters?" La relación queda dañada. Satisfacción LP cae 20 puntos.'}},
+    {k:'C',lbl:'Rebalancear hacia posición defensiva',dsc:'Reducir exposición agresiva al 20%.',fx:{risk:-20,aum:-5000,cmp:8},roll:{p:.65,win:4000,los:-2000,rw:6,rl:-3},mem:'rebalanceo_defensivo',con:null},
+  ]},
+  {id:'hire9',cat:'INTERNO',urg:'med',edu:'team',title:'Expansión del Equipo — Risk Manager',
+   desc:'Con el portfolio creciendo y dos LPs activos, la ausencia de un Risk Manager se hace evidente. Un ex-analista de JPMorgan (Buenos Aires) está disponible. Pide USD 2.500/mes.',
+   opts:[
+    {k:'A',lbl:'Contratar Risk Manager (USD 2.500/mes)',dsc:'Profesionalización del riesgo. LPs van a notarlo.',fx:{aum:-5000,risk:-20,rep:12,cmp:15,mor:10},mem:'contrato_risk_manager',con:{t:'pos',ti:'ZAR Capital Profesionaliza su Riesgo',bo:'<b style="color:#00c896">El Risk Manager implementa VaR y límites de posición.</b> Rodrigo felicita la contratación. "Ahora sí parece un fondo serio."'}},
+    {k:'B',lbl:'Consultor part-time (USD 800/mes)',dsc:'Cobertura parcial. Menor costo.',fx:{aum:-1600,risk:-8,cmp:8},con:{t:'neu',ti:'Gestión de Riesgo Parcial',bo:'Cobertura básica. El consultor detecta 3 exposiciones no monitoreadas. Solución provisional mientras el AUM crece.'}},
+    {k:'C',lbl:'Gestionar el riesgo internamente',dsc:'El CIO puede cubrir esta función.',fx:{risk:8,mor:-5,cmp:-5},con:{t:'neu',ti:'Sobrecarga del CIO',bo:'Función cubierta pero el análisis técnico sufre. En turno 10 aparece una pérdida que el Risk Manager habría evitado.'}},
+  ]}
+],
+10:[
+  {id:'ma10',cat:'CORPORATIVO',urg:'high',edu:'fund_str',title:'Oportunidad M&A — Participación en Startup FinTech',
+   desc:'Una startup FinTech Uruguay (valuación USD 4M, 2 años operando, breakeven próximo) ofrece participación del 2% por USD 80.000. Decisión en 72hs.',
+   opts:[
+    {k:'A',lbl:'Invertir USD 80.000 (2% equity)',dsc:'Apuesta de largo plazo. Illiquid pero upside real.',fx:{aum:-80000,rep:15,risk:12,mor:10},mem:'inversion_fintech',con:{t:'pos',ti:'Primera Inversión de Capital Privado',bo:'<b style="color:#00c896">ZAR Capital entra al private equity.</b> La startup tiene track record sólido. Rodrigo aprueba — él conoce el equipo fundador.'}},
+    {k:'B',lbl:'Negociar menor participación (1% / USD 40K)',dsc:'Menos capital comprometido. Diversificar el riesgo.',fx:{aum:-40000,rep:8,risk:6},mem:'inversion_fintech_menor',con:{t:'neu',ti:'Participación Minoritaria',bo:'La startup acepta. Menos upside pero preservás capital operativo. La valuación puede triplicarse en 3 años.'}},
+    {k:'C',lbl:'Rechazar — fuera del mandato',dsc:'ZAR es líquido. Private equity no es el foco ahora.',fx:{cmp:8,risk:-5},mem:'rechazo_fintech',con:{t:'neu',ti:'Disciplina de Mandato',bo:'Decisión correcta desde el mandato. La startup levanta capital de otro fondo. En turno 12 sabrás si fue error o acierto.'}},
+  ]},
+  {id:'lp_rod10',cat:'INVERSORES',urg:'med',edu:'lp_rep',title:'Rodrigo quiere aumentar su posición',
+   desc:'Rodrigo F. quiere duplicar su capital en el fondo — de USD 100.000 a USD 200.000. El lock-up original vence en 30 días. Pide nuevas condiciones.',
+   opts:[
+    {k:'A',lbl:'Aceptar con condiciones originales',dsc:'Same terms. Lock-up nuevo de 6 meses.',fx:{lp:100000,rep:10,mor:12},mem:'rodrigo_aumenta',con:{t:'pos',ti:'LP Flagship Aumenta Posición',bo:'<b style="color:#00c896">AUM LP crece USD 100.000 adicionales.</b> Rodrigo le comenta a sus contactos en Montevideo. Reputación ZAR en Uruguay sube.'}},
+    {k:'B',lbl:'Aceptar con mejores condiciones para él',dsc:'Reducir management fee al 1% para este tramo.',fx:{lp:100000,rep:15,mor:10},mem:'rodrigo_condiciones_especiales',con:{t:'pos',ti:'Relación Estratégica con LP Flagship',bo:'Rodrigo trae otro Family Office de referencia. La concesión de fee se paga en acceso a capital nuevo.'}},
+    {k:'C',lbl:'Renegociar lock-up a 12 meses',dsc:'Capital de largo plazo = más estabilidad para operar.',fx:{lp:100000,rep:8,cmp:10},mem:'rodrigo_lockup_largo',con:{t:'pos',ti:'Capital Estructural',bo:'Lock-up de 12 meses le da a ZAR Capital la estabilidad para estrategias de mayor plazo. Rodrigo acepta como señal de confianza mutua.'}},
+  ]}
+],
+11:[
+  {id:'audit11',cat:'REGULATORIO',urg:'high',edu:'lp_rep',title:'Auditoría Interna Anual',
+   desc:'Tu asesor legal recomienda una auditoría interna completa antes de cerrar el año. Detecta 3 áreas de mejora en compliance. Costo total: USD 6.000.',
+   opts:[
+    {k:'A',lbl:'Auditoría completa (USD 6.000)',dsc:'Resolver todo. Ir al año 2 sin flancos abiertos.',fx:{aum:-6000,cmp:25,rep:12,risk:-10},mem:'auditoria_completa',con:{t:'pos',ti:'Infraestructura de Clase Institucional',bo:'<b style="color:#00c896">ZAR Capital cierra el año con compliance impecable.</b> El tercer LP potencial recibe el reporte de auditoría y queda convencido.'}},
+    {k:'B',lbl:'Resolver solo las 2 más críticas',dsc:'Priorizar. USD 3.000.',fx:{aum:-3000,cmp:12,risk:-5},con:{t:'neu',ti:'Mejora Parcial',bo:'Las áreas críticas resueltas. La tercera observación queda pendiente para turno 12. El LP nuevo pide resolución antes de firmar.'}},
+    {k:'C',lbl:'Postergar para el año 2',dsc:'El fondo está operativo. La auditoría puede esperar.',fx:{cmp:-8,risk:8,rep:-5},con:{t:'neg',ti:'Riesgo Diferido',bo:'<b style="color:#e84040">El tercer LP solicita auditoría como condición de entrada.</b> Sin auditoría, el capital no llega. Año 2 empieza con compliance pendiente.'}},
+  ]},
+  {id:'lp3_11',cat:'INVERSORES',urg:'high',edu:'pitch',title:'Tercer LP — Family Office Bogotá',
+   desc:'Andrés M. (Family Office, Bogotá, Colombia) fue referenciado por Rodrigo. Capital potencial: USD 150.000. Solicita reunión en Montevideo y due diligence completo.',
+   opts:[
+    {k:'A',lbl:'Reunión presencial en Montevideo',dsc:'Viaje, presentación institucional, 2 días.',fx:{aum:-2000,rep:18,mor:12,pend:150000},mem:'lp3_reunion_presencial',con:{t:'pos',ti:'Tercer LP en Pipeline — Alta Probabilidad',bo:'<b style="color:#00c896">Andrés queda impresionado.</b> "ZAR tiene el proceso más profesional que vi en un fondo de esta etapa." Capital en negociación para turno 12.'}},
+    {k:'B',lbl:'Reunión virtual — ahorrar costos',dsc:'Video call con deck completo.',fx:{rep:8,pend:150000},mem:'lp3_reunion_virtual',con:{t:'neu',ti:'Tercer LP en Pipeline — Media Probabilidad',bo:'Andrés aprecia la eficiencia pero señala: "Los fondos importantes vienen a mí." Capital posible pero competencia con otro fondo que sí viajó.'}},
+    {k:'C',lbl:'Enviar DDQ y esperar',dsc:'El capital se gana con documentos, no con viajes.',fx:{pend:80000},con:{t:'neg',ti:'LP en Riesgo',bo:'Andrés no responde el DDQ en 2 semanas. Rodrigo llama: "Tendrías que haber ido a verlo." Capital potencial en riesgo.'}},
+  ]}
+],
+12:[
+  {id:'year2_12',cat:'ESTRATEGIA',urg:'high',edu:'fund_str',title:'Cierre de Año — ¿Qué es ZAR Capital en el Año 2?',
+   desc:'Primer año cerrado. El momento de definir el rumbo del año 2. Esta decisión determina la trayectoria institucional del fondo para los próximos 3 años.',
+   opts:[
+    {k:'A',lbl:'Consolidar y profundizar',dsc:'Mismo mandato. Mejores procesos. Track record más largo.',fx:{rep:10,cmp:15,mor:10,risk:-10},mem:'estrategia_consolidar',con:{t:'pos',ti:'Año 2 — Consolidación Institucional',bo:'<b style="color:#00c896">Decisión de gestor maduro.</b> Los LPs actuales aumentan posiciones. La base está sólida para el año 3 de expansión real.'}},
+    {k:'B',lbl:'Escalar agresivamente',dsc:'Captar 3-5 LPs nuevos. Duplicar AUM.',fx:{rep:5,risk:20,mor:5,med:15},mem:'estrategia_escalar',con:{t:'neu',ti:'Año 2 — Modo Expansión',bo:'Ambición legítima. Riesgo: si el tracking record no es sólido, la captación agresiva puede exponerte. Los fondos que escalan sin base sólida generalmente retroceden.'}},
+    {k:'C',lbl:'Bifurcación estratégica',dsc:'Lanzar segunda estrategia paralela. Diversificar el fondo.',fx:{rep:12,risk:15,aum:-10000,mor:12},mem:'estrategia_bifurcar',con:{t:'pos',ti:'ZAR Capital — Arquitectura Multi-Estrategia',bo:'<b style="color:#00c896">Segunda estrategia lanzada.</b> Más complejidad, más upside. El año 2 empieza con mayor superficie de oportunidad.'}},
+  ]},
+  {id:'lin12',cat:'INTERNO',urg:'low',edu:'team',title:'Primera Decisión de Linaje',
+   desc:'Un familiar cercano (hermano, primo) con interés en finanzas pide sumarse al fondo. Primera intersección entre el proyecto institucional y el linaje familiar.',
+   opts:[
+    {k:'A',lbl:'Sumarlo como analista junior',dsc:'Oportunidad de construir el linaje desde adentro.',fx:{mor:15,rep:-3,risk:5},mem:'linaje_incorporado',con:{t:'pos',ti:'Primera Piedra del Linaje ZAR',bo:'<b style="color:#c89040">El familiar se suma.</b> Tensión potencial si el desempeño no es el esperado. Pero la visión dinástica empieza a tomar forma. El árbol genealógico del fondo comienza.'}},
+    {k:'B',lbl:'Rol formal con evaluación objetiva',dsc:'Entra si pasa el mismo proceso que cualquier candidato.',fx:{mor:10,cmp:12,rep:5},mem:'linaje_formal',con:{t:'pos',ti:'Meritocracia + Familia',bo:'Pasa el proceso. Se suma legítimamente. Los LPs y el equipo lo respetan porque ganó su lugar. Fundamento sólido para el linaje.'}},
+    {k:'C',lbl:'Mantener separación familia/fondo',dsc:'El fondo es institucional. El linaje es otro proyecto.',fx:{cmp:10,rep:8},mem:'linaje_separado',con:{t:'neu',ti:'Frontera Clara',bo:'Decisión institucional correcta por ahora. El linaje puede construirse en el Family Office paralelo — no necesariamente en el Hedge Fund.'}},
   ]}
 ]
 };
@@ -431,6 +527,17 @@ function res(eid,oi){
   if(!e||e.resolved)return;
   const o=e.opts[oi];
   apFx(o.fx);
+  // ── MEMORIA DEL UNIVERSO ──
+  if(o.mem){
+    if(!S.memoria)S.memoria={};
+    S.memoria[o.mem]={turno:S.turn,decision:o.lbl,fecha:new Date().toISOString().slice(0,10)};
+    // guardar también en localStorage para que Command Center lo lea
+    try{
+      const memGlobal=JSON.parse(localStorage.getItem('zcp_memoria')||'{}');
+      memGlobal[o.mem]={turno:S.turn,decision:o.lbl,evento:e.title,fecha:new Date().toISOString().slice(0,10)};
+      localStorage.setItem('zcp_memoria',JSON.stringify(memGlobal));
+    }catch(err){}
+  }
   let con=o.con;
   if(o.roll){
     const w=Math.random()<o.roll.p;
@@ -454,6 +561,45 @@ function apFx(fx){
   if(fx.mor)S.m.mor=clp(S.m.mor+fx.mor);
   if(fx.med)S.m.med=clp(S.m.med+fx.med);
   if(fx.cmp)S.m.cmp=clp(S.m.cmp+fx.cmp);
+}
+
+function getMemoriaCtx(){
+  if(!S.memoria||!Object.keys(S.memoria).length)return'Sin decisiones registradas aún.';
+  const labels={
+    contrato_analista:'Contrató analista junior con salario',
+    equity_analista:'Entregó equity al analista (0.5%)',
+    sin_equipo:'Decidió operar solo sin equipo',
+    rotacion_hard_assets:'Rotó a hard assets durante crisis macro AR',
+    mantener_crisis:'Mantuvo posiciones durante crisis macro AR',
+    comunicacion_crisis:'Comunicó proactivamente la crisis al LP',
+    segundo_lp_firmado:'Cerró segundo LP con reporte institucional completo',
+    segundo_lp_basico:'Cerró segundo LP con reporte básico',
+    decision_hedge_fund:'Escaló a estructura de Hedge Fund',
+    decision_family_office:'Mantuvo estructura de Family Office',
+    decision_dual:'Adoptó estructura dual Family Office + Hedge Fund',
+    cobertura_geo:'Cubrió exposición ante shock geopolítico',
+    apuesta_geo:'Apostó a la volatilidad del shock geopolítico',
+    salida_geo:'Salió de posiciones ante shock geopolítico',
+    comunicado_crisis_sistemica:'Comunicó proactivamente la crisis sistémica a todos los LPs',
+    rebalanceo_defensivo:'Rebalanceó a posición defensiva en crisis sistémica',
+    contrato_risk_manager:'Contrató Risk Manager ex-JPMorgan',
+    inversion_fintech:'Invirtió USD 80K en startup FinTech Uruguay (2%)',
+    inversion_fintech_menor:'Invirtió USD 40K en startup FinTech Uruguay (1%)',
+    rechazo_fintech:'Rechazó oportunidad de M&A en FinTech',
+    rodrigo_aumenta:'Rodrigo duplicó su posición en el fondo',
+    rodrigo_condiciones_especiales:'Concedió condiciones especiales a Rodrigo (fee reducido)',
+    rodrigo_lockup_largo:'Negoció lock-up de 12 meses con Rodrigo',
+    auditoria_completa:'Realizó auditoría interna completa',
+    lp3_reunion_presencial:'Viajó a Montevideo para reunión con LP colombiano',
+    lp3_reunion_virtual:'Realizó reunión virtual con LP colombiano',
+    estrategia_consolidar:'Eligió consolidar en Año 2',
+    estrategia_escalar:'Eligió escalar agresivamente en Año 2',
+    estrategia_bifurcar:'Eligió bifurcar con segunda estrategia en Año 2',
+    linaje_incorporado:'Incorporó familiar al fondo como analista',
+    linaje_formal:'Incorporó familiar mediante proceso meritocrático',
+    linaje_separado:'Mantuvo separación familia/fondo'
+  };
+  return Object.entries(S.memoria).slice(-8).map(([k,v])=>`• T${v.turno}: ${labels[k]||k}`).join('\n');
 }
 
 function advance(){
@@ -531,6 +677,7 @@ async function consultAI(){
   const tot=S.aum+S.lp;
   const lv=getLevel(tot,S.m.rep);
   const pend=S.evts.filter(e=>!e.resolved).map(e=>e.title).join(', ')||'ninguno';
+  const memCtx=getMemoriaCtx();
   const prompt=`Sos el Asesor Ejecutivo senior de ZAR Capital Partners (hedge fund barbell Argentina/Uruguay, Meridian Strategy). El Founder & CIO es Pedro.
 
 Estado actual:
@@ -539,7 +686,10 @@ Estado actual:
 - Métricas: Reputación ${S.m.rep}/100 | Riesgo ${S.m.risk}/100 | Moral ${S.m.mor}/100 | Compliance ${S.m.cmp}/100
 - Eventos pendientes: ${pend}
 
-Escribí un briefing ejecutivo personal dirigido a Pedro. Máximo 180 palabras. Tono: profesional, directo, sin preámbulos. Señalá 1-2 prioridades críticas para este período.`;
+Historial de decisiones clave (memoria del fondo):
+${memCtx}
+
+Escribí un briefing ejecutivo personal dirigido a Pedro. Incorporá referencias específicas al historial de decisiones cuando sea relevante. Máximo 200 palabras. Tono: profesional, directo, sin preámbulos. Señalá 1-2 prioridades críticas para este período y cómo las decisiones pasadas afectan el presente.`;
   try{
     const tx=await apiCall(prompt,400);
     if(!tx){
