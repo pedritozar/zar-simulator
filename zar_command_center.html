@@ -335,6 +335,8 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
       <div style="margin-top:12px;padding-top:12px;border-top:1px solid #1a2535">
         <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-bottom:5px">Última actualización</div>
         <div id="mundo-ts" style="font-size:9px;color:#1e2c3a">—</div>
+        <div id="mundo-prox" style="font-size:8px;color:#1e2c3a;margin-top:3px">Próx: —</div>
+        <div id="mundo-auto-badge" style="display:none;margin-top:8px;background:rgba(200,144,64,.12);border:1px solid #c89040;color:#c89040;font-size:8px;padding:5px 8px;line-height:1.5"></div>
         <div style="font-size:8px;color:#3a4f65;letter-spacing:1px;margin-top:8px;margin-bottom:5px">Entidades en el universo</div>
         <div id="mundo-count" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#c89040">0</div>
       </div>
@@ -1406,6 +1408,82 @@ function showM(con){
 }
 function closeM(){document.getElementById('zmod').style.display='none';}
 
+
+// ── MUNDO AUTÓNOMO ────────────────────────────────────────────
+const LSMUNDO='zcp_mundo_auto';
+const MUNDO_INTERVALO=2*60*60*1000; // 2 horas
+
+async function mundoAutoUpdate(){
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey)return;
+  const now=Date.now();
+  try{
+    const raw=localStorage.getItem(LSMUNDO);
+    const meta=raw?JSON.parse(raw):{lastRun:0,eventos:[]};
+    if(now-meta.lastRun < MUNDO_INTERVALO)return;
+
+    let simCtx='';
+    try{const sim=JSON.parse(localStorage.getItem(LSSIM)||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12 | Nivel: NV.${sim.lvId||1}`;}catch(e){}
+
+    const prompt=`Sos el Motor Político-Económico Global autónomo del universo ZAR Capital Partners.
+Fecha real: ${new Date().toLocaleDateString('es-AR')} | ${simCtx}
+El fondo lleva ${Math.round((now-(meta.lastRun||now-86400000))/3600000)} horas sin supervisión.
+Generá 4 eventos que ocurrieron en el mundo durante este período. Mezclar: empresas, política, geopolítica, finanzas. Modo híbrido (real + ficción del universo). Intensidad moderada.
+SOLO JSON sin markdown: {"eventos":[{"id":"a1","titulo":"string","tipo":"empresa|politico|geo|financiero","region":"string","descripcion":"2 oraciones","impacto_fondo":"ALTO|MEDIO|BAJO|NINGUNO","oportunidad":"string|null","riesgo":"string|null","modo":"real|ficticio","inyectable":true}]}`;
+
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const parsed=JSON.parse(d.content[0].text.replace(/```json|```/g,'').trim());
+    const nuevos=parsed.eventos||[];
+
+    meta.eventos=[...nuevos,...(meta.eventos||[])].slice(0,30);
+    meta.lastRun=now;
+    meta.pendientes=(meta.pendientes||0)+nuevos.length;
+    localStorage.setItem(LSMUNDO,JSON.stringify(meta));
+
+    _mundoEventos=[...nuevos,..._mundoEventos].slice(0,50);
+    mostrarNotificacionMundo(nuevos.length);
+  }catch(e){}
+}
+
+function mostrarNotificacionMundo(n){
+  const badge=document.getElementById('mundo-auto-badge');
+  if(badge){
+    badge.textContent=n+' evento'+(n>1?'s':'')+' nuevo'+(n>1?'s':'')+' mientras no estabas';
+    badge.style.display='block';
+  }
+  renderMundo();
+}
+
+function cargarEventosAuto(){
+  try{
+    const raw=localStorage.getItem(LSMUNDO);
+    if(!raw)return;
+    const meta=JSON.parse(raw);
+    if(meta.eventos&&meta.eventos.length){
+      _mundoEventos=[...meta.eventos,..._mundoEventos].slice(0,50);
+      if(meta.pendientes>0){
+        mostrarNotificacionMundo(meta.pendientes);
+        meta.pendientes=0;
+        localStorage.setItem(LSMUNDO,JSON.stringify(meta));
+      }
+    }
+  }catch(e){}
+}
+
+function tiempoHastaProxUpdate(){
+  try{
+    const raw=localStorage.getItem(LSMUNDO);
+    if(!raw)return'En breve';
+    const meta=JSON.parse(raw);
+    const diff=MUNDO_INTERVALO-(Date.now()-meta.lastRun);
+    if(diff<=0)return'Ahora';
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    return h>0?`${h}h ${m}m`:`${m}m`;
+  }catch(e){return'—';}
+}
+
 // ── INIT ──────────────────────────────────────────────────────
 (function(){
   loadCC();
@@ -1424,6 +1502,13 @@ function closeM(){document.getElementById('zmod').style.display='none';}
   renderEquipo();
   renderEquipoKPIs();
   renderOfertas();
+  cargarEventosAuto();
+  mundoAutoUpdate();
+  setInterval(mundoAutoUpdate, 5*60*1000);
+  setInterval(()=>{
+    const el=document.getElementById('mundo-prox');
+    if(el)el.textContent='Próx. actualización: '+tiempoHastaProxUpdate();
+  },30000);
   showTab('mesa');
 })();
 </script>
