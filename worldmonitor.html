@@ -100,12 +100,24 @@ body{background:#000;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',mon
   <div style="padding:7px 10px;border-top:1px solid #1a2535;display:flex;flex-direction:column;gap:4px">
     <button class="btn" onclick="generateWorldEvent()" style="border-color:#e84040;color:#e84040;width:100%;padding:5px">Cisne Negro Regional</button>
     <button class="btn" onclick="refreshSimState()" style="width:100%;padding:4px">Sincronizar Simulador</button>
+    <div style="border-top:1px solid #1a2535;padding-top:6px;margin-top:2px">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px">Modo del Universo</div>
+      <div style="display:flex;gap:3px">
+        <button id="modo-real" onclick="setModoUniverso('real')" class="btn" style="flex:1;font-size:8px;border-color:#00c896;color:#00c896;padding:4px">Real</button>
+        <button id="modo-hibrido" onclick="setModoUniverso('hibrido')" class="btn" style="flex:1;font-size:8px;border-color:#c89040;color:#c89040;padding:4px;background:rgba(200,144,64,.15)">Híbrido</button>
+        <button id="modo-ficcion" onclick="setModoUniverso('ficcion')" class="btn" style="flex:1;font-size:8px;padding:4px">Ficción</button>
+      </div>
+      <div id="modo-label" style="font-size:8px;color:#c89040;margin-top:4px;text-align:center;letter-spacing:.5px">Modo: Híbrido</div>
+    </div>
   </div>
 </div>
 
 <!-- RIGHT PANEL: EVENT FEED + DETAIL -->
 <div class="panel" style="top:60px;right:12px;width:268px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;overflow:hidden">
-  <div style="padding:7px 10px;border-bottom:1px solid #1a2535;font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;flex-shrink:0">Feed de Eventos Globales</div>
+  <div style="padding:7px 10px;border-bottom:1px solid #1a2535;font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;display:flex;justify-content:space-between;align-items:center">
+    <span>Feed de Eventos Globales</span>
+    <span id="feed-modo-badge" style="font-size:7px;padding:1px 5px;background:rgba(200,144,64,.12);color:#c89040;border:1px solid #c89040;letter-spacing:.5px">HÍBRIDO</span>
+  </div>
   <div id="event-feed" style="flex:1;overflow-y:auto"></div>
 
   <div id="detail-panel" style="display:none;border-top:2px solid #c89040;flex-shrink:0">
@@ -121,7 +133,7 @@ body{background:#000;color:#c0cbd8;font-family:'IBM Plex Mono','Courier New',mon
   <span style="font-size:8px;color:#1e2c3a;letter-spacing:1px">globe.gl</span>
 </div>
 
-<script src="https://unpkg.com/globe.gl"></script>
+<script src="https://unpkg.com/globe.gl" onerror="console.warn('globe.gl no cargó — reintentando')"></script>
 <script>
 
 // ── DATA ──────────────────────────────────────────────────────
@@ -180,6 +192,11 @@ let world = null;
 
 // ── GLOBE ─────────────────────────────────────────────────────
 function initGlobe(){
+  if(typeof Globe === 'undefined'){
+    document.getElementById('globe-wrap').innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#1e2c3a;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;flex-direction:column;gap:10px"><div>Cargando globo...</div><div style="font-size:8px;color:#1a2535">Verificá tu conexión a internet</div></div>';
+    setTimeout(initGlobe, 2000);
+    return;
+  }
   world = Globe()
     .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
     .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
@@ -383,20 +400,46 @@ function injectToSim(label, sub, color){
   }
 }
 
-function generateWorldEvent(){
-  const pool = [
-    {label:'Terremoto Mag.7+ en Japón',sub:'Mercados asiáticos bajo presión. Yen volátil. Seguros disparan.'},
-    {label:'Colapso bancario en Europa Central',sub:'Contagio sistémico. Fuga hacia UST y oro. EUR bajo presión.'},
-    {label:'Huelga portuaria China — 30 días',sub:'Rutas comerciales del Pacífico bloqueadas. Commodities +15%.'},
-    {label:'Elecciones relámpago en Argentina',sub:'Volatilidad extrema en CER y CEDEARs locales. Riesgo país +800bps.'},
-    {label:'Escalada militar en Taiwán',sub:'Semiconductores en crisis. Tech global -12%. Fuga a bonos.'},
-    {label:'Default soberano inesperado EM',sub:'Contagio a bonos emergentes. Flujos hacia USD y UST.'},
-    {label:'Pandemia animal — impacto commodities',sub:'Proteínas y granos bajo presión. Commodities ag. +25%.'},
-    {label:'Ciberataque a SWIFT',sub:'Sistema financiero global afectado. Crypto como alternativa temporal.'},
-    {label:'Devaluación sorpresa del Yuan',sub:'FX asiático en caos. USD/CNH dispara. Exportadores chinos presionados.'},
+async function generateWorldEvent(){
+  const simKey=localStorage.getItem('zcp_apikey');
+  const pool=[
+    {label:'Terremoto Mag.7+ en Japón',sub:'Mercados asiáticos bajo presión. Yen volátil.'},
+    {label:'Colapso bancario en Europa Central',sub:'Contagio sistémico. Fuga hacia UST y oro.'},
+    {label:'Huelga portuaria China — 30 días',sub:'Rutas comerciales del Pacífico bloqueadas.'},
+    {label:'Elecciones relámpago en Argentina',sub:'Volatilidad extrema en CER y CEDEARs.'},
+    {label:'Escalada militar en Taiwán',sub:'Semiconductores en crisis. Tech global -12%.'},
   ];
-  const ev = pool[Math.floor(Math.random() * pool.length)];
-  injectToSim(ev.label, ev.sub, '#e84040');
+
+  if(!simKey){
+    const ev=pool[Math.floor(Math.random()*pool.length)];
+    injectToSim(ev.label,ev.sub,'#e84040');
+    return;
+  }
+
+  const modo=_modoUniverso||'hibrido';
+  const modoInstr={
+    real:'Generá un evento de cisne negro basado solo en riesgos reales del mundo actual.',
+    hibrido:'Generá un evento de cisne negro mezclando riesgos reales con el universo ficticio de ZAR Capital Partners.',
+    ficcion:'Generá un evento de cisne negro completamente ficticio del universo alternativo de ZAR Capital Partners.'
+  };
+
+  let simCtx='';
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12`;}catch(e){}
+
+  const prompt=`Sos el Monitor de Riesgo Global de ZAR Capital Partners. ${simCtx}
+${modoInstr[modo]}
+El evento debe ser dramático, inesperado y con impacto financiero claro.
+Respondé SOLO en JSON sin markdown: {"titulo":"string","descripcion":"2 oraciones con impacto específico al fondo","region":"string","impacto":"string"}`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const parsed=JSON.parse(d.content[0].text.replace(/```json|```/g,'').trim());
+    injectToSim(parsed.titulo,parsed.descripcion,'#e84040');
+  }catch(e){
+    const ev=pool[Math.floor(Math.random()*pool.length)];
+    injectToSim(ev.label,ev.sub,'#e84040');
+  }
 }
 
 // ── CLOCK + MARKET STATUS ─────────────────────────────────────
@@ -424,9 +467,43 @@ function updateClock(){
   }catch(e){}
 }
 
+// ── MODO UNIVERSO ─────────────────────────────────────────────
+let _modoUniverso='hibrido';
+
+function setModoUniverso(modo){
+  _modoUniverso=modo;
+  const modos={real:'Real',hibrido:'Híbrido',ficcion:'Ficción'};
+  const cols={real:'#00c896',hibrido:'#c89040',ficcion:'#8860ff'};
+  const col=cols[modo];
+
+  ['real','hibrido','ficcion'].forEach(m=>{
+    const btn=document.getElementById('modo-'+m);
+    if(!btn)return;
+    btn.style.background=m===modo?`rgba(${m==='real'?'0,200,150':m==='hibrido'?'200,144,64':'136,96,255'},.15)`:'transparent';
+    btn.style.borderColor=m===modo?cols[m]:'#1a2535';
+    btn.style.color=m===modo?cols[m]:'#3a4f65';
+  });
+
+  const lbl=document.getElementById('modo-label');
+  if(lbl){lbl.textContent='Modo: '+modos[modo];lbl.style.color=col;}
+
+  const badge=document.getElementById('feed-modo-badge');
+  if(badge){badge.textContent=modos[modo].toUpperCase();badge.style.color=col;badge.style.borderColor=col;badge.style.background=`rgba(${modo==='real'?'0,200,150':modo==='hibrido'?'200,144,64':'136,96,255'},.1)`;}
+
+  localStorage.setItem('zcp_modo_universo',modo);
+  renderFeed();
+}
+
+function getModoLabel(){
+  const m={real:'solo datos reales del mundo actual',hibrido:'mezclando datos reales con el universo ficticio de ZAR Capital',ficcion:'en el universo alternativo completo de ZAR Capital Partners'};
+  return m[_modoUniverso]||m.hibrido;
+}
+
 // ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('load', () => {
   initGlobe();
+  const savedModo=localStorage.getItem('zcp_modo_universo')||'hibrido';
+  setModoUniverso(savedModo);
   renderFeed();
   refreshSimState();
   updateClock();
