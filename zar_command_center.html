@@ -48,13 +48,14 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
 </div>
 
 <!-- TABS -->
-<div style="display:flex;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0">
-  <button class="tab-btn" onclick="showTab('mesa')" id="tab-mesa" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid #c89040;color:#c89040;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Mesa de Operaciones</button>
-  <button class="tab-btn" onclick="showTab('lps')" id="tab-lps" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Pipeline Inversores</button>
-  <button class="tab-btn" onclick="showTab('mundo')" id="tab-mundo" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Motor Global</button>
-  <button class="tab-btn" onclick="showTab('cal')" id="tab-cal" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Calendario</button>
-  <button class="tab-btn" onclick="showTab('rep')" id="tab-rep" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Reportes</button>
-  <button class="tab-btn" onclick="showTab('ctas')" id="tab-ctas" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer">Cuentas y Brokers</button>
+<div style="display:flex;background:#0c101a;border-bottom:1px solid #1a2535;flex-shrink:0;overflow-x:auto">
+  <button class="tab-btn" onclick="showTab('mesa')" id="tab-mesa" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid #c89040;color:#c89040;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Mesa de Operaciones</button>
+  <button class="tab-btn" onclick="showTab('lps')" id="tab-lps" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Pipeline Inversores</button>
+  <button class="tab-btn" onclick="showTab('mundo')" id="tab-mundo" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Motor Global</button>
+  <button class="tab-btn" onclick="showTab('org')" id="tab-org" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Organización</button>
+  <button class="tab-btn" onclick="showTab('cal')" id="tab-cal" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Calendario</button>
+  <button class="tab-btn" onclick="showTab('rep')" id="tab-rep" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Reportes</button>
+  <button class="tab-btn" onclick="showTab('ctas')" id="tab-ctas" style="padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#3a4f65;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap">Cuentas y Brokers</button>
 </div>
 
 <!-- CONTENT AREA -->
@@ -358,6 +359,149 @@ label{font-size:8px;color:#3a4f65;letter-spacing:1.5px;text-transform:uppercase;
   </div>
 </div>
 
+<!-- ═══ ORGANIZACIÓN ═══ -->
+<div id="tab-org-content" style="flex:1;overflow:hidden;display:none;flex-direction:column">
+  <div style="display:flex;flex:1;overflow:hidden">
+
+    <!-- LEFT: CONTROLES -->
+    <div style="width:300px;flex-shrink:0;overflow-y:auto;padding:14px;border-right:1px solid #1a2535">
+      <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1a2535">Gestión Organizacional — ZAR Capital</div>
+
+      <!-- OFICINA -->
+      <div style="margin-bottom:12px">
+        <div style="font-size:8px;color:#c89040;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px">Sede Operativa</div>
+        <div class="card" style="margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span id="oficina-nivel-label" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#c89040">Monoambiente</span>
+            <span id="oficina-costo" style="font-size:9px;color:#e84040">$0/mes</span>
+          </div>
+          <div id="oficina-desc" style="font-size:8px;color:#3a4f65;line-height:1.5;margin-bottom:6px">Operación desde casa. Sin costo de alquiler. Capacidad: 1 persona.</div>
+          <button class="btn" onclick="expandirOficina()" id="btn-oficina" style="width:100%;border-color:#c89040;color:#c89040">Expandir Oficina</button>
+        </div>
+        <div style="margin-bottom:6px">
+          <label>Ciudad principal</label>
+          <input type="text" id="org-ciudad" placeholder="Buenos Aires" onchange="saveOrgVal('ciudad',this.value)">
+        </div>
+        <div id="sedes-extra" style="font-size:8px;color:#1e2c3a;margin-bottom:6px"></div>
+        <button class="btn" onclick="addSede()" style="width:100%;font-size:8px">+ Agregar Sede / Sucursal</button>
+      </div>
+
+      <!-- ESTRUCTURA JURÍDICA -->
+      <div style="margin-bottom:12px;padding-top:10px;border-top:1px solid #1a2535">
+        <div style="font-size:8px;color:#4a9eff;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px">Estructura del Fondo</div>
+        <div style="margin-bottom:6px">
+          <label>Tipo de vehículo</label>
+          <select id="org-tipo" onchange="saveOrgVal('tipo',this.value)">
+            <option value="family">Family Office</option>
+            <option value="fondo_cobertura">Fondo de Cobertura (Hedge Fund)</option>
+            <option value="fondo_inversion">Fondo de Inversión</option>
+            <option value="dual">Dual: Family Office + Hedge Fund</option>
+            <option value="pe">Private Equity</option>
+          </select>
+        </div>
+        <div style="margin-bottom:6px">
+          <label>Estado de la decisión</label>
+          <select id="org-decision" onchange="saveOrgVal('decision',this.value)">
+            <option value="pendiente">Pendiente de decisión</option>
+            <option value="deliberando">En deliberación con el equipo</option>
+            <option value="confirmado">Confirmado</option>
+          </select>
+        </div>
+        <button class="btn" onclick="convocarEquipoDecision()" style="width:100%;border-color:#8860ff;color:#8860ff">Convocar Equipo para Debatir</button>
+      </div>
+
+      <!-- RECLUTAMIENTO -->
+      <div style="padding-top:10px;border-top:1px solid #1a2535">
+        <div style="font-size:8px;color:#00c896;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px">Reclutamiento</div>
+        <div style="margin-bottom:6px">
+          <label>Rol a cubrir</label>
+          <select id="rec-rol">
+            <option value="analista_junior">Analista Junior</option>
+            <option value="analista_senior">Analista Senior</option>
+            <option value="trader">Trader</option>
+            <option value="risk_manager">Risk Manager</option>
+            <option value="compliance">Compliance Officer</option>
+            <option value="ir">Investor Relations</option>
+            <option value="operaciones">Operaciones / Back Office</option>
+            <option value="pasante">Pasante (UBA, Di Tella, UDESA)</option>
+          </select>
+        </div>
+        <div style="margin-bottom:6px">
+          <label>Modalidad</label>
+          <select id="rec-modalidad">
+            <option value="full">Full time</option>
+            <option value="part">Part time</option>
+            <option value="pasantia">Pasantía (sin sueldo / beca)</option>
+            <option value="freelance">Freelance / Consultor</option>
+          </select>
+        </div>
+        <button class="btn-gold" onclick="publicarOferta()" id="btn-oferta" style="width:100%;margin-bottom:6px">Publicar Oferta Laboral</button>
+        <button class="btn" onclick="generarCandidatos()" id="btn-cands" style="width:100%" disabled>Ver Candidatos</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: EQUIPO + MÉTRICAS -->
+    <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+
+      <!-- KPIs del equipo -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid #1a2535;flex-shrink:0">
+        <div style="padding:10px 12px;border-right:1px solid #1a2535">
+          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Equipo</div>
+          <div id="eq-total" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700">1</div>
+          <div style="font-size:8px;color:#1e2c3a">personas</div>
+        </div>
+        <div style="padding:10px 12px;border-right:1px solid #1a2535">
+          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Moral</div>
+          <div id="eq-moral" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#00c896">—</div>
+        </div>
+        <div style="padding:10px 12px;border-right:1px solid #1a2535">
+          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Costo/mes</div>
+          <div id="eq-costo" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#e84040">$0</div>
+        </div>
+        <div style="padding:10px 12px;border-right:1px solid #1a2535">
+          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">En Riesgo</div>
+          <div id="eq-riesgo" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#e84040">0</div>
+        </div>
+        <div style="padding:10px 12px">
+          <div style="font-size:8px;color:#3a4f65;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Ofertas Activas</div>
+          <div id="eq-ofertas" style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#c89040">0</div>
+        </div>
+      </div>
+
+      <!-- EQUIPO ACTUAL -->
+      <div style="flex:1;overflow-y:auto;padding:12px">
+        <div style="font-size:8px;color:#3a4f65;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Equipo Actual — ZAR Capital Partners</div>
+
+        <!-- Founder siempre visible -->
+        <div class="card ani" style="margin-bottom:8px;border-left:3px solid #c89040">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <div>
+              <span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700">Pedro Zacarias</span>
+              <span class="tag tag-warn" style="margin-left:8px">FOUNDER & CIO</span>
+            </div>
+            <span class="tag tag-pos">ACTIVO</span>
+          </div>
+          <div style="display:flex;gap:16px;font-size:8px;color:#3a4f65">
+            <span>Rol: Founder, CIO, Trader, Analista</span>
+            <span>Modalidad: Full time</span>
+            <span>Salario: Equity</span>
+          </div>
+          <div style="margin-top:5px;font-size:8px;color:#3a4f65">Habilidades: Análisis técnico (TESLA/MALETA) · Macro · Gestión de riesgo · Relación con LPs</div>
+        </div>
+
+        <div id="equipo-grid"></div>
+
+        <div id="ofertas-grid" style="margin-top:14px"></div>
+
+        <div id="candidatos-panel" style="display:none;margin-top:14px">
+          <div style="font-size:8px;color:#00c896;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Candidatos Disponibles</div>
+          <div id="candidatos-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ CALENDARIO ═══ -->
 <div id="tab-cal-content" style="flex:1;overflow-y:auto;display:none;align-items:center;justify-content:center">
   <div style="text-align:center;padding:60px">
@@ -462,7 +606,7 @@ function saveCC(){try{localStorage.setItem(LSCC,JSON.stringify(CC));}catch(e){}}
 function loadCC(){try{const r=localStorage.getItem(LSCC);if(r)CC=JSON.parse(r);}catch(e){}}
 
 // ── TABS ──────────────────────────────────────────────────────
-const TABS=['mesa','lps','mundo','cal','rep','ctas'];
+const TABS=['mesa','lps','mundo','org','cal','rep','ctas'];
 function showTab(id){
   TABS.forEach(t=>{
     const c=document.getElementById('tab-'+t+'-content');
@@ -1069,6 +1213,188 @@ function crearEntidadManual(){
   document.getElementById('mundo-count').textContent=CC.mundoEntidades;
   renderMundo();
 }
+
+// ── ORGANIZACIÓN ─────────────────────────────────────────────
+const OFICINAS=[
+  {nivel:1,nombre:'Monoambiente',desc:'Operación desde casa. Sin costo. Capacidad: 1 persona.',costo:0,capacidad:1},
+  {nivel:2,nombre:'Oficina Boutique',desc:'Espacio en BA — Palermo, San Telmo o Puerto Madero. Capacidad: 3-5 personas.',costo:800,capacidad:5},
+  {nivel:3,nombre:'Piso Corporativo',desc:'Oficina propia + sala de reuniones. Credibilidad con LPs. Capacidad: 15 personas.',costo:3500,capacidad:15},
+  {nivel:4,nombre:'Torre Corporativa',desc:'Piso premium BA + sucursal Montevideo. Capacidad: 30+ personas.',costo:12000,capacidad:30},
+  {nivel:5,nombre:'Campus Global',desc:'Presencia en NY, Londres, Tokio o Moscú. HQ propio.',costo:50000,capacidad:999}
+];
+function saveOrgVal(k,v){if(!CC.org)CC.org={};CC.org[k]=v;saveCC();}
+function renderOficina(){
+  const nv=CC.org?.oficinaNivel||1;
+  const of=OFICINAS[nv-1];const next=OFICINAS[nv];
+  const el=document.getElementById('oficina-nivel-label');
+  if(el)el.textContent=of.nombre;
+  const desc=document.getElementById('oficina-desc');
+  if(desc)desc.textContent=of.desc;
+  const costo=document.getElementById('oficina-costo');
+  if(costo)costo.textContent=of.costo>0?'$'+of.costo.toLocaleString()+'/mes':'Sin costo';
+  const btn=document.getElementById('btn-oficina');
+  if(btn){if(next){btn.textContent='Expandir → '+next.nombre;btn.disabled=false;}else{btn.textContent='Nivel Máximo';btn.disabled=true;}}
+}
+function expandirOficina(){
+  const nv=CC.org?.oficinaNivel||1;const next=OFICINAS[nv];
+  if(!next){showM({t:'neu',ti:'Nivel Máximo',sub:'',bo:'Ya tenés la sede más grande posible.'});return;}
+  showM({t:'neu',ti:'Expandir Oficina',sub:'DECISIÓN ORGANIZACIONAL',bo:`¿Expandir a <b style="color:#c89040">${next.nombre}</b>?<br><br>Costo mensual: <b style="color:#e84040">$${next.costo.toLocaleString()}/mes</b><br>${next.desc}<br><br><div style="display:flex;gap:8px;margin-top:10px"><button onclick="closeM()" class="btn" style="flex:1">Cancelar</button><button onclick="confirmarExpansion()" style="flex:2;padding:5px;background:#c89040;border:none;color:#000;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px">Confirmar</button></div>`});
+}
+function confirmarExpansion(){
+  if(!CC.org)CC.org={};
+  CC.org.oficinaNivel=(CC.org.oficinaNivel||1)+1;
+  saveCC();closeM();renderOficina();
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');sim.m=sim.m||{};sim.m.rep=Math.min(100,(sim.m.rep||30)+8);sim.m.mor=Math.min(100,(sim.m.mor||70)+5);localStorage.setItem('zcp_state_v3',JSON.stringify(sim));}catch(e){}
+  showM({t:'pos',ti:'Expansión Confirmada',sub:'',bo:'<b style="color:#00c896">Nueva sede activa.</b> Los LPs van a notar el cambio.'});
+}
+function addSede(){
+  const ciudad=prompt('Ciudad de la nueva sede:');if(!ciudad)return;
+  const tipo=prompt('Tipo (real/ficticio):','real');
+  if(!CC.org)CC.org={};if(!CC.org.sedes)CC.org.sedes=[];
+  CC.org.sedes.push({ciudad,tipo:tipo||'real'});saveCC();renderSedes();
+}
+function renderSedes(){
+  const el=document.getElementById('sedes-extra');if(!el)return;
+  const sedes=CC.org?.sedes||[];
+  el.innerHTML=sedes.map(s=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span class="tag ${s.tipo==='real'?'tag-pos':'tag-neu'}">${s.tipo.toUpperCase()}</span><span style="font-size:9px;color:#c0cbd8">${s.ciudad}</span></div>`).join('');
+}
+async function publicarOferta(){
+  const rol=document.getElementById('rec-rol').value;
+  const modalidad=document.getElementById('rec-modalidad').value;
+  const btn=document.getElementById('btn-oferta');
+  const btnC=document.getElementById('btn-cands');
+  btn.textContent='Publicando...';btn.disabled=true;
+  if(!CC.org)CC.org={};if(!CC.org.ofertas)CC.org.ofertas=[];
+  const rolNombres={analista_junior:'Analista Junior',analista_senior:'Analista Senior',trader:'Trader',risk_manager:'Risk Manager',compliance:'Compliance Officer',ir:'Investor Relations',operaciones:'Operaciones / Back Office',pasante:'Pasante'};
+  const salarios={analista_junior:1200,analista_senior:2800,trader:2500,risk_manager:3000,compliance:2200,ir:2000,operaciones:1500,pasante:0};
+  const oferta={id:'of_'+Date.now(),rol:rolNombres[rol]||rol,modalidad,salario:salarios[rol]||0,estado:'ACTIVA',fecha:new Date().toISOString().slice(0,10)};
+  CC.org.ofertas.push(oferta);saveCC();
+  renderEquipoKPIs();renderOfertas();
+  btn.textContent='Publicar Oferta Laboral';btn.disabled=false;btnC.disabled=false;
+  showM({t:'pos',ti:'Oferta Publicada',sub:'RECLUTAMIENTO',bo:`Oferta para <b style="color:#00c896">${oferta.rol}</b> publicada.<br>Salario: ${oferta.salario>0?'USD $'+oferta.salario+'/mes':'Pasantía (sin costo)'}<br>Clic en "Ver Candidatos" para revisar perfiles.`});
+}
+async function generarCandidatos(){
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey){showM({t:'neu',ti:'API Key requerida',sub:'',bo:'Necesitás la API key para generar candidatos.'});return;}
+  const btn=document.getElementById('btn-cands');btn.textContent='Buscando...';btn.disabled=true;
+  const ofActiva=CC.org?.ofertas?.filter(o=>o.estado==='ACTIVA')||[];
+  if(!ofActiva.length){showM({t:'neu',ti:'Sin ofertas activas',sub:'',bo:'Publicá una oferta primero.'});btn.textContent='Ver Candidatos';btn.disabled=false;return;}
+  const of=ofActiva[ofActiva.length-1];
+  let simCtx='';try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12`;}catch(e){}
+  const prompt=`Sos el recruiter de ZAR Capital Partners (hedge fund Argentina/Uruguay). Buscamos: ${of.rol} | Modalidad: ${of.modalidad} | ${simCtx}
+Generá 3 candidatos únicos (pueden ser ficticios). Uno sobrecalificado, uno exacto, uno riesgoso pero interesante.
+SOLO JSON sin markdown: {"candidatos":[{"nombre":"string","edad":25,"universidad":"string","experiencia":"string","fortaleza":"string","debilidad":"string","salario_pedido":1200,"fit":"ALTO|MEDIO|RIESGO","nota":"1 frase recruiter"}]}`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:700,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const parsed=JSON.parse(d.content[0].text.replace(/```json|```/g,'').trim());
+    window._candidatos=parsed.candidatos||[];window._ofertaActual=of;
+    renderCandidatos();document.getElementById('candidatos-panel').style.display='block';
+  }catch(e){showM({t:'neg',ti:'Error',sub:'',bo:'No se pudieron generar candidatos: '+e.message});}
+  btn.textContent='Ver Candidatos';btn.disabled=false;
+}
+function renderCandidatos(){
+  const list=document.getElementById('candidatos-list');if(!list)return;
+  const fitCol={ALTO:'#00c896',MEDIO:'#c89040',RIESGO:'#e84040'};
+  list.innerHTML=(window._candidatos||[]).map((c,i)=>`
+    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${fitCol[c.fit]||'#1a2535'}">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700">${c.nombre}</span>
+        <span class="tag" style="background:rgba(255,255,255,.04);color:${fitCol[c.fit]}">${c.fit}</span>
+      </div>
+      <div style="font-size:8px;color:#3a4f65;margin-bottom:3px">${c.edad} años · ${c.universidad}</div>
+      <div style="font-size:9px;color:#c0cbd8;margin-bottom:4px">${c.experiencia}</div>
+      <div style="display:flex;gap:10px;margin-bottom:4px"><span style="font-size:8px;color:#00c896">↑ ${c.fortaleza}</span><span style="font-size:8px;color:#e84040">↓ ${c.debilidad}</span></div>
+      <div style="font-size:8px;color:#c89040;margin-bottom:6px">"${c.nota}"</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:9px;color:#3a4f65">Salario: <b style="color:#c0cbd8">${c.salario_pedido>0?'USD $'+c.salario_pedido+'/mes':'Sin costo'}</b></span>
+        <button onclick="contratarCandidato(${i})" style="padding:4px 10px;background:rgba(0,200,150,.1);border:1px solid #00c896;color:#00c896;font-family:'IBM Plex Mono',monospace;font-size:8px;cursor:pointer">Contratar</button>
+      </div>
+    </div>`).join('');
+}
+function contratarCandidato(i){
+  const c=window._candidatos&&window._candidatos[i];const of=window._ofertaActual;if(!c||!of)return;
+  if(!CC.org)CC.org={};if(!CC.org.equipo)CC.org.equipo=[];
+  CC.org.equipo.push({id:'emp_'+Date.now(),nombre:c.nombre,rol:of.rol,edad:c.edad,universidad:c.universidad,salario:c.salario_pedido,modalidad:of.modalidad,moral:80,performance:75,riesgoRenuncia:'BAJO',fechaIngreso:new Date().toISOString().slice(0,10),fortaleza:c.fortaleza,debilidad:c.debilidad});
+  CC.org.ofertas=CC.org.ofertas.map(o=>o.id===of.id?{...o,estado:'CUBIERTA'}:o);
+  saveCC();
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');sim.m=sim.m||{};sim.m.mor=Math.min(100,(sim.m.mor||70)+8);sim.m.cmp=Math.min(100,(sim.m.cmp||85)+3);localStorage.setItem('zcp_state_v3',JSON.stringify(sim));}catch(e){}
+  renderEquipoKPIs();renderEquipo();renderOfertas();
+  document.getElementById('candidatos-panel').style.display='none';
+  showM({t:'pos',ti:'Contratación Confirmada',sub:'',bo:`<b style="color:#00c896">${c.nombre}</b> se une como <b>${of.rol}</b>.<br>Costo adicional: ${c.salario_pedido>0?'USD $'+c.salario_pedido+'/mes':'$0 (pasante)'}`});
+}
+function renderEquipoKPIs(){
+  const equipo=CC.org?.equipo||[];const ofertas=(CC.org?.ofertas||[]).filter(o=>o.estado==='ACTIVA');
+  const moralProm=equipo.length>0?Math.round(equipo.reduce((a,e)=>a+e.moral,0)/equipo.length):70;
+  const costoTotal=equipo.reduce((a,e)=>a+(e.salario||0),0);
+  const enRiesgo=equipo.filter(e=>e.riesgoRenuncia==='ALTO'||e.riesgoRenuncia==='CRÍTICO').length;
+  const eq=document.getElementById('eq-total');if(eq)eq.textContent=equipo.length+1;
+  const mor=document.getElementById('eq-moral');if(mor){mor.textContent=moralProm+'/100';mor.style.color=moralProm>=70?'#00c896':moralProm>=50?'#c89040':'#e84040';}
+  const cos=document.getElementById('eq-costo');if(cos)cos.textContent='$'+costoTotal.toLocaleString();
+  const rie=document.getElementById('eq-riesgo');if(rie)rie.textContent=enRiesgo;
+  const of=document.getElementById('eq-ofertas');if(of)of.textContent=ofertas.length;
+}
+function renderEquipo(){
+  const grid=document.getElementById('equipo-grid');if(!grid)return;
+  const equipo=CC.org?.equipo||[];
+  if(!equipo.length){grid.innerHTML='<div style="font-size:9px;color:#1e2c3a;text-align:center;padding:16px 0">Sin equipo contratado todavía — publicá una oferta</div>';return;}
+  const riesgoCol={BAJO:'#00c896',MEDIO:'#c89040',ALTO:'#e84040','CRÍTICO':'#e84040'};
+  grid.innerHTML=equipo.map(e=>`
+    <div class="card ani" style="margin-bottom:8px;border-left:3px solid ${riesgoCol[e.riesgoRenuncia]||'#1a2535'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <div><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${e.nombre}</span><span class="tag tag-neu" style="margin-left:6px">${e.rol}</span></div>
+        <span class="tag" style="background:rgba(255,255,255,.04);color:${riesgoCol[e.riesgoRenuncia]}">RENUNCIA ${e.riesgoRenuncia}</span>
+      </div>
+      <div style="display:flex;gap:12px;font-size:8px;color:#3a4f65;margin-bottom:5px">
+        <span>Moral: <b style="color:${e.moral>=70?'#00c896':'#e84040'}">${e.moral}/100</b></span>
+        <span>Performance: <b style="color:#c89040">${e.performance}/100</b></span>
+        <span>Salario: <b style="color:#c0cbd8">${e.salario>0?'$'+e.salario+'/mes':'Pasante'}</b></span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="ajustarMoral('${e.id}',10)" class="btn" style="font-size:8px">Moral +10</button>
+        <button onclick="ajustarMoral('${e.id}',-10)" class="btn" style="font-size:8px;border-color:#e84040;color:#e84040">Moral -10</button>
+        <button onclick="desvincular('${e.id}')" class="btn" style="font-size:8px;border-color:#e84040;color:#e84040;margin-left:auto">Desvincular</button>
+      </div>
+    </div>`).join('');
+}
+function ajustarMoral(id,delta){
+  const e=CC.org?.equipo?.find(x=>x.id===id);if(!e)return;
+  e.moral=Math.max(0,Math.min(100,e.moral+delta));
+  e.riesgoRenuncia=e.moral<30?'CRÍTICO':e.moral<50?'ALTO':e.moral<70?'MEDIO':'BAJO';
+  saveCC();renderEquipo();renderEquipoKPIs();
+}
+function desvincular(id){
+  const e=CC.org?.equipo?.find(x=>x.id===id);if(!e)return;
+  showM({t:'neg',ti:'Desvincular '+e.nombre,sub:'',bo:`¿Confirmás desvincular a <b>${e.nombre}</b>?<br><br><div style="display:flex;gap:8px;margin-top:10px"><button onclick="closeM()" class="btn" style="flex:1">Cancelar</button><button onclick="confirmarDesvincular('${id}')" style="flex:2;padding:5px;background:#e84040;border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer">Confirmar</button></div>`});
+}
+function confirmarDesvincular(id){
+  CC.org.equipo=CC.org.equipo.filter(x=>x.id!==id);saveCC();closeM();
+  try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');sim.m=sim.m||{};sim.m.mor=Math.max(0,(sim.m.mor||70)-10);localStorage.setItem('zcp_state_v3',JSON.stringify(sim));}catch(e){}
+  renderEquipo();renderEquipoKPIs();
+}
+function renderOfertas(){
+  const grid=document.getElementById('ofertas-grid');if(!grid)return;
+  const ofertas=(CC.org?.ofertas||[]).filter(o=>o.estado==='ACTIVA');
+  if(!ofertas.length){grid.innerHTML='';return;}
+  grid.innerHTML=`<div style="font-size:8px;color:#c89040;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Ofertas Activas</div>`+ofertas.map(o=>`<div class="card" style="margin-bottom:6px;border-left:3px solid #c89040"><div style="display:flex;justify-content:space-between"><span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700">${o.rol}</span><span style="font-size:8px;color:#3a4f65">${o.fecha}</span></div><div style="font-size:8px;color:#3a4f65">${o.modalidad} · ${o.salario>0?'USD $'+o.salario+'/mes':'Sin costo'}</div></div>`).join('');
+}
+async function convocarEquipoDecision(){
+  const simKey=localStorage.getItem('zcp_apikey');
+  if(!simKey){showM({t:'neu',ti:'API Key requerida',sub:'',bo:'Necesitás la API key.'});return;}
+  const tipo=document.getElementById('org-tipo')?.value||'family';
+  const equipo=CC.org?.equipo||[];
+  let simCtx='';try{const sim=JSON.parse(localStorage.getItem('zcp_state_v3')||'{}');simCtx=`AUM: USD ${((sim.aum||50000)+(sim.lp||0)).toLocaleString()} | Turno: ${sim.turn||1}/12`;}catch(e){}
+  showM({t:'neu',ti:'Convocando al Equipo...',sub:'REUNIÓN ESTRATÉGICA',bo:'Generando el debate...'});
+  const prompt=`Sos el equipo directivo de ZAR Capital Partners. Pedro convocó una reunión para debatir la estructura: ${tipo}.
+Estado: ${simCtx} | Equipo: ${equipo.length+1} personas.
+Generá el debate en 3-4 párrafos. Cada miembro argumenta su posición. Con tensiones y acuerdos reales. Máximo 200 palabras.`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':simKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    showM({t:'neu',ti:'Reunión Estratégica — '+new Date().toLocaleDateString('es-AR'),sub:'DEBATE INTERNO · '+tipo.toUpperCase(),bo:d.content[0].text.replace(/\n/g,'<br>')});
+  }catch(e){showM({t:'neg',ti:'Error',sub:'',bo:''+e.message});}
+}
+
 function showM(con){
   const col={pos:'#00c896',neg:'#e84040',neu:'#c89040'};
   const c=col[con.t]||'#c89040';
@@ -1093,6 +1419,11 @@ function closeM(){document.getElementById('zmod').style.display='none';}
   renderKPIs();
   renderBrokers();
   renderLPs();
+  renderOficina();
+  renderSedes();
+  renderEquipo();
+  renderEquipoKPIs();
+  renderOfertas();
   showTab('mesa');
 })();
 </script>
